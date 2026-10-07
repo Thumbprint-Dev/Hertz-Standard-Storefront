@@ -20,17 +20,6 @@ four51.app.controller('OrderViewCtrl', ['$scope', '$location', '$routeParams', '
 			return [a.FirstName, a.LastName].filter(Boolean).join(' ');
 		};
 
-		/**
-		 * Whether this order can be sent back. A placed order that has not been cancelled; the
-		 * return form itself decides which of its lines still have anything returnable.
-		 */
-		var NOT_RETURNABLE = ['Unsubmitted', 'AwaitingApproval', 'Declined', 'Canceled', 'Cancelled'];
-		$scope.canReturn = function() {
-			var o = $scope.order;
-			return !!(o && o.ID && !$scope.isCanceled() &&
-			          NOT_RETURNABLE.indexOf(o.Status) === -1);
-		};
-
 		/** Four51 spells it Canceled; the status text is checked too in case only it says so. */
 		$scope.isCanceled = function() {
 			var o = $scope.order;

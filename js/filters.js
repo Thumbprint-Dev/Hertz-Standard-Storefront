@@ -84,23 +84,12 @@ four51.app.filter('onproperty', ['$451', function($451) {
   
   
   /**
-   * IMPORTANT:
-   * Angular filters must be synchronous. The previous implementation used Address.get(...)
-   * which is async, causing the filter to return an empty array and breaking shipper defaulting.
-   *
-   * This filter now always returns the "FedEx Ground" shipper (case-insensitive) if it exists.
-   * If it doesn't exist, it falls back to returning the full shippers list unchanged.
+   * The shipping methods to offer: every one Four51 returns for the order. (Angular filters
+   * must be synchronous, so nothing here may look anything up.)
    */
   four51.app.filter('shipperFilter', [function() {
     return function(shippers /*, addresses, currentid, order */) {
-      if (!shippers || !shippers.length) return shippers;
-      var fedexGround = null;
-      angular.forEach(shippers, function(s) {
-        if (!fedexGround && s && s.Name && s.Name.toLowerCase().indexOf('fedex ground') !== -1) {
-          fedexGround = s;
-        }
-      });
-      return fedexGround ? [fedexGround] : shippers;
+      return shippers;
     };
   }]);
   

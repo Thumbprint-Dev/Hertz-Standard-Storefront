@@ -33,7 +33,6 @@ four51.app.config(['$routeProvider', '$locationProvider', function($routeProvide
         when('/order/:id', { templateUrl: 'partials/Reporting/orderHistoryView.html', controller: 'OrderViewCtrl' }).
         when('/order/new/:id', { templateUrl: 'partials/Reporting/orderHistoryView.html', controller: 'OrderViewCtrl' }).
         when('/order/:orderid/:lineitemindex/', { templateUrl: 'partials/Reporting/lineItemHistoryView.html', controller: 'LineItemViewCtrl' }).
-        when('/favoriteorders', { templateUrl: 'partials/favoriteOrderListView.html', controller: 'FavoriteOrderCtrl' }).
 
         when('/admin', { templateUrl: 'partials/userView.html', controller: 'UserEditCtrl' }).
         when('/addresses', { templateUrl: 'partials/addressListView.html', controller: 'AddressListCtrl' }).
@@ -49,7 +48,6 @@ four51.app.config(['$routeProvider', '$locationProvider', function($routeProvide
         when('/report/:id', { templateUrl: 'partials/Reporting/reportView.html', controller: 'ReportCtrl' }).
 
         when('/contactus', { templateUrl: 'partials/Messages/contactus.html' }).
-        when('/returns/', { templateUrl: 'partials/Messages/returns.html' }).
 
         otherwise({ redirectTo: '/catalog' });
 }]);

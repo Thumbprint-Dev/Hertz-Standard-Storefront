@@ -1,92 +1,45 @@
 <!--
-  Contact us.
+  Contact us: how to reach a person, when, and where Hertz is.
 
-  Built entirely from the shared page components, with nothing of its own. Every element
-  below is a class that order history, addresses, your information or the order detail
-  page already uses: `hz-pg-head` and `hz-pg-title` for the heading, `hz-pg-sub` for the
-  standfirst, `hz-pg-card` with its uppercase `hz-pg-card-t` header for each block, and
-  `hz-pg-dl` rows for the label-and-value pairs at the bottom.
+  One channel, email, because it is the one this store already shows (at checkout). The
+  phone number from the original Hertz contact page was taken down there as a client
+  decision, so it is not put back here; add it, or a chat widget, if Hertz and Thumbprint
+  choose to.
 
-  That is the point, and it took three passes to get to. The first two gave this page its
-  own heading scale, its own card with a different corner radius, a filled grey panel and
-  a ruled strip that appear nowhere else on the site. Each looked fine alone and none of
-  it looked like the rest of the site. There is no `hz-ct-` class any more.
-
-  Earlier history worth keeping: this file used to be a browser "save page as" dump, 80KB
-  of full HTML document with its own <head>, <body> and an inlined New Relic agent, loaded
-  as an Angular partial into a page that already had all three, of which about 1KB was
-  content. The words were written for a Thumbprint client rather than a Hertz employee,
-  offering to "make your branded shopping experience seamless". The person who reaches
-  this page is a rental agent whose polo did not arrive.
-
-  Nothing here is invented. The hours and the headquarters address are the ones the
-  original page carried.
-
-  The email address and phone number that were already commented out on the original are
-  still commented out below. They were taken down at some point, and putting them back is
-  a decision for Hertz and Thumbprint rather than part of a layout change.
-
-  No em dashes in the copy, per the client.
+  Built from the shared account-page components in css/custom.css (`hz-pg-*`). No em dashes
+  in the copy.
 -->
 <section class="hz-pg">
 
   <div class="hz-pg-head">
     <h1 class="hz-pg-title">Contact us</h1>
   </div>
-  <!-- No standfirst. It asked a question the two cards below answer, so it delayed the
-       answer by a line without adding to it. -->
+  <p class="hz-pg-sub">
+    Questions about an order, a size or a delivery? Email us and include your order number if
+    you have one.
+  </p>
   <div class="hz-pg-spacer" aria-hidden="true"></div>
 
-  <!-- The two things you can act on, side by side, as the client drew them. -->
-  <!--
-    The layout the client drew, twice: an outlined card carrying the action, a filled panel
-    carrying the instruction, and a ruled strip of reference below.
-
-    The two cards are deliberately not alike. One is a thing you DO and has a button; the
-    other is a thing you READ and has none, and the filled ground says so before the words
-    do.
-  -->
   <div class="hz-pg-cards">
-
     <div class="hz-pg-card hz-pg-opt">
       <div class="hz-pg-card-b">
-        <h2 class="hz-pg-opt-h">Returns</h2>
-        <p>Wrong size, wrong item, or damaged on the way? Start a return with your order
-          number and we will take it from there.</p>
-        <a class="hz-pg-btn" href="https://thumbprint.com/hertz/UniformReturn"
-           target="_blank" rel="noopener noreferrer">Start a return</a>
+        <h2 class="hz-pg-opt-h">Email</h2>
+        <p><a href="mailto:hertzsupport@thumbprint.com">hertzsupport@thumbprint.com</a></p>
+        <p>We reply during support hours.</p>
+        <a class="hz-pg-btn" href="mailto:hertzsupport@thumbprint.com?subject=Hertz%20Store%20question">Email us</a>
       </div>
     </div>
-
-    <!--
-      The original contact page pointed at a live chat widget. This store has none,
-      so there is no card for it: how people reach a person (chat, email or phone) is for
-      Hertz and Thumbprint to decide before launch. See README.md.
-    -->
   </div>
 
-  <!--
-    Reference, not another choice, so it is a ruled strip rather than a third card.
-
-    Two columns: the headquarters address and the support hours.
-  -->
   <div class="hz-pg-facts">
-    <div class="hz-pg-fact">
-      <!-- An office, not a returns address. Returns go through the button above. -->
-      <p class="hz-pg-fact-k">Headquarters</p>
-      <address>15255 Endeavor Drive<br />Noblesville, IN 46060</address>
-    </div>
     <div class="hz-pg-fact">
       <p class="hz-pg-fact-k">Support hours</p>
       <address>Monday to Friday<br />9:00am to 5:00pm ET</address>
     </div>
-    <!--
-      Email and phone were on this page once and were commented out before any of these
-      rewrites. Left as found rather than restored, because whether employees get a direct
-      line is a client decision:
-        Email  hertzsupport@thumbprint.com
-        Phone  317.703.3449
-    -->
+    <div class="hz-pg-fact">
+      <p class="hz-pg-fact-k">Headquarters</p>
+      <address>15255 Endeavor Drive<br />Noblesville, IN 46060</address>
+    </div>
   </div>
 
 </section>

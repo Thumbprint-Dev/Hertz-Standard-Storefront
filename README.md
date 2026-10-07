@@ -19,9 +19,9 @@ services with it at runtime.
 | Product | `/product/:id` | Size buttons, quantity, price, add to cart with a confirmation; Four51 variant and personalisation specs when a product has them |
 | Cart | `/cart` | Quantity changes in place (saved automatically), remove, unit and line prices, totals |
 | Checkout | `/checkout` | Order details and custom order fields, shipping address and method, billing address, payment method, submit |
-| Orders | `/order`, `/order/:id` | History with totals and status; order detail with addresses, totals, reorder, favourite, start a return |
+| Orders | `/order`, `/order/:id` | History with totals and status; order detail with addresses, totals and order again |
 | Account | `/admin`, `/addresses` | Edit name, email, phone, username, password; saved addresses |
-| Help | `/contactus`, `/returns` | Contact page and returns policy |
+| Contact | `/contactus` | Support email, support hours, headquarters |
 
 ### Sizes: one card per garment
 
@@ -65,14 +65,12 @@ Changes in the Four51 admin that do not appear on the site are usually the store
 
 These carry values from the original Hertz theme and need a decision for this store:
 
-1. **How shoppers reach a person.** The contact page lists the headquarters address and
-   support hours only. The original pointed at a live chat widget this store does not have;
-   chat, email or phone is for Hertz and Thumbprint to choose.
-2. **The returns form.** "Start a return" links to `https://thumbprint.com/hertz/UniformReturn`,
-   the existing Hertz returns form. Confirm it is right for this store or replace it
-   (`partials/Messages/contactus.html`, `partials/Messages/returns.html`,
-   `partials/Reporting/orderHistoryView.html`).
-3. **Support email at checkout:** `hertzsupport@thumbprint.com` (`partials/checkOutView.html`).
+1. **How shoppers reach a person.** The contact page offers email
+   (`hertzsupport@thumbprint.com`, the address checkout already shows), support hours and the
+   headquarters address. Add a phone number or a chat widget if Hertz and Thumbprint want one.
+2. **Returns.** This store has no returns flow or policy page. If it needs one, it is a new
+   page and a link from the order detail page.
+3. **Support email:** on the contact page and at checkout, `hertzsupport@thumbprint.com` (`partials/Messages/contactus.html`, `partials/checkOutView.html`).
 4. **Google Maps key** for address lookup, in `index.html`. It is the key the original theme
    used; give this store its own.
 5. **Analytics.** The original's Microsoft Clarity tag was removed (it reported to the other

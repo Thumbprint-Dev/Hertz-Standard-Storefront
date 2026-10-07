@@ -6,13 +6,13 @@
 
   <div class="hs-hero">
     <div class="hs-hero-text">
-      <p class="hs-kicker">Official Hertz store</p>
-      <h1>Everything your team wears, in one place.</h1>
+      <p class="hs-kicker">Hertz Official Store</p>
+      <h1>Hertz uniforms and gear, in one place.</h1>
       <span class="hs-bar" aria-hidden="true"></span>
-      <p class="hs-sub">Browse uniforms and gear, choose your sizes and check out. You pick where it ships when you place the order.</p>
+      <p class="hs-sub">Choose your items and sizes, then check out in a few steps.</p>
       <div class="hs-hero-ctas">
         <a class="hs-btn" href="" ng-click="scrollToShop()">Start shopping</a>
-        <a class="hs-btn hs-btn--ghost" href="order">Your orders</a>
+        <a class="hs-btn hs-btn--ghost" href="order">Order history</a>
       </div>
     </div>
     <div class="hs-hero-media">
@@ -23,7 +23,6 @@
   <div class="hs-section" id="shop">
     <div class="hs-section-head">
       <h2>Shop by category</h2>
-      <span ng-if="home.categories.length">{{home.categories.length}} {{home.categories.length == 1 ? 'category' : 'categories'}}</span>
     </div>
 
     <div class="hs-cats" ng-if="home.loading">

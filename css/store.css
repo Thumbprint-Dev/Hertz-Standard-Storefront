@@ -270,3 +270,7 @@
   .hs-cat-desc { display: none; }
 }
 .hs-pay { margin-bottom: 20px; }
+
+/* On the home page the help band sits directly on the footer: no gap, and no hairline
+   between the yellow and the footer. Other pages keep the footer's own spacing. */
+.main-wrapper:has(.hs-home) .hz-footer { margin-top: 0; border-top: 0; }

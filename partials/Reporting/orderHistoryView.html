@@ -187,30 +187,11 @@
           </div>
         </div>
 
-        <!-- The way into the return form, for the order it came from. -->
-        <div class="hz-pg-card hz-ord-return" ng-if="canReturn()">
-          <div class="hz-pg-card-b">
-            <p class="hz-ord-return-t">Something not right?</p>
-            <p>Wrong size, wrong item or damaged on the way: send it back within 30 days of delivery. Have your order number ready: {{order.ExternalID || order.ID}}.</p>
-            <a class="hz-pg-btn" href="https://thumbprint.com/hertz/UniformReturn" target="_blank" rel="noopener noreferrer">Start a return</a>
-            <a class="hz-pg-btn hz-pg-btn--ghost" href="returns">Returns policy</a>
-          </div>
-        </div>
-
-        <!-- Order the same again, or save it as a favourite to reorder later. -->
+        <!-- Order the same again. -->
         <div class="hz-pg-card"
              ng-if="order.FromUserID == user.ID && order.Status != 'Unsubmitted' && user.Type !='TempCustomer'">
           <div class="hz-pg-card-b">
-            <button type="button" class="hz-pg-btn" ng-click="repeatOrder()" style="margin-bottom: 18px;">Order these items again</button>
-            <loadingindicator ng-show="displayLoadingIndicator" />
-            <div class="hz-pg-field">
-              <label for="hzFav">Save this order</label>
-              <input id="hzFav" type="text" ng-model="order.FavoriteName"
-                     placeholder="Name it, so you can reorder it" autocomplete="off" />
-              <p class="hz-pg-field-hint">Saved orders appear under Account, Favorites.</p>
-            </div>
-            <button type="button" class="hz-pg-btn hz-pg-btn--ghost" ng-click="saveFavorite()"
-                    style="margin-top: 10px;">Save</button>
+            <button type="button" class="hz-pg-btn" ng-click="repeatOrder()">Order these items again</button>
           </div>
         </div>
 
