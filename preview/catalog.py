@@ -57,7 +57,7 @@ def product(interop, name, photo, price, category):
         "InteropID": interop,
         "ExternalID": interop,
         "Name": name,
-        "Description": "<p>%s in the Hertz uniform range. Placeholder description for the local preview.</p>" % name,
+        "Description": "<p>%s from the Hertz Shop. Placeholder description for the local preview.</p>" % name,
         "Type": "Static",
         "SmallImageURL": image,
         "LargeImageURL": image,

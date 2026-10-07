@@ -9,9 +9,9 @@
   <div class="hs-list-head">
     <div>
       <h1 class="hs-title" ng-if="listing.term">Results for "{{listing.term}}"</h1>
-      <h1 class="hs-title" ng-if="!listing.term">Search the store</h1>
+      <h1 class="hs-title" ng-if="!listing.term">Search the shop</h1>
       <form class="hs-search" ng-submit="searchAgain()" role="search">
-        <input type="search" ng-model="listing.term" placeholder="Search by name or item number" aria-label="Search the store" />
+        <input type="search" ng-model="listing.term" placeholder="Search by name or item number" aria-label="Search the shop" />
         <button class="hs-btn" type="submit">Search</button>
       </form>
     </div>

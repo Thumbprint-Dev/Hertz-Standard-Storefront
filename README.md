@@ -1,4 +1,4 @@
-# Hertz Store: standard ordering storefront
+# Hertz Shop: standard ordering storefront
 
 A Four51 storefront theme (AngularJS) for ordinary ordering: browse the catalog, choose a
 size, add to cart, check out and pay. It has the Hertz look (Open Sans, black type, the
