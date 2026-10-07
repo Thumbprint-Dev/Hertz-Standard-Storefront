@@ -11,7 +11,7 @@
  * searching on the base ID.
  */
 four51.app.factory('Catalog', ['$q', 'Product', 'hzSkuParts', 'hzSizeOrder', function($q, Product, hzSkuParts, hzSizeOrder) {
-  var known = {};
+  var known = {}, byCategory = {};
 
   function priceOf(p) {
     var ps = p && (p.StandardPriceSchedule || p.ReplenishmentPriceSchedule);
@@ -56,17 +56,23 @@ four51.app.factory('Catalog', ['$q', 'Product', 'hzSkuParts', 'hzSizeOrder', fun
       Product.search(interopID, null, null, function(list, count) {
         all = all.concat(list || []);
         if (list && list.length === size && all.length < (count || 0)) page(n + 1);
-        else d.resolve(families(all));
+        else {
+          var fams = families(all);
+          // Remembered by category, so a product page can say where it sits and show its neighbours.
+          angular.forEach(fams, function(f) { f.categoryId = interopID; });
+          byCategory[interopID] = fams;
+          d.resolve(fams);
+        }
       }, n, size);
     }
     page(1);
     return d.promise;
   }
 
-  /** Search results, as families. */
-  function search(term) {
+  /** Search results, as families. `size` caps how many products Four51 returns. */
+  function search(term, size) {
     var d = $q.defer();
-    Product.search(null, term, null, function(list) { d.resolve(families(list || [])); }, 1, 100);
+    Product.search(null, term, null, function(list) { d.resolve(families(list || [])); }, 1, size || 100);
     return d.promise;
   }
 
@@ -94,5 +100,11 @@ four51.app.factory('Catalog', ['$q', 'Product', 'hzSkuParts', 'hzSizeOrder', fun
     return d.promise;
   }
 
-  return { families: families, category: category, search: search, family: family, priceOf: priceOf };
+  /** Other garments from the category a family was listed in, when it was. */
+  function neighbours(fam, count) {
+    var list = (fam && fam.categoryId && byCategory[fam.categoryId]) || [];
+    return list.filter(function(f) { return f !== fam; }).slice(0, count || 4);
+  }
+
+  return { families: families, category: category, search: search, family: family, neighbours: neighbours, priceOf: priceOf };
 }]);

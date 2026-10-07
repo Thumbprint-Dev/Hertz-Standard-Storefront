@@ -8,10 +8,10 @@
 
   <div class="hs-list-head">
     <div>
-      <h1 class="hs-title" ng-if="listing.term">Results for "{{listing.term}}"</h1>
-      <h1 class="hs-title" ng-if="!listing.term">Search the shop</h1>
+      <h1 class="hs-title" ng-if="listing.shown">Results for "{{listing.shown}}"</h1>
+      <h1 class="hs-title" ng-if="!listing.shown">Search the shop</h1>
       <form class="hs-search" ng-submit="searchAgain()" role="search">
-        <input type="search" ng-model="listing.term" placeholder="Search by name or item number" aria-label="Search the shop" />
+        <input type="search" ng-model="listing.term" placeholder="Start typing a product name or item number" aria-label="Search the shop" autocomplete="off" autofocus />
         <button class="hs-btn" type="submit">Search</button>
       </form>
     </div>
@@ -19,8 +19,8 @@
 
   <productgrid families="listing.families" loading="listing.loading" hide-prices="user.Permissions.contains('HidePricing')"></productgrid>
 
-  <div class="hs-empty" ng-if="listing.term && !listing.loading && !listing.families.length">
-    <p>Nothing matches "{{listing.term}}".</p>
+  <div class="hs-empty" ng-if="listing.shown && !listing.loading && !listing.families.length">
+    <p>Nothing matches "{{listing.shown}}".</p>
     <a class="hs-btn hs-btn--ghost" href="catalog">Browse the categories</a>
   </div>
 </section>

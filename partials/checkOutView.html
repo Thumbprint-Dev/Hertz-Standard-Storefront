@@ -113,7 +113,8 @@
             <span ng-if="cart_order.$invalid">Order details are incomplete. </span>
             <span ng-if="!currentOrder.ShipAddressID">A shipping address is needed. </span>
             <span ng-if="currentOrder.ShipAddressID && cart_shipping.$invalid">Confirm the shipping address and choose a shipping method. </span>
-            <span ng-if="cart_billing.$invalid">Billing details are incomplete.</span>
+            <span ng-if="!currentOrder.BillAddressID">A billing address is needed. </span>
+            <span ng-if="currentOrder.BillAddressID && cart_billing.$invalid">Billing details are incomplete.</span>
           </p>
 
           <button type="button" class="hz-co-btn hz-co-btn--primary hz-co-btn--pay"

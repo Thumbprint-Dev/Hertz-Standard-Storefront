@@ -15,10 +15,10 @@ services with it at runtime.
 |---|---|---|
 | Home | `/catalog` | Hero, a tile per top-level category (photo from its range), help band |
 | Category | `/catalog/:id` | Grid of products, one card per garment, sort by name or price, other categories beside it |
-| Search | `/search/:term` | Same grid; search box in the header and on the page |
-| Product | `/product/:id` | Size buttons, quantity, price, add to cart with a confirmation; Four51 variant and personalisation specs when a product has them |
+| Search | `/search/:term` | Products as you type: a dropdown under the header search box (arrows and Enter work), and live results on the search page |
+| Product | `/product/:id` | Image, category, name, price, size buttons, quantity and add to cart with a confirmation; Four51 variant and personalisation specs when a product has them; more from the same category |
 | Cart | `/cart` | Quantity changes in place (saved automatically), remove, unit and line prices, totals |
-| Checkout | `/checkout` | Order details and custom order fields, shipping address and method, billing address, payment method, submit |
+| Checkout | `/checkout` | Order details and custom order fields, shipping address and method, payment method, a required billing address (same as shipping, a saved one, or a new one), submit |
 | Orders | `/order`, `/order/:id` | History with totals and status; order detail with addresses, totals and order again |
 | Account | `/admin`, `/addresses` | Edit name, email, phone, username, password; saved addresses |
 | Contact | `/contactus` | Support email, support hours, headquarters |
@@ -54,8 +54,10 @@ Changes in the Four51 admin that do not appear on the site are usually the store
   the Shop menu and the footer list).
 - Price schedules on every product (Standard order type). Products without one cannot be
   added to the cart.
-- User permissions: `StandardOrder`, the payment permissions above, `CreateShipToAddress` if
-  shoppers may type a new address, `ViewSelfAdmin` for the account page.
+- User permissions: `StandardOrder`, the payment permissions above, `CreateShipToAddress` and
+  `CreateBillToAddress` if shoppers may type a new shipping or billing address, `ViewSelfAdmin`
+  for the account page. Billing addresses assigned to a user in Four51 appear at checkout as
+  saved billing addresses.
 - A ship method with `ShipperSelectionType` = `UserDropDown`, so the shopper chooses the
   shipping method at checkout.
 - Product images in Four51 (`LargeImageURL`). Where a Hertz product has none, the theme

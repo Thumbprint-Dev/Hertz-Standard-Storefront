@@ -26,6 +26,8 @@ FAMILIES = [
     ("accessories", "HTZ-RFHAT-HZ", "Reflective Cap", "rfhat", None, 16.00),
     ("accessories", "HTZ-BEANIE-HZ", "Knit Beanie", "beanie", None, 14.00),
     ("accessories", "HTZ-RFBLT-UV", "Reflective Belt", None, None, 18.00),
+    # A category whose products have no image, as on the live shop.
+    ("name-tags", "HTZ-NAMETAG-HZ", "Name Tag", None, None, 12.00),
 ]
 
 CATEGORIES = [
@@ -34,6 +36,7 @@ CATEGORIES = [
     ("layering", "Layering", "Quarter zips, fleece and soft shells"),
     ("outerwear", "Outerwear", "Parkas for cold weather"),
     ("accessories", "Accessories", "Caps, beanies and belts"),
+    ("name-tags", "Name Tags", ""),
 ]
 
 

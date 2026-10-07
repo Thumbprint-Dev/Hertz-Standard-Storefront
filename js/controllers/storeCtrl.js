@@ -68,17 +68,33 @@ four51.app.directive('productgrid', function() {
 });
 
 /** Search results, the same grid as a category. */
-four51.app.controller('ProductSearchCtrl', ['$scope', '$routeParams', '$location', 'Catalog', function($scope, $routeParams, $location, Catalog) {
-  $scope.listing = { term: $routeParams.searchTerm || '', loading: !!$routeParams.searchTerm, families: [] };
-  if ($scope.listing.term) {
-    Catalog.search($scope.listing.term).then(function(fams) {
-      $scope.listing.families = fams;
-      $scope.listing.loading = false;
-    });
+four51.app.controller('ProductSearchCtrl', ['$scope', '$routeParams', '$location', '$timeout', 'Catalog', function($scope, $routeParams, $location, $timeout, Catalog) {
+  $scope.listing = { term: $routeParams.searchTerm || '', shown: '', loading: false, families: [] };
+
+  // Results follow the box as it is typed in, a moment after typing pauses. Only the latest
+  // answer is shown, so a slow reply for an earlier word never replaces a newer one.
+  var timer = null, asked = 0;
+  function run(term) {
+    var t = (term || '').trim();
+    if (timer) $timeout.cancel(timer);
+    if (t.length < 2) { $scope.listing.families = []; $scope.listing.shown = ''; $scope.listing.loading = false; return; }
+    $scope.listing.loading = true;
+    timer = $timeout(function() {
+      var mine = ++asked;
+      Catalog.search(t).then(function(fams) {
+        if (mine !== asked) return;
+        $scope.listing.families = fams;
+        $scope.listing.shown = t;
+        $scope.listing.loading = false;
+      });
+    }, 250);
   }
+  $scope.$watch('listing.term', run);
+
+  // Enter keeps the address in step with what is shown, for the back button and for sharing.
   $scope.searchAgain = function() {
     var t = ($scope.listing.term || '').trim();
-    if (t) $location.path('search/' + encodeURIComponent(t));
+    if (t) $location.path('search/' + encodeURIComponent(t)).replace();
   };
 }]);
 
@@ -88,8 +104,8 @@ four51.app.controller('ProductSearchCtrl', ['$scope', '$routeParams', '$location
  * spec controls choose the variant. Either way the line, its price schedule and its checks
  * come from ProductDisplayService, exactly as the stock product page did.
  */
-four51.app.controller('StoreProductCtrl', ['$scope', '$routeParams', '$location', '$timeout', 'Catalog', 'Order', 'User', 'ProductDisplayService', 'hzSkuParts',
-function($scope, $routeParams, $location, $timeout, Catalog, Order, User, ProductDisplayService, hzSkuParts) {
+four51.app.controller('StoreProductCtrl', ['$scope', '$routeParams', '$location', '$timeout', 'Catalog', 'Category', 'Order', 'User', 'ProductDisplayService', 'hzSkuParts',
+function($scope, $routeParams, $location, $timeout, Catalog, Category, Order, User, ProductDisplayService, hzSkuParts) {
   var asked = $routeParams.productInteropID;
   $scope.page = { loading: true, family: null, size: null, added: null, adding: false, missing: false };
   $scope.LineItem = {};
@@ -109,6 +125,9 @@ function($scope, $routeParams, $location, $timeout, Catalog, Order, User, Produc
     $scope.page.loading = false;
     if (!fam) { $scope.page.missing = true; return; }
     $scope.page.family = fam;
+    // Where it sits and what is beside it, when it was reached from a category.
+    $scope.page.related = Catalog.neighbours(fam, 4);
+    if (fam.categoryId) Category.get(fam.categoryId, function(c) { $scope.page.category = c; });
     // A size in the link is preselected; a base link waits for a choice.
     var size = hzSkuParts(asked).size;
     var chosen = size && fam.sizes.filter(function(s) { return s.size === size; })[0];

@@ -5,20 +5,27 @@
   A Hertz garment is a Four51 product per size, so the size buttons choose which product
   the line is for. A product that uses Four51 variants or line-item specs gets the stock
   spec controls instead, below the sizes, and ProductDisplayService resolves the variant.
+
+  Layout: the image on the left, held in view while the right column scrolls; on the right
+  the name and price, the choices, the buy row, what happens next, then the details. Below
+  both, more from the same category when the product was reached from one.
 -->
 <section class="hs hs-pdp">
   <nav class="hs-crumbs" aria-label="Breadcrumb">
     <a href="catalog">Home</a>
     <span aria-hidden="true">/</span>
+    <a ng-if="page.category" href="catalog/{{page.category.InteropID}}">{{page.category.Name}}</a>
+    <span ng-if="page.category" aria-hidden="true">/</span>
     <span>{{page.family.name || '&nbsp;'}}</span>
   </nav>
 
   <div class="hs-pdp-grid" ng-if="page.loading">
     <div class="hs-pdp-img hs-skel"></div>
     <div>
-      <span class="hs-skel" style="display:block;height:40px;width:70%"></span>
-      <span class="hs-skel" style="display:block;height:26px;width:30%;margin-top:16px"></span>
-      <span class="hs-skel" style="display:block;height:140px;margin-top:32px"></span>
+      <span class="hs-skel" style="display:block;height:14px;width:24%"></span>
+      <span class="hs-skel" style="display:block;height:44px;width:80%;margin-top:14px"></span>
+      <span class="hs-skel" style="display:block;height:28px;width:26%;margin-top:18px"></span>
+      <span class="hs-skel" style="display:block;height:160px;margin-top:36px"></span>
     </div>
   </div>
 
@@ -28,33 +35,43 @@
   </div>
 
   <div class="hs-pdp-grid" ng-if="!page.loading && page.family">
-    <div class="hs-pdp-img">
-      <img ng-if="LineItem.Product | hzImage:LineItem.Variant" ng-src="{{LineItem.Product | hzImage:LineItem.Variant}}" alt="{{page.family.name}}" />
-      <i ng-if="!(LineItem.Product | hzImage:LineItem.Variant)">No image</i>
+
+    <!-- ───────────────────────────── the image -->
+    <div class="hs-pdp-media">
+      <div class="hs-pdp-img">
+        <img ng-if="LineItem.Product | hzImage:LineItem.Variant" ng-src="{{LineItem.Product | hzImage:LineItem.Variant}}" alt="{{page.family.name}}" />
+      </div>
     </div>
 
-    <form name="buy" novalidate ng-submit="addToCart()">
+    <!-- ───────────────────────────── what it is, and buying it -->
+    <form class="hs-pdp-info" name="buy" novalidate ng-submit="addToCart()">
+      <p class="hs-kicker">{{page.category.Name || 'The Hertz Shop'}}</p>
       <h1>{{page.family.name}}</h1>
-      <p class="hs-pdp-price" ng-if="!user.Permissions.contains('HidePricing') && unitPrice() != null">
-        {{unitPrice() | culturecurrency}}
-      </p>
-      <p class="hs-pdp-sku">Item {{LineItem.Variant.ExternalID || LineItem.Variant.InteropID || (page.size ? LineItem.Product.InteropID : page.family.id)}}</p>
-
-      <hr class="hs-pdp-rule" />
+      <div class="hs-pdp-pricerow">
+        <p class="hs-pdp-price" ng-if="!user.Permissions.contains('HidePricing') && unitPrice() != null">
+          {{unitPrice() | culturecurrency}}
+        </p>
+        <p class="hs-pdp-sku">Item {{LineItem.Variant.ExternalID || LineItem.Variant.InteropID || (page.size ? LineItem.Product.InteropID : page.family.id)}}</p>
+      </div>
+      <span class="hs-bar" aria-hidden="true"></span>
 
       <!-- Sizes: one Four51 product each. -->
-      <div ng-if="page.family.sizes.length">
-        <p class="hs-opt-head"><b>Size</b><span ng-if="page.size">{{page.size}}</span></p>
+      <div class="hs-pdp-block" ng-if="page.family.sizes.length">
+        <p class="hs-opt-head">
+          <b>Size</b>
+          <span ng-if="page.size">Selected: {{page.size}}</span>
+          <span ng-if="!page.size" class="hs-opt-ask">Pick a size</span>
+        </p>
         <div class="hs-sizes" role="radiogroup" aria-label="Size">
           <button type="button" class="hs-size" ng-repeat="s in page.family.sizes"
                   ng-class="{on: page.size == s.size}" role="radio" aria-checked="{{page.size == s.size}}"
                   ng-click="chooseSize(s)">{{s.size}}</button>
         </div>
-        <p class="hs-size-hint" ng-if="page.triedWithoutSize && needsSize()">Choose a size.</p>
+        <p class="hs-size-hint" ng-if="page.triedWithoutSize && needsSize()">Choose a size to add this to your cart.</p>
       </div>
 
       <!-- Variant and personalisation specs, for products set up that way in Four51. -->
-      <div class="hs-specs" ng-if="(LineItem.Specs | objLength) > 0">
+      <div class="hs-pdp-block hs-specs" ng-if="(LineItem.Specs | objLength) > 0">
         <div ng-repeat="s in LineItem.Specs" ng-switch="s.ControlType">
           <div ng-switch-when="Selection"><customselectionfield customfield="s" change="specChanged"></customselectionfield></div>
           <div ng-switch-when="Text"><customtextfield customfield="s"></customtextfield></div>
@@ -63,40 +80,77 @@
         </div>
       </div>
 
-      <div class="hs-buy">
-        <span class="hs-qty">
-          <button type="button" ng-click="step(-1)" ng-disabled="(LineItem.Quantity || 0) <= 1" aria-label="One fewer">&minus;</button>
-          <input type="number" min="1" inputmode="numeric" ng-model="LineItem.Quantity" aria-label="Quantity"
-                 ng-change="page.touchedQty = true" />
-          <button type="button" ng-click="step(1)" aria-label="One more">+</button>
-        </span>
-        <button class="hs-btn hs-btn--block" type="submit"
-                ng-disabled="page.adding || !allowAddToOrder"
-                ng-click="page.triedWithoutSize = needsSize()">
-          <span ng-if="!page.adding">{{needsSize() ? 'Choose a size' : 'Add to cart'}}</span>
-          <span ng-if="page.adding">Adding&hellip;</span>
-        </button>
-      </div>
+      <div class="hs-pdp-block">
+        <p class="hs-opt-head"><b>Quantity</b>
+          <span ng-if="!user.Permissions.contains('HidePricing') && LineItem.LineTotal > 0 && LineItem.Quantity > 1">{{LineItem.Quantity}} for {{LineItem.LineTotal | culturecurrency}}</span>
+        </p>
+        <div class="hs-buy">
+          <span class="hs-qty">
+            <button type="button" ng-click="step(-1)" ng-disabled="(LineItem.Quantity || 0) <= 1" aria-label="One fewer">&minus;</button>
+            <input type="number" min="1" inputmode="numeric" ng-model="LineItem.Quantity" aria-label="Quantity"
+                   ng-change="page.touchedQty = true" />
+            <button type="button" ng-click="step(1)" aria-label="One more">+</button>
+          </span>
+          <button class="hs-btn hs-btn--block hs-btn--buy" type="submit"
+                  ng-disabled="page.adding || !allowAddToOrder"
+                  ng-click="page.triedWithoutSize = needsSize()">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 8h14l-1.2 11H6.2z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+            </svg>
+            <span ng-if="!page.adding">{{needsSize() ? 'Choose a size' : 'Add to cart'}}</span>
+            <span ng-if="page.adding">Adding&hellip;</span>
+          </button>
+        </div>
 
-      <p class="hs-line-total" ng-if="!user.Permissions.contains('HidePricing') && LineItem.LineTotal > 0 && LineItem.Quantity > 1">
-        {{LineItem.Quantity}} for {{LineItem.LineTotal | culturecurrency}}
-      </p>
+        <div class="hs-alert" ng-if="page.error" role="alert">{{page.error}}</div>
+        <div class="hs-alert" ng-if="showAddToCartErrors && lineItemErrors.length" role="alert">
+          <span ng-repeat="e in lineItemErrors">{{e}}<br ng-if="!$last" /></span>
+        </div>
 
-      <div class="hs-alert" ng-if="page.error" role="alert">{{page.error}}</div>
-      <div class="hs-alert" ng-if="showAddToCartErrors && lineItemErrors.length" role="alert">
-        <span ng-repeat="e in lineItemErrors">{{e}}<br ng-if="!$last" /></span>
-      </div>
-
-      <div class="hs-added" ng-if="page.added" role="status">
-        <p>Added to your cart: <b>{{page.added.qty}} &times; {{page.added.name}}</b><span ng-if="page.added.size">, size {{page.added.size}}</span>.</p>
-        <div>
-          <a class="hs-btn" href="cart">View cart</a>
-          <a class="hs-btn hs-btn--ghost" href="catalog">Keep shopping</a>
+        <!-- What was added, with the photo, so it is plain the right size went in. -->
+        <div class="hs-added" ng-if="page.added" role="status">
+          <span class="hs-added-img"><img ng-if="LineItem.Product | hzImage" ng-src="{{LineItem.Product | hzImage}}" alt="" /></span>
+          <div class="hs-added-text">
+            <p class="hs-added-h">Added to your cart</p>
+            <p>{{page.added.qty}} &times; {{page.added.name}}<span ng-if="page.added.size">, size {{page.added.size}}</span></p>
+          </div>
+          <div class="hs-added-acts">
+            <a class="hs-btn" href="cart">View cart</a>
+            <a class="hs-btn hs-btn--ghost" href="catalog">Keep shopping</a>
+          </div>
         </div>
       </div>
 
-      <hr class="hs-pdp-rule" ng-if="LineItem.Product.Description" />
-      <div class="hs-desc" ng-if="LineItem.Product.Description" ng-bind-html="trustedDescription(LineItem.Product)"></div>
+      <!-- What happens next, in three lines. Each is true of every order in this shop. -->
+      <ul class="hs-pdp-notes">
+        <li>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"></path><path d="M14 10h4l3 3v3h-7z"></path><circle cx="7" cy="17.5" r="1.6"></circle><circle cx="17" cy="17.5" r="1.6"></circle></svg>
+          <span><b>Shipping</b> Choose the address and shipping method at checkout.</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3.5" width="14" height="17" rx="1.5"></rect><path d="M9 8h6M9 12h6M9 16h4"></path></svg>
+          <span><b>Your orders</b> Every order and its status is in <a href="order">Order history</a>.</span>
+        </li>
+        <li>
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5.5" width="17" height="13" rx="1.5"></rect><path d="M4 7l8 6 8-6"></path></svg>
+          <span><b>Questions</b> <a href="contactus">Contact us</a> before or after you order.</span>
+        </li>
+      </ul>
+
+      <div class="hs-pdp-details" ng-if="LineItem.Product.Description">
+        <p class="hs-pdp-details-h">Details</p>
+        <div class="hs-desc" ng-bind-html="trustedDescription(LineItem.Product)"></div>
+      </div>
     </form>
+  </div>
+
+  <!-- ───────────────────────────── more from the category -->
+  <div class="hs-pdp-more" ng-if="!page.loading && page.related.length">
+    <div class="hs-section-head">
+      <h2>More from {{page.category.Name || 'this category'}}</h2>
+      <a class="hs-more-link" ng-if="page.category" href="catalog/{{page.category.InteropID}}">See all</a>
+    </div>
+    <productgrid families="page.related" loading="false" hide-prices="user.Permissions.contains('HidePricing')"></productgrid>
   </div>
 </section>

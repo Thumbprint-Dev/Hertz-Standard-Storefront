@@ -232,7 +232,7 @@
 .hs-pay-opt:hover { border-color: #11172b; }
 .hs-pay-opt.on { border-color: #11172b; box-shadow: inset 3px 0 0 #FFCC00; }
 .hs-pay-opt input { margin: 0; accent-color: #11172b; width: 16px; height: 16px; flex: none; }
-.hs-pay-opt span { display: grid; gap: 2px; }
+.hs-pay-opt > span { display: grid; gap: 2px; }
 .hs-pay-opt b { font-size: var(--fs-md); font-weight: 700; color: #11172b; }
 .hs-pay-opt small { font-size: var(--fs-sm); color: #5f6778; }
 .hs-pay-detail { display: grid; gap: 12px; padding: 4px 0 0; }
@@ -274,3 +274,104 @@
 /* On the home page the help band sits directly on the footer: no gap, and no hairline
    between the yellow and the footer. Other pages keep the footer's own spacing. */
 .main-wrapper:has(.hs-home) .hz-footer { margin-top: 0; border-top: 0; }
+
+/* =========================================================================
+   Image boxes keep their shape whatever is in them. An aspect ratio is only a preferred
+   size: a tall photo grew its box, so a category with an image stood taller than one
+   without. The image is laid over the box instead, so every tile in a row matches,
+   with or without an image.
+   ========================================================================= */
+.hs-cat-img, .hs-card-img, .hs-pdp-img { position: relative; overflow: hidden; min-height: 0; }
+.hs-cat-img img, .hs-card-img img, .hs-pdp-img img {
+  position: absolute; inset: 0; width: 100%; height: 100%; max-height: none;
+  object-fit: contain; padding: inherit;
+}
+.hs-cat-img img { padding: 22px; }
+.hs-card-img img { padding: 18px; }
+.hs-pdp-img img { padding: clamp(24px, 4vw, 56px); }
+.hs-cat { height: 100%; }
+.hs-cat-body { flex: 1; align-content: start; }
+/* No image: a quiet Hertz mark rather than an empty grey box. */
+.hs-cat-img:not(:has(img))::after, .hs-card-img:not(:has(img))::after {
+  content: 'Hertz'; position: absolute; inset: 0; display: grid; place-items: center;
+  font-size: var(--fs-2xl); font-weight: 800; font-style: italic; letter-spacing: -.02em; color: rgba(0, 0, 0, .12);
+}
+.hs-card-img i { display: none; }
+@media (max-width: 560px) { .hs-cat-img img { padding: 12px; } }
+
+/* ---- the header's search suggestions ---- */
+.hz-hd-search { position: relative; }
+.hz-hd-suggest {
+  position: absolute; top: calc(100% + 6px); right: 0; z-index: 1000; width: 380px; max-width: calc(100vw - 32px);
+  background: #fff; border: 1px solid rgba(0, 0, 0, .14); border-top: 3px solid #FFCC00; border-radius: 2px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, .12); padding: 6px 0; text-align: left;
+}
+.hz-hd-suggest-note { margin: 0; padding: 12px 16px; font-size: var(--fs-sm); color: #58595B; }
+.hz-hd-suggest-row {
+  display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; gap: 12px;
+  padding: 8px 16px; color: #000 !important; text-decoration: none !important;
+}
+.hz-hd-suggest-row:hover, .hz-hd-suggest-row.on { background: #F7F7F7; box-shadow: inset 3px 0 0 #FFCC00; }
+.hz-hd-suggest-img { position: relative; width: 44px; height: 44px; background: #F7F7F7; border-radius: 2px; overflow: hidden; }
+.hz-hd-suggest-img img { position: absolute; inset: 4px; width: calc(100% - 8px); height: calc(100% - 8px); object-fit: contain; mix-blend-mode: multiply; }
+.hz-hd-suggest-name { display: grid; font-size: var(--fs-body); font-weight: 700; line-height: 1.3; }
+.hz-hd-suggest-name small { font-size: var(--fs-xs); font-weight: 400; color: #808285; }
+.hz-hd-suggest-price { font-size: var(--fs-body); font-weight: 700; font-variant-numeric: tabular-nums; }
+.hz-hd-suggest-all { display: block; margin-top: 4px; padding: 10px 16px; border-top: 1px solid rgba(0, 0, 0, .08); font-size: var(--fs-sm); font-weight: 700; color: #000 !important; }
+.hz-hd-suggest-all:hover { background: #F7F7F7; }
+
+/* =========================================================================
+   Product page, refined: a larger image held in view, a clear head (category, name, price,
+   the yellow bar), roomy choices, one strong buy row, what happens next, the details, and
+   more from the category underneath.
+   ========================================================================= */
+.hs-pdp { padding-bottom: 96px; }
+.hs-pdp-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(32px, 5.5vw, 88px); }
+.hs-pdp-media { position: sticky; top: 20px; }
+.hs-pdp-media .hs-pdp-img { position: relative; top: auto; border-radius: 2px; background: var(--surface-alt); }
+.hs-pdp-info { padding-top: 6px; }
+.hs-pdp-info .hs-kicker { margin-bottom: 12px; }
+.hs-pdp-info h1 { font-size: clamp(30px, 3.4vw, 46px); line-height: 1.04; letter-spacing: -.025em; text-wrap: balance; }
+.hs-pdp-pricerow { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-top: 16px; }
+.hs-pdp-pricerow .hs-pdp-price { margin: 0; font-size: var(--fs-4xl); font-weight: 800; }
+.hs-pdp-pricerow .hs-pdp-sku { margin: 0; }
+.hs-pdp-info .hs-bar { margin: 22px 0 30px; }
+.hs-pdp-block { margin-bottom: 26px; }
+.hs-opt-ask { color: var(--black-60); }
+.hs-sizes { grid-template-columns: repeat(auto-fill, minmax(68px, 1fr)); gap: 10px; }
+.hs-size { min-height: 50px; font-size: var(--fs-md); }
+.hs-buy { margin-top: 0; grid-template-columns: auto minmax(0, 1fr); }
+.hs-qty { height: 56px; }
+.hs-qty button { width: 48px; }
+.hs-btn--buy { min-height: 56px; font-size: var(--fs-lg); }
+.hs-btn--buy svg { flex: none; }
+
+.hs-added { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 14px 16px; align-items: center; margin-top: 16px; padding: 16px; }
+.hs-added-img { position: relative; width: 64px; height: 64px; background: #fff; border-radius: 2px; overflow: hidden; }
+.hs-added-img img { position: absolute; inset: 6px; width: calc(100% - 12px); height: calc(100% - 12px); object-fit: contain; }
+.hs-added-text p { margin: 0; font-size: var(--fs-body); color: var(--black-80); }
+.hs-added-text .hs-added-h { margin-bottom: 2px; font-size: var(--fs-md); font-weight: 800; color: var(--ink); }
+.hs-added-acts { grid-column: 1 / -1; display: flex; gap: 10px; flex-wrap: wrap; }
+.hs-added-acts .hs-btn { flex: 1 1 140px; }
+
+.hs-pdp-notes { list-style: none; margin: 34px 0 0; padding: 0; border-top: 1px solid var(--rule); }
+.hs-pdp-notes li { display: flex; gap: 14px; align-items: flex-start; padding: 16px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-body); color: var(--black-80); }
+.hs-pdp-notes svg { flex: none; color: var(--ink); margin-top: 1px; }
+.hs-pdp-notes b { display: block; margin-bottom: 2px; font-size: var(--fs-md); font-weight: 700; color: var(--ink); }
+.hs-pdp-notes a { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--yellow); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+
+.hs-pdp-details { margin-top: 34px; }
+.hs-pdp-details-h { margin: 0 0 12px; font-size: var(--fs-label); font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink); }
+
+.hs-pdp-more { margin-top: clamp(56px, 7vw, 96px); padding-top: 28px; border-top: 2px solid var(--ink); }
+.hs-pdp-more .hs-section-head h2 { font-size: var(--fs-4xl); }
+.hs-more-link { font-size: var(--fs-body); font-weight: 700; color: var(--ink) !important; text-decoration: underline !important; text-decoration-color: var(--yellow) !important; text-decoration-thickness: 3px !important; text-underline-offset: 5px; }
+
+@media (max-width: 960px) {
+  .hs-pdp-grid { grid-template-columns: 1fr; }
+  .hs-pdp-media { position: static; }
+}
+@media (max-width: 760px) {
+  .hs-pdp-pricerow .hs-pdp-price { font-size: var(--fs-3xl); }
+  .hs-sizes { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+}

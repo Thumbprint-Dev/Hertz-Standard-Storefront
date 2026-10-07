@@ -1,116 +1,122 @@
-four51.app.directive('orderbilling', ['Address', 'AddressList', '$timeout', function(Address, AddressList, $timeout) {
+/**
+ * Checkout · billing: the payment method and the billing address the order is connected to.
+ *
+ * The billing address is required. It can be the shipping address, one of the shopper's
+ * saved billing addresses (loaded here from Four51), or a new one typed in when the user's
+ * Four51 permissions allow creating a billing address. Whatever is chosen is set on
+ * `currentOrder.BillAddressID`, which is what connects it to the order when it is saved.
+ *
+ * Starting point, so most shoppers do nothing: an order that already has a billing address
+ * keeps it; one saved billing address is used; several wait for a choice; none means the
+ * shipping address.
+ */
+four51.app.directive('orderbilling', ['Address', 'AddressList', function(Address, AddressList) {
 	var obj = {
 		restrict: 'AE',
 		templateUrl: 'partials/controls/orderBilling.html',
 		controller: ['$scope', function($scope) {
-		
-			$scope.billaddress = { Country: 'US', IsShipping: false, IsBilling: true };
+			var fresh = function() { return { Country: 'US', IsShipping: false, IsBilling: true }; };
+			$scope.billaddress = fresh();
+			$scope.billing = { mode: null, loaded: false };
+			$scope.billaddresses = [];
+			$scope.savedBills = [];
 
-			$scope.$on('event:AddressSaved', function(event, address) {
-				if (address.IsBilling) {
-					$scope.currentOrder.BillAddressID = address.ID;
-					$scope.billaddressform = false;
+			// Saved billing addresses other than the one the order ships to, which has its own option.
+			function refreshSaved() {
+				var ship = $scope.currentOrder && $scope.currentOrder.ShipAddressID;
+				$scope.savedBills = ($scope.billaddresses || []).filter(function(a) {
+					return a && a.ID && a.IsBilling !== false && a.ID != ship;
+				});
+			}
+
+			function init() {
+				var o = $scope.currentOrder;
+				if (!o || !$scope.billing.loaded || $scope.billing.mode) return;
+				refreshSaved();
+				if (o.BillAddressID) {
+					$scope.billing.mode = o.BillAddressID == o.ShipAddressID ? 'same' : 'saved';
+				} else if ($scope.savedBills.length === 1) {
+					o.BillAddressID = $scope.savedBills[0].ID;
+					$scope.billing.mode = 'saved';
+				} else if ($scope.savedBills.length > 1) {
+					$scope.billing.mode = 'saved';
+				} else if (o.ShipAddressID) {
+					$scope.useShipping();
 				}
+			}
 
-				$scope.billaddress = { Country: 'US', IsShipping: false, IsBilling: true };
+			AddressList.billing(function(list) {
+				$scope.billaddresses = (list || []).filter(function(a) { return a && a.ID; });
+				$scope.billing.loaded = true;
+				init();
 			});
 
-			// Auto-populate billing address if there's only one billing address assigned
-			var autoSetBillingAddress = function(force) {
-				if ($scope.billaddresses && $scope.billaddresses.length > 0 && $scope.currentOrder) {
-					// Filter to only billing addresses
-					var billingAddresses = $scope.billaddresses.filter(function(addr) { return addr.IsBilling === true; });
-					// If there's exactly one billing address, auto-select it
-					// Force set it if force=true, otherwise only set if not already set
-					if (billingAddresses.length === 1 && (force || !$scope.currentOrder.BillAddressID)) {
-						$scope.currentOrder.BillAddressID = billingAddresses[0].ID;
-						// Trigger validation after setting the address - wait for form to be available
-						$timeout(function() {
-							if ($scope.cart_billing) {
-								// Mark the entire form as valid for billing address
-								if ($scope.cart_billing.billingAddress) {
-									$scope.cart_billing.billingAddress.$setValidity('required', true);
-									$scope.cart_billing.billingAddress.$setValidity('ng-required', true);
-								}
-								// Also ensure form-level validation passes
-								$scope.cart_billing.$setValidity('billingAddress', true);
-							}
-						}, 200);
-					}
+			$scope.useShipping = function() {
+				$scope.billing.mode = 'same';
+				$scope.billaddressform = false;
+				if ($scope.currentOrder) $scope.currentOrder.BillAddressID = $scope.currentOrder.ShipAddressID || null;
+			};
+			$scope.useSaved = function() {
+				var o = $scope.currentOrder;
+				$scope.billing.mode = 'saved';
+				$scope.billaddressform = false;
+				if (o && (!o.BillAddressID || o.BillAddressID == o.ShipAddressID)) {
+					o.BillAddressID = $scope.savedBills.length ? $scope.savedBills[0].ID : null;
 				}
 			};
+			$scope.useNew = function() {
+				$scope.billing.mode = 'new';
+				$scope.billaddress = fresh();
+				$scope.billaddressform = true;
+				// Nothing is connected until the new address is saved, so Submit waits for it.
+				if ($scope.currentOrder) $scope.currentOrder.BillAddressID = null;
+			};
 
-			// Watch for billaddresses changes
-			$scope.$watch('billaddresses', function(billaddresses) {
-				autoSetBillingAddress();
-			}, true); // Deep watch to catch array changes
-
-			// Also watch for currentOrder to be available
-			$scope.$watch('currentOrder', function(currentOrder) {
-				if (currentOrder) {
-					autoSetBillingAddress();
-					// Also check if BillAddressID gets cleared and restore it
-					if (!currentOrder.BillAddressID) {
-						autoSetBillingAddress(true);
-					}
-				}
-			}, true);
-
-			// Watch for BillAddressID being cleared and restore it
-			$scope.$watch('currentOrder.BillAddressID', function(newValue, oldValue) {
-				// If BillAddressID was cleared (had value, now doesn't), restore it
-				if (oldValue && !newValue) {
-					$timeout(function() {
-						autoSetBillingAddress(true);
-					}, 100);
-				}
-				if (newValue) {
-					Address.get(newValue, function(add) {
-						if ($scope.user.Permissions.contains('EditBillToName') && !add.IsCustEditable) {
-							$scope.currentOrder.BillFirstName = add.FirstName;
-							$scope.currentOrder.BillLastName = add.LastName;
-						}
-						$scope.BillAddress = add;
-						// Ensure form validation passes
-						$timeout(function() {
-							if ($scope.cart_billing && $scope.cart_billing.billingAddress) {
-								$scope.cart_billing.billingAddress.$setValidity('required', true);
-							}
-						}, 50);
-					});
-				}
+			// The order and its shipping address arrive after this directive; start once they do,
+			// and keep "same as shipping" following the shipping address when it changes.
+			$scope.$watch('currentOrder.ID', init);
+			$scope.$watch('currentOrder.ShipAddressID', function(ship) {
+				refreshSaved();
+				if (!$scope.billing.mode) { init(); return; }
+				if ($scope.billing.mode === 'same' && $scope.currentOrder) $scope.currentOrder.BillAddressID = ship || null;
 			});
 
-			$scope.$on('event:AddressCancel', function(event) {
+			$scope.$on('event:AddressSaved', function(event, address) {
+				if (!address || !address.IsBilling) return;
+				$scope.billaddresses.push(address);
+				refreshSaved();
+				$scope.currentOrder.BillAddressID = address.ID;
+				$scope.billing.mode = 'saved';
 				$scope.billaddressform = false;
+				$scope.billaddress = fresh();
+			});
+			$scope.$on('event:AddressCancel', function() {
+				if ($scope.billing.mode !== 'new') return;
+				$scope.billaddressform = false;
+				if ($scope.savedBills.length) $scope.useSaved();
+				else $scope.useShipping();
 			});
 
-			// Ensure billing address is set before any order save operations
-			// Listen for order save events
-			$scope.$on('event:OrderSaving', function() {
-				autoSetBillingAddress(true);
+			// The address shown under the choice, and the names Four51 wants on the order.
+			$scope.$watch('currentOrder.BillAddressID', function(id) {
+				if (!id) { $scope.BillAddress = null; return; }
+				Address.get(id, function(add) {
+					if ($scope.user.Permissions.contains('EditBillToName') && !add.IsCustEditable) {
+						$scope.currentOrder.BillFirstName = add.FirstName;
+						$scope.currentOrder.BillLastName = add.LastName;
+					}
+					$scope.BillAddress = add;
+				});
 			});
 
-			// Also ensure it's set on scope ready
-			$timeout(function() {
-				autoSetBillingAddress(true);
-			}, 500);
-
-			// Aggressively ensure billing address is always set
-			// Watch currentOrder deeply and ensure BillAddressID is always set if available
+			// Required: the billing form is invalid, and Submit waits, until an address is set.
 			$scope.$watch(function() {
-				// Return a value that changes when we need to check
-				return $scope.currentOrder && $scope.currentOrder.ID ? $scope.currentOrder.ID + '_' + ($scope.currentOrder.BillAddressID || 'null') : null;
-			}, function() {
-				// Always ensure billing address is set
-				autoSetBillingAddress(true);
+				return !!($scope.currentOrder && $scope.currentOrder.BillAddressID);
+			}, function(ok) {
+				if ($scope.cart_billing) $scope.cart_billing.$setValidity('billAddress', ok);
 			});
-
-			// Intercept any order operations to ensure billing address is set
-			// Listen for any scope broadcasts that might indicate order operations
-			$scope.$on('$destroy', function() {
-				// Ensure it's set one last time before directive is destroyed
-				autoSetBillingAddress(true);
+			$scope.$watch('cart_billing', function(form) {
+				if (form) form.$setValidity('billAddress', !!($scope.currentOrder && $scope.currentOrder.BillAddressID));
 			});
 		}]
 	};

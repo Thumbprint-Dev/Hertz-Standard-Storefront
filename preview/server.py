@@ -44,13 +44,21 @@ USER = {
     "LastName": "Shopper", "Email": "preview@example.com", "Type": "Customer", "TermsAccepted": True,
     "CurrentOrderID": None, "SiteID": SITE, "Groups": [], "CostCenters": [], "CustomFields": [],
     "Permissions": ["StandardOrder", "ViewSelfAdmin", "ViewContactUs", "PayByCreditCard", "PayByPO",
-                    "PayByVisa", "PayByMasterCard", "CreateShipToAddress"],
+                    "PayByVisa", "PayByMasterCard", "CreateShipToAddress", "CreateBillToAddress"],
     "AvailableCreditCards": [{"Type": "Visa", "DisplayName": "Visa"}, {"Type": "MasterCard", "DisplayName": "MasterCard"}],
     "Culture": {"Name": "en-US", "CurrencyPrefix": "$", "DateFormat": "MM/dd/yyyy"}, "CultureUI": "en-US",
     "Company": {"Name": "Hertz", "GoogleAnalyticsCode": None},
     "ShipMethod": {"ShipperSelectionType": "UserDropDown"},
     "DefaultShipAddressID": ADDRESS["ID"], "DefaultBillAddressID": ADDRESS["ID"],
 }
+
+# A second address that is billing only, so checkout's "saved billing address" option shows.
+BILLING = {
+    "ID": "preview-bill", "AddressName": "Accounts payable", "FirstName": "Preview", "LastName": "Shopper",
+    "Street1": "8501 Williams Rd", "Street2": "Finance", "City": "Estero", "State": "FL", "Zip": "33928",
+    "Country": "US", "Phone": "", "IsShipping": False, "IsBilling": True, "Editable": True,
+}
+ADDRESSES = {ADDRESS["ID"]: ADDRESS, BILLING["ID"]: BILLING}
 
 SHIPPERS = [
     {"ID": "ground", "Name": "UPS Ground", "Rates": [{"Price": 9.95}], "ShippingRate": 9.95},
@@ -215,11 +223,18 @@ class Handler(SimpleHTTPRequestHandler):
             if low == "shipper":
                 return self.send_json(SHIPPERS)
             if low in ("address/shipping", "address/billing"):
-                return self.send_json({"List": [ADDRESS], "Count": 1})
+                kind = "IsShipping" if low.endswith("shipping") else "IsBilling"
+                found = [a for a in ADDRESSES.values() if a.get(kind)]
+                return self.send_json({"List": found, "Count": len(found)})
+            if low == "address" and method in ("POST", "PUT"):
+                add = dict(body or {})
+                add.setdefault("ID", "preview-addr-%d" % (len(ADDRESSES) + 1))
+                ADDRESSES[add["ID"]] = add
+                return self.send_json(add)
             if low == "address":
-                return self.send_json({"List": [ADDRESS], "Count": 1})
+                return self.send_json({"List": list(ADDRESSES.values()), "Count": len(ADDRESSES)})
             if low.startswith("address/"):
-                return self.send_json(ADDRESS)
+                return self.send_json(ADDRESSES.get(p.split("/", 1)[1], ADDRESS))
             if low in ("spendingaccount", "savedcreditcard", "message"):
                 return self.send_json([])
             if low == "orderstats":
@@ -238,9 +253,8 @@ class Handler(SimpleHTTPRequestHandler):
                 order["StatusText"] = order["Status"]
                 order.setdefault("Type", "Standard")
                 order.setdefault("ShipAddressID", ADDRESS["ID"])
-                order.setdefault("BillAddressID", ADDRESS["ID"])
                 order["ShipAddress"] = ADDRESS
-                order["BillAddress"] = ADDRESS
+                order["BillAddress"] = ADDRESSES.get(order.get("BillAddressID"))
                 order.setdefault("PaymentMethod", "PurchaseOrder")
                 order.setdefault("OrderFields", [])
                 order["FromUserID"] = USER["ID"]

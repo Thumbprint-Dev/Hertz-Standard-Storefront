@@ -1,9 +1,11 @@
 <!--
-  Checkout · billing: how the order is paid for, and the billing address.
+  Checkout · billing: how the order is paid for, and the billing address it is connected to.
+  The logic is the `orderbilling` directive (js/directives/orderbilling.js). `cart_billing` is
+  a real form whose validity the Submit button reads; it stays invalid until the order has a
+  billing address.
 
-  Every binding is stock: `currentOrder.BillAddressID`, `BillFirstName`, `BillLastName`,
-  the `paymentselector`, `billingmessage`, `sameasshipaddresscheckbox` and `addressinput`
-  directives. `cart_billing` is a real form whose validity the Submit button reads.
+  The new-address form (`addressinput`) carries its own <form>, so it sits after
+  `cart_billing` rather than inside it.
 -->
 <div class="hz-co-card">
   <div class="hz-co-card-h">
@@ -16,58 +18,73 @@
 
   <div class="hz-co-card-b">
     <billingmessage></billingmessage>
-    <sameasshipaddresscheckbox></sameasshipaddresscheckbox>
 
-    <div ng-show="billaddressform || (billaddresses.length == 0 && user.Permissions.contains('CreateBillToAddress'))">
-      <addressinput address="billaddress" user="user"></addressinput>
-    </div>
+    <form name="cart_billing" novalidate="">
+      <paymentselector></paymentselector>
 
-    <div ng-hide="billaddressform || (billaddresses.length == 0 && user.Permissions.contains('CreateBillToAddress'))">
-      <form name="cart_billing" novalidate="">
-        <paymentselector></paymentselector>
-
-        <div class="hz-co-field" ng-show="billaddresses.length > 0">
-          <label class="hz-co-label is-required">
-            {{('Billing' | r) + ' ' + ('Address' | r) | xlat}}
+      <div class="hs-bill">
+        <p class="hz-co-label is-required">Billing address</p>
+        <div class="hs-pay-opts" role="radiogroup" aria-label="Billing address">
+          <label class="hs-pay-opt" ng-show="currentOrder.ShipAddressID" ng-class="{on: billing.mode == 'same'}">
+            <input type="radio" name="billMode" value="same" ng-model="billing.mode" ng-change="useShipping()" />
+            <span><b>Same as shipping address</b>
+              <small ng-if="orderShipAddress.Street1">{{orderShipAddress.Street1}}<span ng-if="orderShipAddress.City">, {{orderShipAddress.City}}</span></small></span>
           </label>
-          <select class="hz-co-select" name="billingAddress" ng-show="billaddresses"
-                  ng-options="address.ID as address.AddressName for address in billaddresses | filter:{IsBilling:true}"
-                  ng-model="currentOrder.BillAddressID" ng-required="false">
+          <label class="hs-pay-opt" ng-show="savedBills.length" ng-class="{on: billing.mode == 'saved'}">
+            <input type="radio" name="billMode" value="saved" ng-model="billing.mode" ng-change="useSaved()" />
+            <span><b>A saved billing address</b>
+              <small>{{savedBills.length}} saved</small></span>
+          </label>
+          <label class="hs-pay-opt" ng-show="user.Permissions.contains('CreateBillToAddress')" ng-class="{on: billing.mode == 'new'}">
+            <input type="radio" name="billMode" value="new" ng-model="billing.mode" ng-change="useNew()" />
+            <span><b>A different address</b>
+              <small>Enter it below</small></span>
+          </label>
+        </div>
+
+        <div class="hz-co-field" ng-show="billing.mode == 'saved' && savedBills.length > 1">
+          <label class="hz-co-label is-required" for="hs-bill-saved">Choose a billing address</label>
+          <select id="hs-bill-saved" class="hz-co-select" name="billingAddress"
+                  ng-model="currentOrder.BillAddressID"
+                  ng-options="a.ID as ((a.AddressName || a.Street1) + ', ' + a.City) for a in savedBills">
             <option value=""></option>
           </select>
         </div>
 
-        <div class="hz-co-ship" ng-show="BillAddress">
-          <p class="hz-co-ship-h">{{('Billing' | r) + ' ' + ('Location' | r) | xlat}}</p>
-
-          <address class="hz-co-ship-a">
-            <span ng-show="BillAddress.AddressName">{{BillAddress.AddressName}}</span>
-            <span ng-show="BillAddress.CompanyName">{{BillAddress.CompanyName}}</span>
-            <span ng-show="(BillAddress.FirstName || BillAddress.LastName) && (!user.Permissions.contains('EditBillToName') && BillAddress.IsCustEditable)">
-              {{BillAddress.FirstName + ' ' + BillAddress.LastName}}
-            </span>
-            <span ng-show="BillAddress.Street1">{{BillAddress.Street1}}</span>
-            <span ng-show="BillAddress.Street2">{{BillAddress.Street2}}</span>
-            <span ng-show="BillAddress.City || BillAddress.State || BillAddress.Zip">
-              {{BillAddress.City}}<span ng-if="BillAddress.City && BillAddress.State">,</span>
-              {{BillAddress.State}} {{BillAddress.Zip}}
-            </span>
-            <span ng-show="BillAddress.Phone">{{BillAddress.Phone}}</span>
-          </address>
-
-          <div class="hz-co-pair"
-               ng-show="user.Permissions.contains('EditBillToName') && !BillAddress.IsCustEditable">
-            <input class="hz-co-input" name="billingFirstName" type="text" autocomplete="off"
-                   ng-model="currentOrder.BillFirstName"
-                   placeholder="{{('First' | r) + ' ' + ('Name' | r) | xlat}}"
-                   onkeypress="isAlphaNum(event);" />
-            <input class="hz-co-input" name="billingLastName" type="text"
-                   ng-model="currentOrder.BillLastName"
-                   placeholder="{{('Last' | r) + ' ' + ('Name' | r) | xlat}}"
-                   onkeypress="isAlphaNum(event);" />
+        <div class="hz-co-ship" ng-show="BillAddress && billing.mode != 'new'">
+          <div class="hz-co-ship-card">
+            <div class="hz-co-ship-body">
+              <p class="hz-co-ship-h">Billing to</p>
+              <address class="hz-co-ship-a">
+                <span class="hz-co-ship-name" ng-show="BillAddress.AddressName">{{BillAddress.AddressName}}</span>
+                <span ng-show="BillAddress.CompanyName">{{BillAddress.CompanyName}}</span>
+                <span ng-show="BillAddress.FirstName || BillAddress.LastName">{{BillAddress.FirstName}} {{BillAddress.LastName}}</span>
+                <span ng-show="BillAddress.Street1">{{BillAddress.Street1}}</span>
+                <span ng-show="BillAddress.Street2">{{BillAddress.Street2}}</span>
+                <span ng-show="BillAddress.City || BillAddress.State || BillAddress.Zip">
+                  {{BillAddress.City}}<span ng-if="BillAddress.City && BillAddress.State">,</span>
+                  {{BillAddress.State}} {{BillAddress.Zip}}
+                </span>
+              </address>
+            </div>
+          </div>
+          <div class="hz-co-pair" ng-show="user.Permissions.contains('EditBillToName') && !BillAddress.IsCustEditable">
+            <input class="hz-co-input" name="billingFirstName" type="text" autocomplete="given-name"
+                   ng-model="currentOrder.BillFirstName" placeholder="First name on the bill" />
+            <input class="hz-co-input" name="billingLastName" type="text" autocomplete="family-name"
+                   ng-model="currentOrder.BillLastName" placeholder="Last name on the bill" />
           </div>
         </div>
-      </form>
+
+        <p class="hs-bill-note" ng-show="billing.loaded && !currentOrder.BillAddressID && billing.mode != 'new'">
+          Choose where the bill goes. The order cannot be placed without a billing address.
+        </p>
+      </div>
+    </form>
+
+    <div class="hs-bill-new" ng-if="billing.mode == 'new' && billaddressform">
+      <p class="hz-co-label">New billing address</p>
+      <addressinput address="billaddress" user="user"></addressinput>
     </div>
   </div>
 </div>
