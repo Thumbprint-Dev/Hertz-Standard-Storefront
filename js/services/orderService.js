@@ -1,0 +1,262 @@
+four51.app.factory('Order', ['$resource', '$rootScope', '$451', 'Security', 'Error', 'User', function($resource, $rootScope, $451, Security, Error, User) {
+	var _multipleShip = false;
+	function _then(fn, data, broadcast) {
+		if (angular.isFunction(fn))
+			fn(data);
+		if (!broadcast)
+			$rootScope.$broadcast('event:orderUpdate', data);
+	}
+
+	function _extend(order, user) {
+		order.isEditable = order.Status == 'Unsubmitted' || order.Status == 'Open' || order.Status == 'AwaitingApproval';
+		angular.forEach(order.LineItems, function(item) {
+			item.OriginalQuantity = item.Quantity; //needed to validate qty changes compared to available quantity
+			angular.forEach(item.Specs, function(spec) {
+				if (spec.ControlType == 'File' && spec.File && spec.File.Url.indexOf('auth') == -1)
+					spec.File.Url += "&auth=" + Security.auth();
+			});
+			item.SpecsLength = Object.keys(item.Specs).length;
+		});
+
+		order.forceMultipleShip = function(value) {
+			_multipleShip = value;
+		}
+		order.IsMultipleShip = function() {
+			var multi = false;
+			if (_multipleShip) return true;
+			angular.forEach(order.LineItems, function(li, i) {
+				if (multi) return;
+				multi = i > 0 ?
+					(li.ShipAddressID != order.LineItems[i-1].ShipAddressID || li.ShipperID != order.LineItems[i-1].ShipperID) :
+					false;
+			});
+			return multi;
+		}
+
+		// if kit line items ensure all are configured
+		angular.forEach(order.LineItems, function(li) {
+			if (li.IsKitParent) {
+				var current = li.NextKitLineItem;
+				while (current) {
+					if (!current.IsConfigured)
+						li.KitIsInvalid = true;
+					current = current.NextKitLineItem;
+				}
+			}
+		});
+
+        order.BillingEnabled = (order.Total > 0 || (order.Total == 0 && user.Company.BillZeroPriceOrders));
+        //order.PaymentMethod = order.BillingEnabled ? order.PaymentMethod : 'Undetermined';
+	}
+
+	/**
+	 * The order as Four51 has it now, not as this browser last saw it.
+	 *
+	 * `_get` answers from `451Cache.Order.<id>` in localStorage whenever there is a copy,
+	 * and nothing ever expires that copy. An order is cached when it is submitted and when
+	 * it is first opened, so an order Four51 later canceled or completed went on reading as
+	 * Open on its own page, while the order list, which always searches, said Canceled.
+	 * Pages that report an order's status use this; the fresh copy replaces the cached one.
+	 */
+	var _getFresh = function(id, success, suppress) {
+		store.remove('451Cache.Order.' + id);
+		_get(id, success, suppress);
+	};
+
+	var _get = function(id, success, suppress) {
+        User.get(function(user) {
+            var currentOrder = store.get('451Cache.Order.' + id);
+            currentOrder ? (function() { _extend(currentOrder, user);	_then(success, currentOrder); })() :
+                $resource($451.api('order/:id'), { id: '@id' }).get({ id: id }).$promise.then(function(o) {
+                    _extend(o, user);
+                    store.set('451Cache.Order.' + id, o);
+                    _then(success, o, suppress);
+                });
+        });
+	};
+
+	/*
+	 * NOTE: the five `451Cache.User.` removals in this file had no trailing dot and were
+	 * therefore removing a key that is never written. `userService.js:2` caches the user at
+	 * `451Cache.User.<apiName>`; these asked for `451Cache.User<apiName>`, so the user cache
+	 * survived every order write.
+	 *
+	 * That is why a cart disappeared on refresh. Saving an order is what gives the user a
+	 * `CurrentOrderID`, and the line below exists to drop the stale copy so the `User.get`
+	 * immediately after re-reads it. With the key wrong, nothing was dropped, `User.get`
+	 * answered from cache with the pre-cart user, and `Four51Ctrl` then read
+	 * `user.CurrentOrderID` as absent on the next load and set `currentOrder` to null. The
+	 * order was never lost — it was sitting on the server, unreachable, because the browser
+	 * held a user record that predated it.
+	 *
+	 * Every other entity here already spells it with the dot: `451Cache.Order.`,
+	 * `451Cache.Address.`, `451Cache.Category.`, `451Cache.Tree.`. This is the origin of the
+	 * "clear localStorage before assuming a code bug" advice in CLAUDE.md.
+	 */
+	var _save = function(order, success, error) {
+		$resource($451.api('order')).save(order).$promise.then(
+			function(o) {
+				store.set('451Cache.Order.' + o.ID, o);
+				store.remove('451Cache.User.' + $451.apiName);
+                User.get(function(user) {
+                    _extend(o, user);
+                    _then(success, o);
+                });
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	};
+
+	var _delete = function(order, success, error) {
+		$resource($451.api('order')).delete().$promise.then(
+			function() {
+				store.remove('451Cache.Order.' + order.ID);
+				store.remove('451Cache.User.' + $451.apiName);
+				_then(success);
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	};
+
+	var _submit = function(order, success, error) {
+		$resource($451.api('order'), { }, { submit: { method: 'PUT' }}).submit(order).$promise.then(
+			function(o) {
+				store.set('451Cache.Order.' + o.ID);
+				store.remove('451Cache.User.' + $451.apiName);
+                User.get(function(user) {
+                    _extend(o, user);
+                    _then(success, o);
+                });
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	}
+
+	var _repeat = function(id, success, error) {
+		$resource($451.api('order/repeat/:id'), {'id': id}, { repeat: { method: 'PUT'}}).repeat().$promise.then(
+			function(o) {
+				store.set('451Cache.Order.' + o.ID);
+				store.remove('451Cache.User.' + $451.apiName);
+                User.get(function(user) {
+                    _extend(o, user);
+                    _then(success, o);
+                });
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	}
+
+	var _approve = function(order, success, error) {
+		$resource($451.api('order/approve/:id'), {'id': order.ID}, { approve: { method: 'PUT', params: { 'comment': order.ApprovalComment}}}).approve().$promise.then(
+			function(o) {
+                store.set('451Cache.Order.' + o.ID, o);
+                User.get(function(user) {
+                    _extend(o, user);
+                    _then(success, o);
+                });
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	}
+
+	var _decline = function(order, success, error) {
+		$resource($451.api('order/decline/:id'), {'id': order.ID}, { decline: { method: 'PUT', params: { 'comment': order.ApprovalComment}}}).decline().$promise.then(
+			function(o) {
+                store.set('451Cache.Order.' + o.ID, o);
+                User.get(function(user) {
+                    _extend(o, user);
+                    _then(success, o);
+                });
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	}
+
+	var _deletelineitem = function(id, lineitemid, success, error) {
+		store.remove('451Cache.Order.' + id);
+		$resource($451.api('order/:id/lineitem/:lineitemid'), {'id': id, 'lineitemid': lineitemid }, { lineitemdelete: { method: 'DELETE'}}).lineitemdelete().$promise.then(
+			function(o) {
+				if (o.ID) {
+					store.set('451Cache.Order.' + o.ID, o);
+                    User.get(function(user) {
+                        _extend(o, user);
+                        _then(success, o);
+                    });
+				} else {
+					store.remove('451Cache.User.' + $451.apiName);
+					_then(success, null);
+				}
+			},
+			function(ex) {
+				error(Error.format(ex));
+			}
+		);
+	};
+
+	var _updateship = function(order) {
+		if (!order) return this;
+		order.ShipperID = null;
+		angular.forEach(order.LineItems, function(li) {
+			li.ShipperName = null;
+			li.ShipperID = null;
+		});
+		order.ShipperName = null;
+		order.ShippingCost = null;
+		return this;
+	};
+
+	var _calcdisc = function(order, acct) {
+		if (acct == null) return order.Total;
+		var discount = 0;
+		if (acct.AccountType.MaxPercentageOfOrderTotal && acct.AccountType.MaxPercentageOfOrderTotal != 100) {
+			//console.log('SpendingAcctBalance:' + acct.Balance); //100
+			var total = order.Total;
+			//console.log('Total (orderTotal):' + total); //35
+			var discountAmount = '0.' + acct.AccountType.MaxPercentageOfOrderTotal;
+			//console.log('Discount Amount:' + discountAmount);
+			discount = total * discountAmount;
+			//console.log('Total is less than account balance x discount % amount:' + discount);
+
+		}
+		else {
+			/*this is correct and applies when the AccountType.MaxPercentageOfOrderTotal is 100% // works fine even if discount is more than the order*/
+			discount = acct.Balance;
+			//console.log('% of Order Total is 100%:' + discount);
+		}
+
+		return order.Total - discount;
+	};
+
+	var _listShipments = function(order, success){
+		$resource($451.api('order/:id/shipments'), { id: order.ID }).query().$promise.then(function(shipments) {
+			_then(success, shipments, true);
+		});
+	};
+
+	return {
+		get: _get,
+		getFresh: _getFresh,
+		save: _save,
+		delete: _delete,
+		submit: _submit,
+		repeat: _repeat,
+		approve: _approve,
+		decline: _decline,
+		deletelineitem: _deletelineitem,
+		clearshipping: _updateship,
+		calculatediscount: _calcdisc,
+		listShipments: _listShipments
+	}
+}]);

@@ -1,0 +1,58 @@
+<!--
+  Site footer.
+
+  All styling lives in css/custom.css under "Footer" rather than in a <style> block here.
+  A partial can be injected more than once per page, and duplicated inline styles are how
+  a cascade gets fought over; it also put ~120 lines of CSS outside the one file the rest
+  of the theme is styled from.
+
+  Every element carries an explicit closing tag.
+-->
+<footer class="hz-footer">
+  <div class="hz-footer-inner">
+
+    <div class="hz-footer-brand">
+      <div class="hz-footer-mark">Hertz</div>
+      <p class="hz-footer-tag">Hertz Official Store</p>
+      <p class="hz-footer-blurb">Go wherever the road may lead.</p>
+    </div>
+
+    <nav class="hz-footer-nav" aria-label="Shop">
+      <h2 class="hz-footer-h">Shop</h2>
+      <ul>
+        <li ng-repeat="c in tree | limitTo:6"><a href="catalog/{{c.InteropID}}">{{c.Name}}</a></li>
+        <li><a href="search">Search the store</a></li>
+      </ul>
+    </nav>
+
+    <nav class="hz-footer-nav" aria-label="Your account">
+      <h2 class="hz-footer-h">Your account</h2>
+      <ul>
+        <li><a href="order">Order history</a></li>
+        <li><a href="cart">Cart</a></li>
+        <li ng-show="user.Permissions.contains('ViewSelfAdmin')"><a href="admin">Your information</a></li>
+        <li ng-show="user.Permissions.contains('CreateShipToAddress') || user.Permissions.contains('CreateBillToAddress')"><a href="addresses">Addresses</a></li>
+      </ul>
+    </nav>
+
+    <nav class="hz-footer-nav" aria-label="Help">
+      <h2 class="hz-footer-h">Help</h2>
+      <ul>
+        <li><a href="contactus">Contact us</a></li>
+        <li><a href="returns">Returns &amp; exchanges</a></li>
+        <li>
+          <a href="https://www.hertz.com/rentacar/privacypolicy/index.jsp?targetPage=privacyPolicyView.jsp"
+             target="_blank" rel="noopener noreferrer">Privacy policy</a>
+        </li>
+      </ul>
+    </nav>
+
+  </div>
+
+  <div class="hz-footer-base">
+    <div class="hz-footer-inner hz-footer-inner--base">
+      <span>&copy; {{year}} The Hertz Corporation</span>
+      <span class="hz-footer-by">Hertz Store powered by Thumbprint</span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,26 @@
+<!--
+  Search results: the same grid as a category. Styled by `.hs-list` in css/store.css.
+-->
+<section class="hs hs-list">
+  <nav class="hs-crumbs" aria-label="Breadcrumb">
+    <a href="catalog">Home</a><span aria-hidden="true">/</span><span>Search</span>
+  </nav>
+
+  <div class="hs-list-head">
+    <div>
+      <h1 class="hs-title" ng-if="listing.term">Results for "{{listing.term}}"</h1>
+      <h1 class="hs-title" ng-if="!listing.term">Search the store</h1>
+      <form class="hs-search" ng-submit="searchAgain()" role="search">
+        <input type="search" ng-model="listing.term" placeholder="Search by name or item number" aria-label="Search the store" />
+        <button class="hs-btn" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+
+  <productgrid families="listing.families" loading="listing.loading" hide-prices="user.Permissions.contains('HidePricing')"></productgrid>
+
+  <div class="hs-empty" ng-if="listing.term && !listing.loading && !listing.families.length">
+    <p>Nothing matches "{{listing.term}}".</p>
+    <a class="hs-btn hs-btn--ghost" href="catalog">Browse the categories</a>
+  </div>
+</section>

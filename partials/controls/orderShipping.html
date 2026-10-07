@@ -1,0 +1,314 @@
+<!--
+  Checkout · step 2, shipping.
+
+  Rewritten off Bootstrap. `cart_shipping` is still the form name the summary reads for
+  validity, every `ng-model`, `ng-required`, `ng-change` and `name` is the stock one, and
+  the directives — `shippingmessage`, `addressinput`, `largeshipaddresssearch`,
+  `loadingindicator`, the custom field types — are untouched. Only the chrome changed.
+
+  Two stock defects fixed in passing, both of which survive a restyle otherwise:
+
+  1. **The `<script>` block at the end was never closed.** There is no `</script>` in the
+     original. It happened to work because it sits at the end of the file, so the parser
+     ran out of input rather than swallowing a sibling — but anything appended after it
+     would have vanished silently.
+  2. **The panel body carried `class` twice** (`class="panel-body" class="panel-body"`).
+     The second is ignored; it is a sign the file had been edited by hand more than once.
+
+  ## What a shopper sees
+
+  Where the order is going (auto-selected when the user has exactly one shipping address,
+  changeable when they have several, and a new address when Four51's CreateShipToAddress
+  allows it), then the shipping method, from the shippers Four51 offers for that address.
+
+  Everything else is retained rather than deleted. Multi-address shipping, ship accounts,
+  editable ship-to names and the international fields are Four51 behaviour a permission
+  change brings back; removing them would be removing functionality.
+-->
+<div class="hz-co-card">
+  <!-- The ways to change the address sit on the heading line. A new address is offered
+       when Four51's CreateShipToAddress permission allows it. -->
+  <div class="hz-co-card-h hz-co-card-h--split" ng-click="showSuccessAlert = false">
+    <h3 class="hz-co-card-t">{{'Shipping' | r | xlat}}</h3>
+    <span class="hz-co-ship-acts">
+      <button class="hz-co-linkbtn" type="button"
+              ng-show="orderShipAddress.ID && !currentOrder.IsMultipleShip() && !changeAddress && !readonlyshipping"
+              ng-click="changeAddress = true">Change</button>
+      <button class="hz-co-linkbtn" type="button"
+              ng-hide="shipaddressform || !shipaddresses || !user.Permissions.contains('CreateShipToAddress')"
+              ng-click="shipaddressform = true">Ship somewhere else</button>
+    </span>
+  </div>
+
+  <div class="hz-co-card-b">
+    <shippingmessage></shippingmessage>
+
+    <!-- The custom-address form, when a shopper is allowed to type one. -->
+    <div ng-hide="shipaddressform == false || (user.Permissions.contains('CreateShipToAddress'))"
+         ng-show="shipaddressform == true">
+      <addressinput address="shipaddress" user="user"></addressinput>
+    </div>
+
+    <div ng-show="shipaddressform == false || (user.Permissions.contains('CreateShipToAddress'))"
+         ng-hide="shipaddressform == true">
+      <form name="cart_shipping" novalidate="">
+
+        <div class="hz-co-switch"
+             ng-show="user.Permissions.contains('ShipToMultipleAddresses') && currentOrder.LineItems.length > 1">
+          <button class="hz-co-toggle" type="button" ng-click="setSingleShipAddress()"
+                  ng-class="{'is-on': !currentOrder.IsMultipleShip()}">
+            {{'Single ' + ('Address' | r) | xlat}}
+          </button>
+          <button class="hz-co-toggle" type="button" ng-click="setMultipleShipAddress()"
+                  ng-class="{'is-on': currentOrder.IsMultipleShip()}">
+            {{'Multiple ' + ('Addresses' | r) | xlat}}
+          </button>
+        </div>
+
+        <!-- With no address chosen yet, the way to type one is here; once an address is
+             showing, the same action sits beside it as "Ship somewhere else". -->
+        <button class="hz-co-linkbtn" type="button"
+                ng-hide="orderShipAddress.ID || (shipaddressform || (!shipaddressform && !shipaddresses) || !user.Permissions.contains('CreateShipToAddress'))"
+                ng-click="shipaddressform = true">
+          Enter an address
+        </button>
+
+        <!--
+          One indicator, not two.
+
+          These were two separate `loadingindicator`s that fire together on virtually every
+          address change — one for shipping costs, one for available shippers. Each paints a
+          pale scrim over the section, so they stacked: the wash doubled and the two captions
+          printed on top of each other. The distinction is internal to Four51 and means
+          nothing to an employee, who is waiting for the same thing either way.
+        -->
+        <loadingindicator ng-show="shippingUpdatingIndicator || shippingFetchIndicator"
+                          title="{{'Updating delivery details' | r | xlat}}"></loadingindicator>
+
+        <!-- ─────────────────────────────────────────────── single address -->
+        <div ng-show="!currentOrder.IsMultipleShip()">
+
+          <!--
+            The search is put away once there is an address to show.
+
+            It was on screen permanently, prefilled with the address, directly above a
+            second copy of the same address — so the page printed where the order was going
+            twice and asked the employee to read a lookup field to find out. Almost nobody
+            changes it: the address comes from their own location.
+
+            `ng-show`, never `ng-if`. The input inside `largeshipaddresssearch` is
+            `required`, so removing it from the DOM would take a required control out of
+            `cart_shipping` and flip the form to valid — the opposite of what hiding it
+            should mean. Hidden, it keeps its value and its validity.
+          -->
+          <div ng-show="!orderShipAddress.ID || changeAddress || showResult">
+            <largeshipaddresssearch></largeshipaddresssearch>
+            <button class="hz-co-linkbtn" type="button"
+                    ng-show="orderShipAddress.ID && changeAddress"
+                    ng-click="changeAddress = false">Cancel</button>
+          </div>
+
+          <div class="hz-co-alert hz-co-alert--bad" role="alert" ng-show="showResult">
+            Address not found. Type a location code or address, then choose the right
+            shipping address when it appears.
+          </div>
+
+          <div ng-hide="showResult">
+            <div class="hz-co-field" ng-show="user.ShipMethod != null && shippers">
+              <label class="hz-co-label"
+                     ng-class="{'is-required': !currentOrder.IsMultipleShip() && user.ShipMethod != null}"
+                     ng-show="currentOrder.LineItems[0].ShipperName || !currentOrder.IsMultipleShip() && user.ShipMethod != null">
+                {{('Shipping' | r) + ' Method' | xlat}}
+              </label>
+              <select id="shippingMethod" class="hz-co-select" name="shipMethod"
+                      placeholder="{{'Shipping' | r | xlat}} Method"
+                      ng-change="updateShipper()"
+                      ng-model="currentOrder.LineItems[0].ShipperName"
+                      ng-show="user.ShipMethod.ShipperSelectionType == 'UserDropDown'"
+                      ng-options="shipper.Name as (shipper.Name) for shipper in (shippers | shipperFilter:shipaddresses:currentOrder.ShipAddressID:currentOrder)"
+                      ng-required="!currentOrder.IsMultipleShip() && user.ShipMethod != null">
+                <option value=""></option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div ng-repeat="field in currentOrder.OrderFields | filter:{Name:'International_Email'}"
+             ng-if="orderShipAddress.Country != 'US' && orderShipAddress.Country != null">
+          <customtextfield customfield="field" ng-if="field.ControlType == 'Text'"
+                           ng-required="field.IsRequired"></customtextfield>
+        </div>
+
+        <div ng-repeat="field in currentOrder.OrderFields | filter:{Name:'International_Phone'}"
+             ng-if="orderShipAddress.Country != 'US' && orderShipAddress.Country != null">
+          <ocmaskfield label="International Phone" customfield="field"
+                       ng-if="field.ControlType == 'Text'" mask="999.999.9999"
+                       ng-required="field.IsRequired"></ocmaskfield>
+        </div>
+
+        <!-- ─────────────────────────────────────── where it is going -->
+        <!-- `&& !showResult`: a failed lookup printed "Address not found" directly above the
+             address the order is going to, which contradicts itself on one screen. The
+             failure now replaces the address block rather than stacking on top of it. -->
+        <div class="hz-co-ship"
+             ng-show="!currentOrder.IsMultipleShip() && orderShipAddress.ID && !showResult && orderShipAddress.AddressName != '_Multiple Shipping Address'">
+          <!-- "Change" (in the heading) is hidden when `readonlyshipping`: the controller sets
+               that when the employee has exactly one shipping address, the ordinary case, and
+               offering it there opened a field they could not type into. -->
+          <div class="hz-co-ship-card">
+            <svg class="hz-co-ship-pin" viewBox="0 0 24 24" width="22" height="22" fill="none"
+                 stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"></path>
+              <circle cx="12" cy="9.5" r="2.5"></circle>
+            </svg>
+            <div class="hz-co-ship-body">
+          <p class="hz-co-ship-h">Shipping to</p>
+          <address class="hz-co-ship-a">
+            <!-- The address's own name ("Hertz LAX") is worth a line. A custom address is
+                 often named after its street, which then printed twice. -->
+            <span class="hz-co-ship-name"
+                  ng-show="orderShipAddress.AddressName && (orderShipAddress.AddressName | lowercase) != (orderShipAddress.Street1 | lowercase)">{{orderShipAddress.AddressName}}</span>
+            <!--
+              One name line.
+
+              Stock printed the name twice — once unconditionally, once again for a user
+              without `EditShipToName` on a non-editable address, which is the ordinary
+              Hertz shopper. Every employee saw their own name repeated back to them, which
+              reads as a bug in the address rather than as a style. The second copy is gone;
+              this line covers both cases.
+            -->
+            <span class="hz-co-ship-person" ng-show="orderShipAddress.FirstName || orderShipAddress.LastName">
+              {{orderShipAddress.FirstName}} {{orderShipAddress.LastName}}
+            </span>
+            <span ng-show="orderShipAddress.CompanyName">{{orderShipAddress.CompanyName}}</span>
+            <span ng-show="orderShipAddress.Street1">{{orderShipAddress.Street1}}</span>
+            <span ng-show="orderShipAddress.Street2">{{orderShipAddress.Street2}}</span>
+            <!-- The comma used to test `currentOrderShipAddress.State`, a name that does not
+                 exist, so it never printed: "Altamonte Springs FL 32701". -->
+            <span ng-show="orderShipAddress.City || orderShipAddress.State || orderShipAddress.Zip">{{orderShipAddress.City}}<span ng-if="orderShipAddress.City && orderShipAddress.State">,</span> {{orderShipAddress.State}} {{orderShipAddress.Zip}}</span>
+            <span class="hz-co-ship-phone" ng-show="orderShipAddress.Phone">{{orderShipAddress.Phone}}</span>
+          </address>
+            </div>
+          </div>
+
+          <div class="hz-co-pair"
+               ng-show="!currentOrder.IsMultipleShip() && user.Permissions.contains('EditShipToName') && (orderShipAddress && !orderShipAddress.IsCustEditable)">
+            <input class="hz-co-input" type="text" ng-model="currentOrder.LineItems[0].ShipFirstName"
+                   placeholder="{{('First' | r) + ' ' + ('Name' | r) | xlat}}"
+                   ng-required="!currentOrder.IsMultipleShip() && user.Permissions.contains('EditShipToName') && (orderShipAddress && !orderShipAddress.IsCustEditable)" />
+            <input class="hz-co-input" type="text" ng-model="currentOrder.LineItems[0].ShipLastName"
+                   placeholder="{{('Last' | r) + ' ' + ('Name' | r) | xlat}}"
+                   ng-required="!currentOrder.IsMultipleShip() && user.Permissions.contains('EditShipToName') && (orderShipAddress && !orderShipAddress.IsCustEditable)" />
+          </div>
+
+          <!--
+            Required. This is the control that holds `cart_shipping` invalid until it is
+            ticked, which is what keeps Submit disabled — the gate, not a reminder.
+          -->
+          <label class="hz-co-confirm">
+            <input type="checkbox" name="shippingAddressConfirmed"
+                   ng-model="shippingAddressConfirmed"
+                   ng-required="!currentOrder.IsMultipleShip() && orderShipAddress.ID && orderShipAddress.AddressName != '_Multiple Shipping Address'" />
+            <span>I confirm the shipping address above is correct.</span>
+          </label>
+        </div>
+
+        <div class="hz-co-field hidden"
+             ng-show="!currentOrder.IsMultipleShip() && user.ShipMethod.AskForAccountNumber">
+          <label class="hz-co-label" ng-show="currentOrder.LineItems[0].ShipAccount">
+            {{('Shipping' | r) + ' ' + ('Account' | r) | xlat}}
+          </label>
+          <input class="hz-co-input" type="text" autocomplete="off"
+                 placeholder="{{'Shipping' | r | xlat}} Account Number"
+                 ng-model="currentOrder.LineItems[0].ShipAccount" />
+        </div>
+
+        <!-- ─────────────────────────────────────── one address per line -->
+        <div class="hz-co-multi" ng-repeat="item in currentOrder.LineItems"
+             ng-show="currentOrder.IsMultipleShip()">
+          <div class="hz-co-multi-item">
+            <p class="hz-co-multi-when">{{item.DateNeeded | date:user.Culture.DateFormat.short}}</p>
+            <p class="hz-co-multi-what"><strong>{{item.Product.Name}}</strong>{{' × ' + item.Quantity}}</p>
+
+            <div class="hz-co-pair"
+                 ng-show="user.Permissions.contains('EditShipToName') && !ShipAddress.IsCustEditable && item.ShipAddressID">
+              <input class="hz-co-input" type="text" ng-model="item.ShipFirstName"
+                     placeholder="{{('First' | r) + ' ' + ('Name' | r) | xlat}}"
+                     autocomplete="off" onkeypress="isAlphaNum(event);"
+                     ng-required="currentOrder.IsMultipleShip() && user.Permissions.contains('EditShipToName') && !ShipAddress.IsCustEditable" />
+              <input class="hz-co-input" type="text" ng-model="item.ShipLastName"
+                     placeholder="{{('Last' | r) + ' ' + ('Name' | r) | xlat}}"
+                     autocomplete="off" onkeypress="isAlphaNum(event);"
+                     ng-required="currentOrder.IsMultipleShip() && user.Permissions.contains('EditShipToName') && !ShipAddress.IsCustEditable" />
+            </div>
+          </div>
+
+          <div class="hz-co-multi-to">
+            <div class="hz-co-field">
+              <label class="hz-co-label" ng-class="{'is-required': currentOrder.IsMultipleShip()}"
+                     ng-show="currentOrder.ShipAddressID || currentOrder.IsMultipleShip()">
+                {{('Shipping' | r) + ' ' + ('Address' | r) | xlat}}
+              </label>
+              <select class="hz-co-select" name="shippingAddressLineItem"
+                      ng-options="address.ID as address.AddressName for address in shipaddresses"
+                      ng-model="item.ShipAddressID"
+                      ng-required="currentOrder.IsMultipleShip()"
+                      ng-change="setShipAddressAtLineItem(item)">
+                <option value=""></option>
+              </select>
+            </div>
+
+            <div class="hz-co-field"
+                 ng-show="item.ShipAddressID || currentOrder.IsMultipleShip() && item.ShipAddressID && user.ShipMethod != null">
+              <label class="hz-co-label"
+                     ng-class="{'is-required': currentOrder.IsMultipleShip() && user.ShipMethod != null}">
+                {{('Shipping' | r) + ' ' + ('Method' | r) | xlat}}
+              </label>
+              <select class="hz-co-select" ng-change="updateShipper(item)"
+                      ng-show="user.ShipMethod.ShipperSelectionType == 'UserDropDown'"
+                      ng-options="shipper.Name as shipper.Name for shipper in shippers | noliverates"
+                      ng-model="item.ShipperName"
+                      ng-required="currentOrder.IsMultipleShip() && user.ShipMethod != null">
+                <option value=""></option>
+              </select>
+            </div>
+
+            <div class="hz-co-field"
+                 ng-show="user.ShipMethod.AskForAccountNumber && currentOrder.IsMultipleShip()">
+              <label class="hz-co-label" ng-show="item.ShipAccount">
+                {{('Shipping' | r) + ' ' + ('Account' | r) | xlat}}
+              </label>
+              <input class="hz-co-input" type="text" autocomplete="off"
+                     ng-if="user.ShipMethod.AskForAccountNumber"
+                     placeholder="{{('Shipping' | r) + ' ' + ('Account' | r) + ' ' + ('Number' | r) | xlat}}"
+                     ng-model="item.ShipAccount" />
+            </div>
+
+            <label class="hz-co-confirm"
+                   ng-show="currentOrder.IsMultipleShip() && item.ShipAddressID">
+              <input type="checkbox"
+                     name="shippingAddressConfirmedMultiple_{{item.ID}}"
+                     ng-model="item.shippingAddressConfirmed"
+                     ng-required="currentOrder.IsMultipleShip() && item.ShipAddressID" />
+              <span>I confirm the shipping address for this item is correct.</span>
+            </label>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Used by the multi-address name fields above via onkeypress. Kept as-is; the only
+  // change is that the tag is now closed.
+  function isAlphaNum(event) {
+    var regex = new RegExp("^[a-zA-Z0-9.,\\s]+$");
+    var key = String.fromCharCode(!event.charCode ? event.which : event.charCode);
+    if (!regex.test(key)) {
+      event.preventDefault();
+      return false;
+    }
+  }
+</script>

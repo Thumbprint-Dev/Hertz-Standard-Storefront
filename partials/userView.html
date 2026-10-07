@@ -1,0 +1,200 @@
+<!--
+  Your information, under Account: the Four51 account details, editable, saved through the
+  stock `save()` in UserEditCtrl (which also handles the password rules and their warning).
+
+  The guest path further down (a TempCustomer signing in or creating an account to finish
+  an order) is kept from the stock theme.
+-->
+<section class="hz-pg user-view">
+
+  <loadingindicator title="{{'Please wait' | r | xlat}}" ng-show="displayLoadingIndicator" />
+  <accountnavigation />
+  <identifyusermessage ng-show="user.Type == 'TempCustomer'" />
+
+  <!-- ───────────────────────────────────────────── signed in: your details -->
+  <div ng-if="user.Type != 'TempCustomer'">
+    <div class="hz-pg-head" style="margin-bottom: 22px;">
+      <h1 class="hz-pg-title">Your information</h1>
+    </div>
+
+    <div class="hz-pg-stack">
+      <form name="user_form" ng-submit="save()" ng-show="user.Permissions.contains('ViewSelfAdmin')" novalidate>
+        <div class="hz-pg-panel">
+          <div class="hz-pg-sect">
+            <p class="hz-pg-sect-t">Contact details</p>
+            <div class="hz-pg-fields">
+              <div class="hz-pg-field">
+                <label for="hzFirst">First name</label>
+                <input id="hzFirst" name="firstname" type="text" required ng-model="user.FirstName" autocomplete="given-name" />
+              </div>
+              <div class="hz-pg-field">
+                <label for="hzLast">Last name</label>
+                <input id="hzLast" name="lastname" type="text" required ng-model="user.LastName" autocomplete="family-name" />
+              </div>
+              <div class="hz-pg-field">
+                <label for="hzEmail">Email</label>
+                <input id="hzEmail" name="email" type="email" required ng-model="user.Email" autocomplete="email" />
+              </div>
+              <div class="hz-pg-field">
+                <label for="hzPhone">Phone</label>
+                <input id="hzPhone" name="phone" type="text" ng-model="user.Phone" ui-mask="(999) 999-9999" autocomplete="tel" />
+              </div>
+            </div>
+          </div>
+
+          <div class="hz-pg-sect">
+            <p class="hz-pg-sect-t">Sign-in</p>
+            <div class="hz-pg-fields">
+              <div class="hz-pg-field">
+                <label for="hzUser">Username</label>
+                <input id="hzUser" name="username" type="text" required ng-model="user.TempUsername" autocomplete="username" />
+              </div>
+              <div class="hz-pg-field">
+                <label for="hzPass">New password</label>
+                <input id="hzPass" name="password" type="password" ng-model="user.Password" autocomplete="new-password"
+                       placeholder="Leave blank to keep your password" />
+              </div>
+              <div class="hz-pg-field" ng-show="user.Password">
+                <label for="hzPass2">Confirm new password</label>
+                <input id="hzPass2" name="confirm_password" type="password" ng-match="user.Password"
+                       ng-required="user.Password" ng-model="user.ConfirmPassword" autocomplete="new-password" />
+              </div>
+            </div>
+            <div class="hz-pg-note hz-pg-note--stop" ng-show="securityWarning" style="margin: 16px 0 0;">
+              <p><strong>That password does not meet the requirements.</strong> It needs at least 8
+                characters, and at least two of: letters, numbers, punctuation.</p>
+            </div>
+          </div>
+
+          <div class="hz-pg-actions" style="margin-top: 18px;">
+            <button type="submit" class="hz-pg-btn" ng-disabled="user_form.$invalid">Save changes</button>
+            <span class="hz-pg-field-hint" ng-show="actionMessage" role="status" ng-bind-html="actionMessage"></span>
+          </div>
+        </div>
+      </form>
+
+      <div class="hz-pg-note" ng-show="!user.Permissions.contains('ViewSelfAdmin')">
+        <p>{{user.FirstName}} {{user.LastName}}<span ng-if="user.Email">, {{user.Email}}</span></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ──────────────────────────────────── not signed in: sign in, or register -->
+  <div ng-if="user.Type == 'TempCustomer'">
+    <div class="hz-pg-head">
+      <h1 class="hz-pg-title">Sign in to finish your order</h1>
+    </div>
+    <p class="hz-pg-sub">
+      Sign in with your Hertz store account. If you have not set one up yet, create it
+      below and your order carries over.
+    </p>
+
+    <div class="hz-pg-grid">
+      <div>
+        <form name="user_form" ng-submit="save()" ng-show="user.Permissions.contains('ViewSelfAdmin')">
+          <div class="hz-pg-panel">
+            <div class="hz-pg-sect">
+              <p class="hz-pg-sect-t">Create an account</p>
+              <div class="hz-pg-fields">
+                <div class="hz-pg-field">
+                  <label for="hzNewFirst">First name</label>
+                  <input id="hzNewFirst" name="firstname" type="text" required
+                         ng-model="user.FirstName" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewLast">Last name</label>
+                  <input id="hzNewLast" name="lastname" type="text" required
+                         ng-model="user.LastName" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewEmail">Email</label>
+                  <input id="hzNewEmail" name="email" type="email" required
+                         ng-model="user.Email" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewPhone">Phone</label>
+                  <input id="hzNewPhone" name="phone" type="text" ng-model="user.Phone"
+                         ui-mask="(999) 999-9999" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewUser">Username</label>
+                  <input id="hzNewUser" name="username" type="text" required
+                         ng-model="user.TempUsername" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewPass">Password</label>
+                  <input id="hzNewPass" name="password" type="password"
+                         ng-required="user.Type == 'TempCustomer'"
+                         ng-model="user.Password" autocomplete="off" />
+                </div>
+                <div class="hz-pg-field">
+                  <label for="hzNewPass2">Confirm password</label>
+                  <input id="hzNewPass2" name="confirm_password" type="password"
+                         ng-match="user.Password"
+                         ng-required="user.Type == 'TempCustomer' || user.Password"
+                         ng-model="user.ConfirmPassword" autocomplete="off" />
+                </div>
+              </div>
+
+              <!-- Password rules. Was a five-deep nest of <ul> and <ol> inside an
+                   alert-warning, printed in full whether or not it applied. -->
+              <div class="hz-pg-note hz-pg-note--stop" ng-show="securityWarning"
+                   style="margin: 16px 0 0;">
+                <p><strong>That password does not meet the requirements.</strong> It needs
+                  at least 8 characters, and at least two of: letters, numbers,
+                  punctuation.</p>
+                <p>After 6 failed sign-in attempts the account locks for 30 minutes.</p>
+              </div>
+            </div>
+
+            <div class="hz-pg-sect" ng-if="user.CustomFields.length">
+              <p class="hz-pg-sect-t">Additional details</p>
+              <div class="hz-pg-fields">
+                <div ng-repeat="field in user.CustomFields">
+                  <customfilefield customfield="field" ng-if="field.ControlType == 'File' && field.DisplayToUser"></customfilefield>
+                  <customtextfield customfield="field" ng-if="field.ControlType == 'Text' && field.DisplayToUser"></customtextfield>
+                  <customselectionfield customfield="field" ng-if="field.ControlType == 'Selection' && field.DisplayToUser"></customselectionfield>
+                </div>
+              </div>
+            </div>
+
+            <div class="hz-pg-sect">
+              <div class="hz-pg-actions">
+                <input class="hz-pg-btn" type="submit" id="451_btn_user"
+                       ng-disabled="user_form.$invalid" value="Create account" />
+              </div>
+              <div class="hz-pg-note" ng-show="actionMessage" style="margin: 14px 0 0;">
+                <p ng-bind-html="actionMessage | r | xlat"></p>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="hz-pg-side">
+        <form name="login_existing" ng-submit="loginExisting()"
+              ng-show="user.Permissions.contains('ViewSelfAdmin')">
+          <div class="hz-pg-panel">
+            <div class="hz-pg-sect">
+              <p class="hz-pg-sect-t">Already have an account</p>
+              <div class="hz-pg-field" style="margin-bottom: 12px;">
+                <label for="hzSignUser">Username</label>
+                <input id="hzSignUser" name="username" type="text" required
+                       ng-model="loginasuser.Username" autocomplete="off" />
+              </div>
+              <div class="hz-pg-field">
+                <label for="hzSignPass">Password</label>
+                <input id="hzSignPass" name="password" type="password" required
+                       ng-model="loginasuser.Password" autocomplete="off" />
+              </div>
+              <input class="hz-pg-btn" type="submit" id="451_btn_login_existing"
+                     ng-disabled="login_existing.$invalid" value="Sign in" />
+              <inlineerror ng-show="loginAsExistingError" title="{{loginAsExistingError}}" />
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</section>

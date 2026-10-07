@@ -1,0 +1,77 @@
+<!--
+  The items in an order.
+
+  Was a 68-line injected <style> block on top of Bootstrap `col-sm-6` halves, with
+  `.order-img { max-width: 500px; width: 1000px; }` and three width-only media queries
+  walking it back. Each item was a card with its own shadow, nested inside the card the
+  page already drew around them.
+
+  Now one row per item, in the same shape the cart uses: name and code on the left, the
+  chosen specifications under it, quantity and price on the right.
+
+  A bug fixed on the way: the product-preview block carried
+  `ng-show="(order.Status == 'AwaitingApproval' && (item.Variant.IsMpowerVariant)"` —
+  an unbalanced parenthesis, so Angular threw a parse error on that expression for every
+  line item on every digest. The parentheses are balanced here.
+-->
+<div class="hz-pg-li" ng-repeat="item in order.LineItems">
+
+  <div class="hz-pg-li-main">
+    <p class="hz-pg-li-name">{{item.Product.Name}}</p>
+    <p class="hz-pg-li-sku">{{item.ProductIDText}}</p>
+
+    <!-- Size, colour, anything else chosen for this line. -->
+    <p class="hz-pg-li-spec"
+       ng-repeat="spec in item.Specs | onproperty:{Property: 'CanSetForLineItem', Value: true}">
+      <span>{{spec.Name}}</span>
+      <a ng-if="spec.ControlType == 'File'" ng-href="{{spec.File.Url}}">{{spec.File.OriginalName + Extension}}</a>
+      <span ng-if="spec.ControlType != 'File'" class="hz-pg-li-spec-v">{{spec.Value || ('(unspecified)' | xlat)}}</span>
+    </p>
+
+    <p class="hz-pg-li-spec" ng-if="item.CostCenter">
+      <span>Cost centre</span> <span class="hz-pg-li-spec-v">{{item.CostCenter}}</span>
+    </p>
+    <p class="hz-pg-li-spec" ng-if="item.ShipperName">
+      <span>Carrier</span> <span class="hz-pg-li-spec-v">{{item.ShipperName}}</span>
+    </p>
+
+    <!-- Only worth printing per item when the order ships to more than one place;
+         otherwise the side panel already says where it went. -->
+    <address class="hz-pg-li-addr" ng-show="item.ShipAddress && order.IsMultipleShip()">
+      Ships to {{item.ShipAddress.Street1}}<span ng-show="item.ShipAddress.Street2">, {{item.ShipAddress.Street2}}</span>,
+      {{item.ShipAddress.City}}, {{item.ShipAddress.State}} {{item.ShipAddress.Zip}}
+    </address>
+
+    <div class="hz-pg-li-links">
+      <a ng-href="{{item.ProofUrl}}" target="_blank" rel="noopener noreferrer"
+         ng-if="order.Status != 'AwaitingApproval' && (item.Product.Type == 'VariableText' && item.ProofUrl)">Download proof</a>
+      <a href="" ng-click="downloadProof(item)"
+         ng-if="order.Status == 'AwaitingApproval' && item.Variant.IsMpowerVariant">Download proof</a>
+      <a ng-if="item.ProductionURL" ng-href="{{item.ProductionURL}}" target="_blank"
+         rel="noopener noreferrer">Download printable file</a>
+    </div>
+  </div>
+
+  <!-- Quantity is always shown; price only where the employee is allowed to see it, and
+       never for a kit, which they do not pay for. -->
+  <div class="hz-pg-li-meta"
+       ng-hide="order.LineItems[0].Product.InteropID === 'CDC-APP-KIT-001' || order.LineItems[0].Product.Name === 'New Hire Kit'">
+    <p class="hz-pg-li-qty" ng-show="item.Quantity">
+      <span class="hz-pg-li-qty-l">Quantity</span>
+      <span class="hz-pg-li-qty-n">{{item.Quantity}}</span>
+    </p>
+    <p class="hz-pg-li-price" ng-if="!(user.Permissions.contains('HidePricing'))">
+      {{item.LineTotal | culturecurrency}}
+      <span ng-show="item.Quantity > 1">{{item.UnitPrice | culturecurrency}} each</span>
+    </p>
+  </div>
+
+  <!-- Awaiting-approval preview. Phase 5 was cancelled, so no Hertz order reaches this,
+       but the directive is still wired and the image is real when it does. -->
+  <figure class="hz-pg-li-proof"
+          ng-show="order.Status == 'AwaitingApproval' && item.Variant.IsMpowerVariant">
+    <img class="img-responsive"
+         ng-src="{{item.Variant.PreviewUrl || item.Variant.LargeImageUrl || item.Variant.SmallImageUrl}}"
+         alt="Preview of {{item.Product.Name}}" imageonload />
+  </figure>
+</div>

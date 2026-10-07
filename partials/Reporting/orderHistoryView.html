@@ -1,0 +1,241 @@
+<!--
+  One order, after it was placed. Reached by choosing an order on /order.
+
+  Rebuilt a second time, 23 September 2026, for what an employee opens it to check: what
+  came, in which size, where it is going, and how to send something back. The stock grid
+  printed each line as a product name over a raw InteropID, counted lines as "items" (four
+  "items" in an order of thirteen garments), printed a "Bills to" heading over an empty
+  address and a lone comma for orders that are never billed, and showed the status twice.
+  It also led nowhere: the return form, which is built on these orders, had no way in.
+
+  Photos and sizes come from the shared `hzPhoto` and `hzSize` filters, so a garment looks
+  and reads the same here as in the picker. The approvals and saved-order blocks are kept,
+  unchanged, for the rare cases that reach them.
+-->
+<section class="hz-pg hz-ord">
+
+  <loadingindicator ng-show="loadingIndicator" title="{{'Please wait while we fetch your order' | r | xlat}}"></loadingindicator>
+
+  <div class="hidden-print" ng-show="order">
+
+    <!-- Shown when the order was just placed: this is the confirmation. -->
+    <orderacknowledgemessage ng-show="order.recent" />
+
+    <a class="hz-pg-back" href="order">&larr; All orders</a>
+
+    <div class="hz-pg-head">
+      <div>
+        <h1 class="hz-pg-title">Order {{order.ExternalID}}</h1>
+        <p class="hz-ord-meta">
+          <span class="hz-pg-pill" ng-show="order.StatusText">{{order.StatusText | r | xlat}}</span>
+          <span ng-show="order.DateSubmitted">Placed {{order.DateSubmitted | date:'MMMM d, y'}}</span>
+          <span ng-show="isCanceled() && canceledOn()">Canceled {{canceledOn() | date:'MMMM d, y'}}</span>
+          <span>{{units()}} {{units() === 1 ? 'item' : 'items'}}</span>
+        </p>
+      </div>
+      <div class="hz-pg-actions">
+        <button type="button" class="hz-pg-btn hz-pg-btn--ghost" ng-click="onPrint()">Print</button>
+      </div>
+    </div>
+
+    <div class="hz-pg-grid">
+
+      <div>
+        <div class="hz-pg-card">
+          <div class="hz-pg-card-h">
+            <p class="hz-pg-card-t">What was ordered</p>
+            <p class="hz-pg-card-t">{{units()}} {{units() === 1 ? 'item' : 'items'}}</p>
+          </div>
+
+          <div class="hz-ord-li" ng-repeat="item in order.LineItems">
+            <span class="hz-ord-thumb" aria-hidden="true">
+              <img ng-if="item.Product.InteropID | hzPhoto" ng-src="{{item.Product.InteropID | hzPhoto}}" alt="" />
+            </span>
+            <div class="hz-ord-li-main">
+              <p class="hz-ord-li-name">{{item.Product.Name}}</p>
+              <p class="hz-ord-li-facts">
+                <span class="hz-ord-size" ng-if="item.Product.InteropID | hzSize">Size {{item.Product.InteropID | hzSize}}</span>
+                <span class="hz-ord-size" ng-if="!(item.Product.InteropID | hzSize)">One size</span>
+                <span class="hz-ord-sku">{{item.Product.InteropID}}</span>
+              </p>
+              <!-- Only when the order ships to more than one place; otherwise the side panel
+                   says where it went. -->
+              <p class="hz-ord-li-addr" ng-show="item.ShipAddress && order.IsMultipleShip()">
+                Ships to {{item.ShipAddress.Street1}}, {{item.ShipAddress.City}}, {{item.ShipAddress.State}}
+              </p>
+            </div>
+            <div class="hz-ord-li-qty">
+              <span class="hz-ord-li-qty-l">Qty</span>
+              <span class="hz-ord-li-qty-n">{{item.Quantity}}</span>
+              <span class="hz-ord-li-price" ng-if="!(user.Permissions.contains('HidePricing'))">{{item.LineTotal | culturecurrency}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tracking, one block per shipment. -->
+        <div class="hz-pg-card" ng-show="shipments.length">
+          <div class="hz-pg-card-h">
+            <p class="hz-pg-card-t">Shipping</p>
+          </div>
+          <div class="hz-pg-card-b">
+            <div class="hz-ord-ship" ng-repeat="s in shipments">
+              <div class="hz-pg-dl">
+                <div class="hz-pg-dl-row" ng-show="s.Shipper">
+                  <span class="hz-pg-dl-k">Carrier</span>
+                  <span class="hz-pg-dl-v">{{s.Shipper}}</span>
+                </div>
+                <div class="hz-pg-dl-row" ng-show="s.TrackingNumber">
+                  <span class="hz-pg-dl-k">Tracking number</span>
+                  <span class="hz-pg-dl-v">
+                    <a ng-if="s.TrackingURL" ng-href="{{s.TrackingURL}}" target="_blank"
+                       rel="noopener noreferrer">{{s.TrackingNumber}}</a>
+                    <span ng-if="!s.TrackingURL">{{s.TrackingNumber}}</span>
+                  </span>
+                </div>
+                <div class="hz-pg-dl-row" ng-repeat="item in s.Items">
+                  <span class="hz-pg-dl-k">{{item.ProductID}}</span>
+                  <span class="hz-pg-dl-v">{{item.QuantityShipped}} shipped</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Approvals. Kept because the directive is still wired, though Phase 5 was
+             cancelled on 18 Sep 2026 and no Hertz order reaches an approval state. -->
+        <div class="hz-pg-card" ng-show="order.Approvals">
+          <div class="hz-pg-card-h">
+            <p class="hz-pg-card-t">Approvals</p>
+          </div>
+          <div class="hz-pg-card-b">
+            <approval ng-show="order.Status == 'AwaitingApproval' && (order.UserCanApprove || user.Permissions.contains('ApproveAllOrders'))" order="order" />
+            <approvalrulelist order="order" />
+          </div>
+        </div>
+      </div>
+
+      <div class="hz-pg-side">
+        <div class="hz-pg-card">
+          <div class="hz-pg-card-h">
+            <p class="hz-pg-card-t">Order details</p>
+          </div>
+          <div class="hz-pg-card-b">
+            <div class="hz-pg-dl">
+              <div class="hz-pg-dl-row" ng-show="order.DateSubmitted">
+                <span class="hz-pg-dl-k">Placed</span>
+                <span class="hz-pg-dl-v">{{order.DateSubmitted | date:'MMM d, y'}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="isCanceled() && canceledOn()">
+                <span class="hz-pg-dl-k">Canceled</span>
+                <span class="hz-pg-dl-v">{{canceledOn() | date:'MMM d, y'}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="order.DateCompleted">
+                <span class="hz-pg-dl-k">Completed</span>
+                <span class="hz-pg-dl-v">{{order.DateCompleted | date:'MMM d, y'}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="order.FromUserFirstName || order.FromUserLastName">
+                <span class="hz-pg-dl-k">Ordered by</span>
+                <span class="hz-pg-dl-v">{{order.FromUserFirstName}} {{order.FromUserLastName}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="order.LineItems[0].ShipperName && !order.IsMultipleShip()">
+                <span class="hz-pg-dl-k">Shipping</span>
+                <span class="hz-pg-dl-v">{{order.LineItems[0].ShipperName}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="order.PaymentMethod != 'Undetermined' && !user.Permissions.contains('HidePricing')">
+                <span class="hz-pg-dl-k">Payment</span>
+                <span class="hz-pg-dl-v">{{order.PaymentMethodText | r | xlat}}</span>
+              </div>
+              <div class="hz-pg-dl-row" ng-show="order.Comments">
+                <span class="hz-pg-dl-k">Comments</span>
+                <span class="hz-pg-dl-v">{{order.Comments}}</span>
+              </div>
+            </div>
+
+            <!-- Shown only with a street to show. Four51 answers an empty address object for an
+                 order with no bill-to, which printed a heading, blank lines and a comma. -->
+            <div class="hz-ord-addr" ng-if="!order.IsMultipleShip() && order.ShipAddress.Street1">
+              <p class="hz-pg-card-t">Ships to</p>
+              <address>
+                <span ng-if="shipName()">{{shipName()}}<br /></span>
+                <span ng-if="order.ShipAddress.CompanyName">{{order.ShipAddress.CompanyName}}<br /></span>
+                {{order.ShipAddress.Street1}}<br />
+                <span ng-if="order.ShipAddress.Street2">{{order.ShipAddress.Street2}}<br /></span>
+                {{order.ShipAddress.City}}, {{order.ShipAddress.State}} {{order.ShipAddress.Zip}}
+                <span ng-if="order.ShipAddress.Country && order.ShipAddress.Country != 'US'"><br />{{order.ShipAddress.Country}}</span>
+              </address>
+            </div>
+
+            <div class="hz-ord-addr" ng-if="order.BillingEnabled && order.BillAddress.Street1">
+              <p class="hz-pg-card-t">Bills to</p>
+              <address>
+                {{order.BillAddress.Street1}}<br />
+                <span ng-if="order.BillAddress.Street2">{{order.BillAddress.Street2}}<br /></span>
+                {{order.BillAddress.City}}, {{order.BillAddress.State}} {{order.BillAddress.Zip}}
+              </address>
+            </div>
+
+            <orderhistorysummary ng-if="!(user.Permissions.contains('HidePricing'))"></orderhistorysummary>
+          </div>
+        </div>
+
+        <!-- Canceled: nothing was shipped, so nothing to send back. -->
+        <div class="hz-pg-card hz-ord-return" ng-if="isCanceled()">
+          <div class="hz-pg-card-b">
+            <p class="hz-ord-return-t">This order was canceled</p>
+            <p ng-if="canceledOn()">Canceled on {{canceledOn() | date:'MMMM d, y'}}. Nothing was shipped and nothing was charged.</p>
+            <p ng-if="!canceledOn()">Nothing was shipped and nothing was charged.</p>
+          </div>
+        </div>
+
+        <!-- The way into the return form, for the order it came from. -->
+        <div class="hz-pg-card hz-ord-return" ng-if="canReturn()">
+          <div class="hz-pg-card-b">
+            <p class="hz-ord-return-t">Something not right?</p>
+            <p>Wrong size, wrong item or damaged on the way: send it back within 30 days of delivery. Have your order number ready: {{order.ExternalID || order.ID}}.</p>
+            <a class="hz-pg-btn" href="https://thumbprint.com/hertz/UniformReturn" target="_blank" rel="noopener noreferrer">Start a return</a>
+            <a class="hz-pg-btn hz-pg-btn--ghost" href="returns">Returns policy</a>
+          </div>
+        </div>
+
+        <!-- Order the same again, or save it as a favourite to reorder later. -->
+        <div class="hz-pg-card"
+             ng-if="order.FromUserID == user.ID && order.Status != 'Unsubmitted' && user.Type !='TempCustomer'">
+          <div class="hz-pg-card-b">
+            <button type="button" class="hz-pg-btn" ng-click="repeatOrder()" style="margin-bottom: 18px;">Order these items again</button>
+            <loadingindicator ng-show="displayLoadingIndicator" />
+            <div class="hz-pg-field">
+              <label for="hzFav">Save this order</label>
+              <input id="hzFav" type="text" ng-model="order.FavoriteName"
+                     placeholder="Name it, so you can reorder it" autocomplete="off" />
+              <p class="hz-pg-field-hint">Saved orders appear under Account, Favorites.</p>
+            </div>
+            <button type="button" class="hz-pg-btn hz-pg-btn--ghost" ng-click="saveFavorite()"
+                    style="margin-top: 10px;">Save</button>
+          </div>
+        </div>
+
+        <!-- An unsubmitted order can be made the working cart again. -->
+        <div class="hz-pg-card" ng-if="order.FromUserID == user.ID && order.Status == 'Unsubmitted'">
+          <div class="hz-pg-card-b">
+            <loadingindicator ng-show="currentLoadingIndicator" />
+            <p class="hz-pg-field-hint" style="margin: 0 0 10px;">
+              This order has not been placed yet.
+            </p>
+            <button ng-if="order.ID != currentOrder.ID" type="button"
+                    ng-click="currentLoadingIndicator = true; setCurrent()"
+                    class="hz-pg-btn">Make this my cart</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hz-pg-note" alert-show="actionMessage" ng-show="actionMessage">
+      <p>{{actionMessage | r | xlat}}</p>
+    </div>
+    <div class="hz-pg-note hz-pg-note--stop" alert-show="errorMessage" ng-show="errorMessage">
+      <p>{{errorMessage | r | xlat}}</p>
+    </div>
+  </div>
+
+  <orderprint class="visible-print" />
+</section>

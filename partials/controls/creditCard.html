@@ -1,0 +1,57 @@
+<!--
+  A new credit card. The bindings, the masks and the card-type and Luhn validation are the
+  stock `creditcard` directive's; only the markup is this theme's.
+-->
+<div class="hs-card-form">
+  <div class="hz-co-field" ng-if="user.Permissions.contains('CardholderName')">
+    <label class="hz-co-label is-required" for="cardholder-name">Name on card</label>
+    <input id="cardholder-name" class="hz-co-input" ng-model="currentOrder.CreditCard.CardholderName"
+           ng-required="currentOrder.PaymentMethod == 'CreditCard' && !currentOrder.CreditCardID"
+           type="text" autocomplete="cc-name" />
+  </div>
+
+  <div class="hz-co-field">
+    <label class="hz-co-label is-required" for="account-number">Card number</label>
+    <div class="hs-card-num">
+      <input id="account-number" class="hz-co-input" ng-model="currentOrder.CreditCard.AccountNumber" name="creditCardNumber"
+             ng-required="currentOrder.PaymentMethod == 'CreditCard' && !currentOrder.CreditCardID"
+             type="text" inputmode="numeric" autocomplete="cc-number" />
+      <span class="hs-card-type" style="background-image:url({{creditCardIconUrl}})" ng-show="creditCardIconUrl" aria-hidden="true"></span>
+    </div>
+  </div>
+
+  <div class="hz-co-pair">
+    <div class="hz-co-field">
+      <label class="hz-co-label is-required" for="expiration-date">Expiry (MM/YY)</label>
+      <input id="expiration-date" class="hz-co-input" ng-model="currentOrder.CreditCard.ExpirationDate"
+             ng-required="currentOrder.PaymentMethod == 'CreditCard' && !currentOrder.CreditCardID"
+             type="text" ui-mask="99/99" autocomplete="cc-exp" />
+    </div>
+    <div class="hz-co-field" ng-if="currentOrder.RequireCVN">
+      <label class="hz-co-label is-required" for="cvn">Security code</label>
+      <input id="cvn" class="hz-co-input" ng-model="currentOrder.CreditCard.CVN" name="cvnNumber"
+             ng-required="currentOrder.PaymentMethod == 'CreditCard' && !currentOrder.CreditCardID"
+             type="text" inputmode="numeric" ng-maxlength="4" autocomplete="cc-csc" />
+    </div>
+  </div>
+
+  <div class="hz-co-field" ng-show="!creditCardIconUrl && currentOrder.CreditCard.AccountNumber.length >= 4">
+    <label class="hz-co-label is-required" for="credit-card-type">Card type</label>
+    <select id="credit-card-type" class="hz-co-select" ng-model="currentOrder.CreditCard.Type"
+            ng-options="creditCard.Type as creditCard.DisplayName for creditCard in user.AvailableCreditCards"
+            ng-required="currentOrder.PaymentMethod == 'CreditCard' && !currentOrder.CreditCardID">
+    </select>
+  </div>
+
+  <label class="hs-pay-save" ng-if="user.Permissions.contains('AllowSaveCreditCard')" ng-show="!currentOrder.CreditCardID">
+    <input ng-model="currentOrder.CreditCard.Save" type="checkbox" />
+    <span>Save this card for next time</span>
+  </label>
+
+  <div class="hs-pay-warn" ng-show="cart_billing.$error.creditCardNumber || cart_billing.$error.creditCardType || cart_billing.$error.cvnNumber || cart_billing.$error.expDate">
+    <p ng-show="cart_billing.$error.creditCardNumber">Enter a valid card number.</p>
+    <p ng-show="cart_billing.$error.creditCardType && !cart_billing.$error.creditCardNumber">{{friendlyName(currentOrder.CreditCard.Type)}} is not accepted.</p>
+    <p ng-show="cart_billing.$error.cvnNumber">Enter a valid security code.</p>
+    <p ng-show="cart_billing.$error.expDate">Enter a valid expiry date.</p>
+  </div>
+</div>

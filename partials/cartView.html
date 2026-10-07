@@ -1,0 +1,116 @@
+<!--
+  Your cart. Styled by `.hz-cart` in css/custom.css, with the quantity and price pieces in
+  css/store.css. Quantities change in place and save themselves (CartViewCtrl.changeQty);
+  every price and total on the page is Four51's, from the saved order.
+
+  Every custom element carries an explicit closing tag: a self-closed custom tag parses as
+  an unclosed opener and swallows its siblings.
+-->
+<section class="hz-cart">
+
+  <loadingindicator ng-show="displayLoadingIndicator"
+                    title="{{'Please wait while we save your order' | r | xlat}}"></loadingindicator>
+
+  <form ng-submit="saveChanges()" name="cart" novalidate="">
+
+    <div class="hz-cart-head">
+      <h1 class="hz-cart-title">Your cart</h1>
+      <button type="button" class="hz-cart-print" ng-click="onPrint()" ng-if="currentOrder.LineItems.length">
+        <i class="fa fa-print" aria-hidden="true"></i> Print
+      </button>
+    </div>
+
+    <cartmessage></cartmessage>
+
+    <div class="hz-cart-empty" ng-if="!currentOrder || !currentOrder.LineItems.length">
+      <p>Your cart is empty.</p>
+      <a class="hz-cart-btn hz-cart-btn--primary" href="catalog">Start shopping</a>
+    </div>
+
+    <div class="hz-cart-grid" ng-if="currentOrder.LineItems.length">
+
+      <div class="hz-cart-items">
+        <div class="hz-cart-row hs-cart-row" ng-repeat="item in currentOrder.LineItems">
+
+          <a class="hz-cart-thumb" href="product/{{item.Product.InteropID}}">
+            <img ng-if="item.Product | hzImage:item.Variant" ng-src="{{item.Product | hzImage:item.Variant}}" alt="" />
+          </a>
+
+          <div class="hz-cart-info">
+            <a class="hz-cart-name" href="product/{{item.Product.InteropID}}">{{item.Product.Name}}</a>
+            <p class="hz-cart-size">
+              <span ng-if="item.Product.InteropID | hzSize">Size {{item.Product.InteropID | hzSize}}</span>
+              <span ng-if="!(item.Product.InteropID | hzSize) && !item.Variant">One size</span>
+              <span ng-if="item.Variant.Description">{{item.Variant.Description}}</span>
+            </p>
+            <p class="hz-cart-spec" ng-repeat="spec in item.Specs" ng-if="spec.Value">
+              <span>{{spec.Label || spec.Name}}:</span> {{spec.Value}}
+            </p>
+            <p class="hs-cart-unit" ng-if="!user.Permissions.contains('HidePricing') && item.UnitPrice != null">
+              {{item.UnitPrice | culturecurrency}} each
+            </p>
+            <button type="button" class="hs-cart-remove" ng-click="removeItem(item)">Remove</button>
+          </div>
+
+          <div class="hs-cart-qty">
+            <span class="hs-qty-box">
+              <button type="button" ng-click="changeQty(item, -1)" ng-disabled="item.Quantity <= 1" aria-label="One fewer">&minus;</button>
+              <input type="number" min="1" inputmode="numeric" ng-model="item.Quantity" ng-change="qtyChanged()"
+                     aria-label="Quantity of {{item.Product.Name}}" />
+              <button type="button" ng-click="changeQty(item, 1)" aria-label="One more">+</button>
+            </span>
+          </div>
+
+          <div class="hs-cart-line" ng-if="!user.Permissions.contains('HidePricing')">
+            {{item.LineTotal | culturecurrency}}
+          </div>
+        </div>
+      </div>
+
+      <aside class="hz-cart-side" aria-label="Order summary">
+        <div class="hz-cart-summary">
+          <p class="hz-cart-summary-h">Order summary</p>
+
+          <div class="hz-cart-sum-row">
+            <span>Items</span>
+            <span>{{currentOrder.LineItems | hzUnits}}</span>
+          </div>
+
+          <div ng-if="!user.Permissions.contains('HidePricing')">
+            <div class="hz-cart-sum-row">
+              <span>Subtotal</span>
+              <span>{{currentOrder.Subtotal | culturecurrency}}</span>
+            </div>
+            <div class="hz-cart-sum-row">
+              <span>Shipping</span>
+              <span ng-if="currentOrder.ShippingCost > 0">{{currentOrder.ShippingCost | culturecurrency}}</span>
+              <span ng-if="!(currentOrder.ShippingCost > 0)" class="hs-muted">At checkout</span>
+            </div>
+            <div class="hz-cart-sum-row" ng-if="currentOrder.TaxCost > 0">
+              <span>Tax</span>
+              <span>{{currentOrder.TaxCost | culturecurrency}}</span>
+            </div>
+            <div class="hz-cart-sum-total">
+              <span>Total</span>
+              <span>{{currentOrder.Total | culturecurrency}}</span>
+            </div>
+          </div>
+
+          <button type="button" class="hz-cart-btn hz-cart-btn--primary"
+                  ng-click="checkOut()" ng-disabled="cart.$invalid || kitValidation">
+            Check out
+          </button>
+
+          <a class="hz-cart-btn" href="catalog">Continue shopping</a>
+
+          <button type="button" class="hz-cart-cancel"
+                  ng-click="currentOrder.Status == 'AwaitingApproval' ? cancelEdit() : cancelOrder()">
+            {{currentOrder.Status == 'AwaitingApproval' ? 'Cancel edit' : 'Empty cart'}}
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <div class="hz-cart-alert" ng-show="errorMessage"><p>{{errorMessage}}</p></div>
+  </form>
+</section>

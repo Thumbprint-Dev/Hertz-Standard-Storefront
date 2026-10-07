@@ -1,0 +1,29 @@
+<!--
+  A grid of garments, shared by the category and search pages. Each card is a family from
+  the Catalog service: one card per garment however many sizes Four51 holds it in.
+  Used as <productgrid families loading hide-prices>.
+-->
+<div class="hs-grid" ng-if="loading">
+  <div class="hs-card" ng-repeat="n in [1,2,3,4,5,6,7,8]">
+    <div class="hs-card-img hs-skel"></div>
+    <span class="hs-skel" style="height:16px;width:80%"></span>
+    <span class="hs-skel" style="height:14px;width:40%"></span>
+  </div>
+</div>
+
+<div class="hs-grid" ng-if="!loading && families.length">
+  <a class="hs-card" ng-repeat="f in families track by f.id" href="product/{{f.id}}">
+    <span class="hs-card-img">
+      <img ng-if="f.product | hzImage" ng-src="{{f.product | hzImage}}" alt="" />
+      <i ng-if="!(f.product | hzImage)">No image</i>
+    </span>
+    <p class="hs-card-name">{{f.name}}</p>
+    <span class="hs-card-meta">
+      <span class="hs-card-price" ng-if="f.priceFrom != null && !hidePrices">
+        <span ng-if="f.priceTo > f.priceFrom">From </span>{{f.priceFrom | culturecurrency}}
+      </span>
+      <span class="hs-card-sizes" ng-if="f.sizes.length > 1">{{f.sizes[0].size}} to {{f.sizes[f.sizes.length - 1].size}}</span>
+      <span class="hs-card-sizes" ng-if="f.sizes.length == 0">One size</span>
+    </span>
+  </a>
+</div>

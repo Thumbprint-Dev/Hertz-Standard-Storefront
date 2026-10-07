@@ -1,0 +1,29 @@
+<!--
+  The money, under the order's facts. Same label/value rows as
+  orderHistoryDetailsView.html, with the total picked out in the display face so the
+  figure people look for is the one that reads first.
+
+  Was 20px Lato with `pull-right` values, from its own injected <style> block.
+-->
+<div class="hz-pg-dl" style="margin-top: 16px; border-top: 1px solid #e3e7ef; padding-top: 10px;">
+  <div class="hz-pg-dl-row">
+    <span class="hz-pg-dl-k">Subtotal</span>
+    <span class="hz-pg-dl-v">{{order.Subtotal | culturecurrency}}</span>
+  </div>
+  <div class="hz-pg-dl-row">
+    <span class="hz-pg-dl-k">Shipping and handling</span>
+    <span class="hz-pg-dl-v">{{order.ShippingCost | culturecurrency}}</span>
+  </div>
+  <div class="hz-pg-dl-row">
+    <span class="hz-pg-dl-k">Tax</span>
+    <span class="hz-pg-dl-v">{{order.TaxCost | culturecurrency}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-if="order.Coupon">
+    <span class="hz-pg-dl-k">Coupon ({{order.Coupon.Label}})</span>
+    <span class="hz-pg-dl-v">{{order.Coupon.OrderDiscount * -1 | culturecurrency}}</span>
+  </div>
+  <div class="hz-pg-dl-row">
+    <span class="hz-pg-dl-k">Total</span>
+    <span class="hz-pg-dl-v hz-pg-dl-v--total">{{order.Total | culturecurrency}}</span>
+  </div>
+</div>

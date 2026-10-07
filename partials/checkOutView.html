@@ -1,0 +1,148 @@
+<!--
+  Checkout.
+
+  Laid out like a Shopify checkout (Trevor, 24 Sep 2026): a white form half and a grey
+  summary half that runs to the edge of the screen, each half's content hugging the line
+  between them. One Submit button at the foot of the form, not in the summary, so the
+  summary only says what is being ordered. On a phone the summary folds into a bar above
+  the form.
+
+  The steps sit on the left, the summary beside them. The three step cards
+  are `orderdetails`, `ordershipping` and `orderbilling`, which are the stock theme's form
+  partials and are left alone — they are where address, payment and approval behaviour
+  lives, and rewriting them is a separate job from making this page read properly.
+
+  Every custom element carries an explicit closing tag.
+-->
+<section class="hz-co">
+  <loadingindicator ng-show="displayLoadingIndicator"
+                    title="{{'Please wait while we update your order' | r | xlat}}"></loadingindicator>
+
+  <!--
+    Waiting for the order.
+
+    `currentOrder` is loaded asynchronously, and only the form column was gated on it — so
+    before it arrived the page rendered the summary rail alone, stretched across the grid,
+    offering a live Submit button for an order that did not exist yet. A short line is more
+    honest and does not invite a click that cannot work.
+
+    `undefined` is not `null` here either: undefined means not answered yet, null means there
+    is no order to check out. They get different text.
+  -->
+  <div class="hz-co-wait" ng-if="currentOrder === undefined">
+    <p>Loading your order&hellip;</p>
+  </div>
+
+  <div class="hz-co-wait" ng-if="currentOrder === null">
+    <p>There is nothing in your cart to check out. <a href="catalog">Start shopping</a>.</p>
+  </div>
+
+  <div class="hz-co-grid" ng-if="currentOrder">
+
+    <!-- A phone only: the summary folded into one bar, opened on a tap. -->
+    <button type="button" class="hz-co-sumbar" ng-click="coSummaryOpen = !coSummaryOpen"
+            aria-controls="hz-co-side" aria-expanded="{{!!coSummaryOpen}}">
+      <span class="hz-co-sumbar-t">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"
+             stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M5 8h14l-1.2 11H6.2z"></path><path d="M9 8V6a3 3 0 0 1 6 0v2"></path>
+        </svg>
+        {{coSummaryOpen ? 'Hide order summary' : 'Show order summary'}}
+        <svg class="hz-co-sumbar-chev" ng-class="{'is-open': coSummaryOpen}" viewBox="0 0 24 24" width="14" height="14"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M6 9l6 6 6-6"></path>
+        </svg>
+      </span>
+      <span class="hz-co-sumbar-n">{{currentOrder.LineItems | hzUnits}} {{(currentOrder.LineItems | hzUnits) == 1 ? 'item' : 'items'}}</span>
+    </button>
+
+    <aside class="hz-co-side" id="hz-co-side" aria-label="Order summary" ng-class="{'is-open': coSummaryOpen}">
+      <div class="hz-co-col hz-co-col--side">
+        <ordersummary></ordersummary>
+      </div>
+    </aside>
+
+    <div class="hz-co-main" ng-show="currentOrder && currentOrder.isEditable">
+      <div class="hz-co-col">
+
+        <nav class="hz-co-crumbs" aria-label="Checkout steps">
+          <a href="cart">Cart</a>
+          <span aria-hidden="true">&rsaquo;</span>
+          <span aria-current="page">Checkout</span>
+        </nav>
+        <h1 class="hz-co-title">Checkout</h1>
+
+        <!--
+          Sections of one form, not cards.
+
+          Order, shipping and billing are steps in a single act, and the employee is not
+          choosing between them — they fill the form top to bottom and submit.
+
+          The directives are untouched: `orderdetails`, `ordershipping`, `orderbilling` and
+          `orderapprovals` each still render their own form, keep their own `name` for
+          validation, and are hidden by their own conditions — billing does not render at all
+          for an order with nothing to charge, and the column simply closes up around it.
+        -->
+        <div class="hz-co-panel">
+          <orderdetails></orderdetails>
+          <ordershipping></ordershipping>
+          <orderbilling></orderbilling>
+          <orderapprovals ng-show="currentOrder.Approvals"></orderapprovals>
+        </div>
+
+        <div class="hz-co-alert" ng-show="errorMessage"><p>{{errorMessage}}</p></div>
+        <div class="hz-co-said" ng-show="actionMessage"><p>{{actionMessage}}</p></div>
+
+        <!--
+          Submit, at the foot of the form, where the eye lands after the last field.
+
+          It moved here from the summary. The conditions are the summary's, unchanged: the
+          step forms (`cart_order`, `cart_shipping`, `cart_billing`) publish onto this same
+          scope, because none of the directives has a scope of its own.
+
+          `!currentOrder.ShipAddressID` is not redundant with `cart_shipping.$invalid`: the
+          shipping form can validate while the order still carries no ship address — the
+          address is set on the order by the shipping directive, not by the form control —
+          and submitting then is rejected by Four51 after the click, which reads as checkout
+          being broken rather than as something being missing.
+        -->
+        <div class="hz-co-pay">
+          <!-- Says what is still missing rather than only disabling the button. -->
+          <p class="hz-co-blocked"
+             ng-if="cart_order.$invalid || cart_shipping.$invalid || cart_billing.$invalid || !currentOrder.ShipAddressID">
+            <span ng-if="cart_order.$invalid">Order details are incomplete. </span>
+            <span ng-if="!currentOrder.ShipAddressID">A shipping address is needed. </span>
+            <span ng-if="currentOrder.ShipAddressID && cart_shipping.$invalid">Confirm the shipping address and choose a shipping method. </span>
+            <span ng-if="cart_billing.$invalid">Billing details are incomplete.</span>
+          </p>
+
+          <button type="button" class="hz-co-btn hz-co-btn--primary hz-co-btn--pay"
+                  ng-click="submitOrder()"
+                  ng-disabled="submitClicked || cart_order.$invalid || cart_shipping.$invalid || cart_billing.$invalid || !currentOrder.ShipAddressID">
+            <span ng-if="!submitClicked">Submit order</span>
+            <span ng-if="submitClicked">Submitting&hellip;</span>
+          </button>
+
+          <div class="hz-co-pay-links">
+            <a class="hz-co-back" href="cart">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"
+                   stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"></path></svg>
+              Return to cart
+            </a>
+            <button type="button" class="hz-co-cancel"
+                    ng-click="currentOrder.Status == 'AwaitingApproval' ? cancelEdit() : cancelOrder()">
+              {{currentOrder.Status == 'AwaitingApproval' ? 'Cancel edit' : 'Empty cart'}}
+            </button>
+          </div>
+        </div>
+
+        <div class="hz-co-help">
+          <p>
+            <strong>Trouble checking out?</strong> Email
+            <a href="mailto:hertzsupport@thumbprint.com">hertzsupport@thumbprint.com</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

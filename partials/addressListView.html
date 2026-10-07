@@ -1,0 +1,103 @@
+<!--
+  Addresses, under Account.
+
+  Was the stock theme: an injected <style> block setting a 40px teal `.cart-title` that
+  the page then never used, a striped table whose Shipping and Billing columns were an
+  empty <i> that became a tick only when true — so a screen reader read nothing at all
+  for either column — and a Delete Selected button sitting to the left of Add, both
+  below the fold.
+
+  Now a table with real Yes/No text in those columns, and the two actions where they
+  belong: Add above the list, Delete with the selection it acts on.
+
+  Bindings are unchanged: `addresses`, `searchTerm`, `search()`, `checkAll($event)`,
+  `newAddress($event)`, `deleteSelected($event)`, `settings.*`, `actionMessage`.
+-->
+<section class="hz-pg address-list-view">
+
+  <loadingindicator ng-show="displayLoadingIndicator" />
+  <accountnavigation />
+
+  <div class="hz-pg-head">
+    <h1 class="hz-pg-title">Addresses</h1>
+    <button type="button" class="hz-pg-btn"
+            ng-if="user.Permissions.contains('CreateShipToAddress') || user.Permissions.contains('CreateBillToAddress')"
+            ng-click="newAddress($event)">Add an address</button>
+  </div>
+  <!-- Your saved addresses, for anyone Four51 lets create one. -->
+  <p class="hz-pg-sub">
+    Your saved addresses. Choose any of them at checkout.
+  </p>
+
+  <form name="searchForm" ng-submit="search()" ng-show="addresses.length">
+    <div class="hz-pg-search" style="margin-bottom: 20px;">
+      <div class="hz-pg-field">
+        <label for="hzAddrSearch">Search addresses</label>
+        <input id="hzAddrSearch" type="text" ng-model="searchTerm" autocomplete="off"
+               placeholder="Name, city or state" />
+      </div>
+      <button type="submit" class="hz-pg-btn hz-pg-btn--ghost" style="height: 42px;">Search</button>
+    </div>
+  </form>
+
+  <div class="hz-pg-empty" ng-show="!addresses.length">
+    <p class="hz-pg-empty-t">No addresses yet</p>
+    <p>Add one and it becomes available when you check out.</p>
+    <button type="button" class="hz-pg-btn" ng-click="newAddress($event)">Add an address</button>
+  </div>
+
+  <div ng-show="addresses.length">
+    <div class="hz-pg-card">
+      <div class="hz-pg-scroll">
+        <table class="hz-pg-table">
+          <thead>
+            <tr>
+              <th style="width: 44px;">
+                <input type="checkbox" ng-click="checkAll($event)" aria-label="Select every address" />
+              </th>
+              <th>Name</th>
+              <th>City</th>
+              <th>State</th>
+              <th>Shipping</th>
+              <th>Billing</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="address in addresses | paginate:(settings.currentPage-1) * settings.pageSize | limitTo:settings.pageSize">
+              <td>
+                <input type="checkbox" ng-model="address.Selected" ng-show="address.IsCustEditable"
+                       aria-label="Select {{address.AddressName}}" />
+              </td>
+              <td><a ng-href="address/{{address.ID}}">{{address.AddressName}}</a></td>
+              <td>{{address.City}}</td>
+              <td>{{address.State}}</td>
+              <!-- Words, not a tick that is absent when false. An empty cell and a cell
+                   meaning "no" looked identical, and read as nothing at all. -->
+              <td>{{address.IsShipping ? 'Yes' : 'No'}}</td>
+              <td>{{address.IsBilling ? 'Yes' : 'No'}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div ng-show="settings.listCount > settings.pageSize">
+      <pagination page="settings.currentPage" max-size="8" rotate="false" boundary-links="true"
+                  total-items="settings.listCount" items-per-page="settings.pageSize"
+                  direction-links="true" previous-text="{{'Previous' | xlat}}"
+                  next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}"
+                  last-text="{{'Last' | xlat}}"></pagination>
+    </div>
+
+    <div class="hz-pg-actions" style="margin-top: 18px;">
+      <button type="button" class="hz-pg-btn hz-pg-btn--stop" ng-click="deleteSelected($event)"
+              ng-disabled="(addresses | filter:{Selected:true}).length == 0">
+        Delete selected
+      </button>
+    </div>
+  </div>
+
+  <div class="hz-pg-note" ng-show="actionMessage" style="margin-top: 20px;">
+    <p>{{actionMessage | r | xlat}}</p>
+  </div>
+</section>

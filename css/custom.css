@@ -1,0 +1,2804 @@
+/*
+Static file for Theme changes
+Theme name: My SPA Theme
+Version: 1.0
+Template: Howdy
+*/
+
+/* =========================================================================
+   Type: one face and one scale for the whole site (Trevor, 24 Sep 2026)
+
+   Open Sans, with the generic sans-serif behind it. Before this the site set six faces:
+   Barlow Semi Condensed for titles and numbers, Open Sans for body, proxima-nova (never
+   loaded, so Arial) on the landing page, Bootstrap's Droid Sans and Lato, and whatever
+   the older partials declared in their own <style> blocks (TT Commons, Verdana, Lato,
+   Rubik, Droid Sans).
+
+   Sizes come from this scale and nowhere else. There were 36 different font sizes, with
+   near-duplicates side by side (12 and 12.5, 13 and 13.5, 14 and 14.5, 15 and 15.5) that
+   no one could tell apart but that stopped any two components matching. Every size in
+   this file is now one of these steps; only the landing hero's display numerals keep
+   their own, and page titles share one responsive size.
+   ========================================================================= */
+:root {
+  --hz-font: 'Open Sans', sans-serif;
+
+  --fs-label: 11px;   /* uppercase labels, letter-spaced */
+  --fs-xs: 12px;      /* meta, badges, hints */
+  --fs-sm: 13px;      /* secondary text, SKUs, links in rows */
+  --fs-body: 14px;    /* body text, table cells */
+  --fs-md: 15px;      /* item names, controls, reading text */
+  --fs-lg: 16px;      /* emphasised lines, address */
+  --fs-xl: 18px;      /* section headings, totals */
+  --fs-2xl: 20px;     /* card headings */
+  --fs-3xl: 22px;     /* block headings */
+  --fs-4xl: 26px;     /* quantities, large figures */
+  --fs-5xl: 32px;     /* section titles, big figures */
+  --fs-title: clamp(30px, 4vw, 42px); /* every page title */
+}
+
+/* Every text element, including the older partials' own <style> blocks. Icon fonts are
+   left alone, or their glyphs would turn into letters. */
+html, body,
+body *:not(.fa):not(.glyphicon):not([class^="glyphicon-"]):not([class*=" glyphicon-"]) {
+  font-family: var(--hz-font) !important;
+}
+
+/*@font-face {
+    font-family: "WhitneyCond-Medium";
+    src: url("fonts/WhitneyCond-Medium.otf");
+}*/
+
+body {
+    font-family: var(--hz-font) !important;
+    margin: 0px;
+}
+html {
+    background-color: white !important;
+}
+.container-view {
+    margin-top: 0;
+}
+.header-navigation {
+    height: 100px !important;
+
+}
+.cart-title {
+    color: black !important;
+}
+.text-info {
+    color: #11172B;
+}
+.navIcon {
+    font-size: 35px;
+    padding: 0px 15px;
+}
+.navbar-default {
+    /*background-color: #11172B;
+    border-color: #11172B;*/
+  }
+.navbar {
+  min-height: 10px;
+  border: none;
+}
+
+.wholeSiteBackground {
+    background-color: #F3F4F8;
+    /*background: linear-gradient(90deg, rgba(0,38,62,1) 33%, rgba(220,68,5,1) 78%);*/
+    /*   background: url("https://thumbprint.com/four51_images/ttf_background_logon.png") no-repeat center center fixed;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;*/
+  }
+
+/*.path-banner {
+    background: url("https://www.usdermatologypartners.com/wp-content/uploads/2016/10/AboutUs-GettyImages-477465226.jpg") no-repeat center center;
+      -webkit-background-size: cover;
+      -moz-background-size: cover;
+      -o-background-size: cover;
+      background-size: cover;
+      height: 500px;
+}*/
+
+.marginTop {
+ 
+}
+
+.main-wrapper {
+    background-color:#FFFFFF;
+    margin: 0 auto;
+}
+.headerLogo {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+.view-form-icon > div:not(.panel-heading) {
+
+}
+.btn-default .badge {
+    background:red;
+}
+/* Was a stock green. Yellow is this brand's only accent, as a fill with near-black type
+   on it (§3.2) — an approve button is not a different brand from the rest of the site. */
+.approvalBtn {
+    background-color: #FFCC00;
+    color: #434244;
+}
+.approvalBtn:hover {
+    background-color: #E6B800;
+    color: #434244;
+}
+.main-logo {
+
+}
+.headerRow {
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.jumbotron {
+    margin:0px;
+    background-color: transparent;
+}
+.jumbotron h2 img {
+    max-height: 100%;
+}
+/*.bannerImage {
+    background-image: url('http://thumbprint.com/four51_images/spiracare/SpiraCare_lobby.png');
+    height: 550px;
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}*/
+.btn-group > .btn:last-child:not(:first-child), .btn-group > .dropdown-toggle:not(:first-child) {
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px;
+}
+.nav-container {
+  padding-left: 10% !important;
+  padding-right: 10% !important;
+}
+.navbar .container .navbar-nav.pull-right li a i:first-of-type {
+    border-color:white;
+    padding: 7px;
+}
+.fa-shopping-cart:before {
+    border-color:#f3c47d;
+}
+
+.mainContainer {
+    padding-right: 10%;
+    padding-left: 10%;
+    min-height: 1000px;
+}
+
+.navHover {
+    font-size: var(--fs-lg);
+    color: white;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+}
+.navHover:hover {
+   background: #fc0;
+}
+.navHover.active {
+    background-color: #fc0;
+}
+.navHover.open {
+    background-color: #fc0;
+}
+.navLinksHover {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+.navLinksHover:hover {
+    color: #fc0;
+}
+.cartHoverLink {
+  /*background: #4E2683;*/
+  border-radius: 10px;
+}
+.dropdown-menu {
+    border-radius: 10px;
+}
+.dropdown-menu, .dropdown-mega .dropdown-menu {
+    font-weight: 600;
+}
+.navbar-nav li.dropdown li > a {
+    color: white !important;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.navbar-nav > li > a {
+  height: 10px;
+
+}
+.navbar-nav li.dropdown li > a:hover {
+    color: white !important;
+    /*background-color: #11172B;*/
+}
+.dropdownLink {
+  width:100%;
+
+}
+.dropdown-menu, .dropdown-mega .dropdown-menu:hover {
+    background-color: black;
+}
+.dropdown-menu > li > a, .dropdown-mega .dropdown-menu > li > a {
+    color: white;
+    font-size: var(--fs-lg);
+    letter-spacing: .4px;
+    font-family: var(--hz-font) !important;
+    line-height: 20px;
+    font-weight: 600;
+}
+.panel-category-list ul li a img {
+    margin: 0 auto;
+    max-height: 400px;
+    border-radius: 5px;
+}
+.badge {
+    background-color: #E51937;
+    color: white;
+}
+.navbar .container .navbar-nav.pull-left li.fadeInLeft a i, .navbar .container-view .navbar-nav.pull-left li.fadeInLeft a i {
+    color: white;
+}
+
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    color: white;
+    /*background-color: #11172B;*/
+}
+.navbar-default .navbar-nav > .open > a, .navbar-default .navbar-nav > .open > a:hover, .navbar-default .navbar-nav > .open > a:focus {
+    background: transparent;
+    color: white;
+}
+.navbar-default .navbar-nav > .active > a, .navbar-default .navbar-nav > .active > a:hover, .navbar-default .navbar-nav > .active > a:focus {
+    background: none;
+}
+.container .navbar-nav li a {
+    color: white;
+    background: black;
+}
+.container .navbar-nav li a:hover {
+    background: #fc0;
+}
+.navbar-default .navbar-nav > li > a {
+    color: white;
+}
+/*.navbar-default .navbar-nav > li > a:hover {
+    color: white;
+}*/
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus,
+.dropdown-mega .dropdown-menu > li > a:hover,
+.dropdown-mega .dropdown-menu > li > a:focus {
+  text-decoration: none;
+  background-color: #fc0;
+  color: white;
+  border-radius: 4px;
+  /* border-bottom: 1px solid #E51937; */
+}
+
+/* .btn-info.disabled, .btn-info[disabled], fieldset[disabled] .btn-info, .btn-info.disabled:hover, .btn-info[disabled]:hover, fieldset[disabled] .btn-info:hover, .btn-info.disabled:focus, .btn-info[disabled]:focus, fieldset[disabled] .btn-info:focus, .btn-info.disabled:active, .btn-info[disabled]:active, fieldset[disabled] .btn-info:active, .btn-info.disabled.active, .btn-info[disabled].active, fieldset[disabled] .btn-info.active {
+    background-color: #6fa300;
+    border-color: #6fa300;
+} */
+/* ------------------- Carousel Styling ------------------- */
+
+.jumbotron {
+  margin-top: 20px;
+}
+
+.carousel-inner {
+  border-radius: 15px;
+}
+
+.carousel-caption {
+  background-color: rgba(0,0,0,.5);
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 0;
+  padding: 0 0 10px 10px;
+  color: #fff;
+  text-align: left;
+}
+
+.carousel-indicators {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+//   z-index: 15;
+  margin: 0;
+  padding: 0 25px 10px 0;
+  text-align: right;
+}
+
+.carousel-control.left,
+.carousel-control.right {
+  background-image: none;
+}
+
+.carousel {
+    position: relative;
+    overflow: hidden;
+}
+.carousel-control .glyphicon-chevron-left, .carousel-control .glyphicon-chevron-right, .carousel-control .icon-prev, .carousel-control .icon-next {
+
+}
+.carousel-control .icon-next, .carousel-control .glyphicon-chevron-right {
+
+}
+.navbar-nav li.dropdown li:hover {
+    color: white;
+}c
+
+/* ------------------- Section Styling - Not needed for carousel styling ------------------- */
+/*.shellAnchor:hover .shellColor,
+.shellAnchor:focus .shellColor {
+    -webkit-filter: grayscale(100%);
+    filter:  grayscale(100%);
+  box-shadow: #224 0.2em 0.2em 0.6em 0.1em;
+}*/
+
+.img-hover-zoom {
+  height: 300px; /* [1.1] Set it as per your need */
+  overflow: hidden; /* [1.2] Hide the overflowing of child elements */
+}
+
+.img-hover-zoom img {
+  transition: transform .5s ease;
+}
+
+.img-hover-zoom:hover img {
+  transform: scale(1.1);
+}
+
+/*.productHover:hover {
+    box-shadow: 0 0 11px rgba(33,33,33,.2);
+}*/
+
+/*search*/
+
+.product-search .form-control:focus {
+    border-color:black;
+}
+.searchButton {
+    border-top-right-radius: 4px !important;
+    border-bottom-right-radius: 4px !important;
+    border: 1px solid rgb(0, 38, 62) !important;
+    color: white;
+    
+}
+.searchButton:hover {
+    color:white;
+}
+.searchField {
+    float: right;
+    /* margin-right: 15% !important */
+    width: 40%;
+    background-color: white;
+    border-radius: 25px;
+}
+.searchInput {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+}
+
+.productListImage {
+  font-size: var(--fs-body);
+    padding-top: 15px;
+    padding-bottom: 60px;
+    text-transform: uppercase;
+    color: black;
+    font-weight: bold;
+    margin-bottom: none;
+    height:30px;
+}
+.panel-product-list ul li.gallery a {
+  padding-top: 30px;
+}
+
+.pdt-product-name {
+   color: #fc0 !important
+}
+/*--------*/
+
+.btn-info {
+    border-color: #fc0;
+    background-color: white;
+    color: #fc0;
+    font-family: var(--hz-font) !important;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 1.35px;
+    text-align: center;
+    text-transform: uppercase !important;
+    border-radius: 4px;
+}
+.btn-info:hover {
+    border-color: #fc0 !important;
+    background-color: #fc0 !important;
+    color: white;
+
+}
+.logonBtn {
+    border-color: #fc0;
+    background-color: white;
+    color: #fc0;
+    font-family: var(--hz-font) !important;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 1.35px;
+    text-align: center;
+    text-transform: uppercase !important;
+}
+.logonBtn:hover {
+    border-color: #fc0 !important;
+    background-color: #fc0 !important;
+    color: white;
+
+}
+.userBtn {
+    border-color: #fc0;
+    background-color: white;
+    color: #fc0;
+    font-family: var(--hz-font) !important;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: 1.35px;
+    text-align: center;
+    text-transform: uppercase !important;
+}
+.userBtn:hover {
+    border-color: #fc0 !important;
+    background-color: #fc0 !important;
+    color: white;
+
+}
+.minicart-btn {
+    border-color: #fc0;
+    background-color: white;
+    color: #fc0;
+    border-radius: 4px;
+}
+.minicart-btn:hover {
+    border-color: #fc0 !important;
+    background-color: #fc0 !important;
+    color: white;
+}
+.checkoutBtn {
+    font-size: var(--fs-xs) !important;
+    text-transform: uppercase !important;
+}
+
+.btn-primary {
+    border-radius: 4px;
+    border: 1px solid #fc0;
+    background: white;
+    color: #fc0;
+}
+.btn-primary:hover {
+    border-radius: 4px;
+    border: 1px solid #fc0;
+    background: #fc0;
+    color: white;
+}
+
+.navImages {
+  float: left;
+}
+
+/* PDT */
+
+.PDT-container {
+  display: flex;
+  background-color: white;
+
+}
+.thumbnail-container {
+    width: 50%;
+}
+
+.view-form-icon .quantity div input {
+  border-radius: 5px;
+}
+
+.btn-info.disabled, .btn-info[disabled], fieldset[disabled] .btn-info, .btn-info.disabled:hover, .btn-info[disabled]:hover, fieldset[disabled] .btn-info:hover, .btn-info.disabled:focus, .btn-info[disabled]:focus, fieldset[disabled] .btn-info:focus, .btn-info.disabled:active, .btn-info[disabled]:active, fieldset[disabled] .btn-info:active, .btn-info.disabled.active, .btn-info[disabled].active, fieldset[disabled] .btn-info.active {
+    background-color: #a4192d;
+    border-color: #a4192d;
+}
+
+.containerLetter {
+    display: flex;
+    justify-content: center;
+}
+
+.product-image-panel {
+    position: fixed;
+    width: 40%;
+}
+.panel-primary {
+    border-color: white;
+}
+/*.footerBox {
+    position: absolute;
+}*/
+.footer-div {
+    height: 200px;
+}
+
+/* Prevent content from overlapping footer on long pages */
+body {
+    padding-bottom: 0;
+    margin-bottom: 0;
+}
+
+.container-view {
+    padding-bottom: 60px;
+    margin-bottom: 0;
+}
+
+/* Ensure footer stays at bottom and has proper spacing */
+.footer {
+    position: relative;
+    z-index: 1;
+    margin-top: 60px;
+    clear: both;
+}
+
+/* Order confirmation and other long content pages */
+.panel-order,
+.panel-order-history,
+.panel-lineitem {
+    margin-bottom: 40px;
+}
+
+.panel-order {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+}
+
+/* Ensure order confirmation and long content pages have proper spacing */
+.panel-order-history,
+.panel-order-shipping-multiple,
+.panel-lineitem {
+    margin-bottom: 30px;
+}
+
+/* Add padding to main content wrapper to prevent footer overlap */
+.main-wrapper {
+    min-height: calc(100vh - 200px);
+}
+
+.nav ul li {
+    display: inline-block !important;
+    float: none;
+}
+
+.videoUL {
+    display: flex;
+    flex-wrap: wrap;
+}
+.videoLI {
+    padding: 5px;
+}
+.video-btn {
+    padding: 10px 33px;
+    font-weight: 800;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  height: 0;
+}
+.videoWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.iframe-container{
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; 
+  height: 0;
+}
+.iframe-container iframe{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* modal */
+
+.introLI:hover {
+    color: white;
+}
+contentmodal a {
+    color: #3B3E41 !important;
+}
+contentmodal a:hover{
+    color: white !important;
+}
+
+contentmodal2 a {
+    color: #3B3E41 !important;
+}
+contentmodal2 a:hover{
+    color: white !important;
+}
+
+/*.modal-dialog {
+    width: auto;
+}*/
+
+.PDT-modals a {
+    background: black;
+    border-radius: 5px;
+    color: white;
+    padding: 10px 34px;
+    font-weight: 800;
+}
+
+.PDT-modals a:hover {
+        background-color: #007FA3;
+        color:white;
+}
+
+.modal-content {
+    position: relative;
+    border: none;
+    border: none;
+    border-radius: none;
+    -webkit-box-shadow:none;
+    box-shadow: none;
+    background-clip: padding-box;
+    outline: none;
+    height: fit-content !important;
+ 
+}
+.modal-header {
+    border-bottom: none;
+}
+
+.features-product {
+    color: #007FA3 !important;
+}
+
+.nav-link {
+  display: inline-block;
+  position: relative;
+
+}
+.nav-link:hover {
+    font-weight: 400;
+    text-decoration: underline !important;
+}
+.nav-link.active {
+    font-weight: 400;
+    text-decoration: underline !important;
+}
+.navItems.active {
+    color:#fc0 !important;
+}
+/*.nav-link:after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  transform: scaleX(0);
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  /* Was a teal left over from another tenant's theme. */
+  background-color: #FFCC00;
+  transform-origin: bottom right;
+  transition: transform 0.25s ease-out;
+}
+
+.nav-link:hover:after {
+  transform: scaleX(1);
+  transform-origin: center;
+}*/
+
+.checkout-title {
+    color: black !important;
+}
+
+.btn-info:hover, .btn-info:focus, .btn-info:active, .btn-info.active, .open .dropdown-toggle.btn-info {
+    color: #ffffff;
+    background-color: #231F1E;
+    border-color: #231F1E;
+}
+.info-container {
+    width: 50%;
+}
+/* responsive styling */
+
+@media screen and (max-width: 1510px) {
+.product-image-panel {
+
+    }
+}
+
+@media screen and (max-width: 1500px) {
+  .productListImage {
+    font-size: var(--fs-sm);
+  }
+}
+@media screen and (max-width: 1252px) {
+    .productListImage {
+        padding-bottom: 25px;
+        font-size: var(--fs-sm);
+        height: 90px;
+ }
+}
+@media screen and (max-width: 1223px) {
+    .productListImage {
+        font-size: var(--fs-xs);
+ }
+}
+ @media (min-width: 1200px) {
+ .panel-product-list ul li.inline {
+     width: 25%;
+ }
+
+}
+
+@media screen and (max-width: 1225px) {
+    .containerLetter {
+        display: block;
+ }
+}
+@media screen and (max-width: 1200px) {
+    .PDT-container {
+      display: block;
+    }
+    .headerRow {
+      margin-left: 5%;
+      margin-right: 5%;
+      margin-top: 10px;
+    }
+    .minicart {
+     margin-right: 0 !important;   
+    }
+    .info-container {
+        width: 100%;
+    }
+    .thumbnail-container {
+        width: 100%;
+    }
+     .product-desc {
+        width: 100% !important;
+    }
+}
+@media screen and (max-width: 1199px) {
+    .productListImage {
+        padding-bottom: 20px;
+        font-size: var(--fs-body);
+ }
+}
+@media screen and (max-width: 1024px) {
+.headerRow {
+      margin-left: 5%;
+      margin-right: 5%;
+}
+  .headerLogo {
+
+  }
+  .searchField {
+  width: 100%;
+  margin-top:8% !important;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+    .product-image-panel {
+        position: inherit;
+        width:100% !important;
+    }
+}
+
+@media (max-width: 1199px) and (min-width: 992px) {
+.panel-product-list ul li.inline {
+    width: 35%
+  }
+}
+
+@media screen and (max-width: 992px) {
+  .searchField {
+  width: 100%;
+  margin-top:0 !important;
+  }
+  .headerLogo {
+    height: 100% !important;
+    margin: auto;
+  }
+  .header-navigation {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+.panel-product-list ul li.inline {
+    width: 100%;
+  }
+      .main-logo {
+        margin-top: 0;
+    }
+}
+  @media screen and (max-width: 768px) {
+      .alert-banner {
+            font-size: var(--fs-md) !important;
+        }
+.searchField {
+    width: 100%;
+    margin-right: 0 !important;
+    margin-top: 0 !important;
+    }
+    .searchFieldForm {
+  }
+  .headerLogo {
+    height: 100% !important;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .navImages {
+
+    justify-content: center;
+    float: none;
+  }
+      .navbar-nav > li > a {
+       padding-top: 5px !important;
+      padding-bottom: 5px !important;
+    }
+}
+
+   @media screen and (max-width: 425px) {
+    .mainContainer {
+        padding-right: 2%;
+        padding-left: 2%;
+    }
+    .searchField {
+    width: 100%;
+    }
+ }
+.checkoutBtn-cart {
+    border-radius: 4px; 
+ }
+.checkoutBtn-save {
+   border-radius: 4px; 
+}
+.checkoutBtn-sum {
+    border-radius: 4px;
+}
+.checkoutBtn-continue {
+    border-radius: 4px;
+}
+.checkoutBtn-cancel {
+    border-radius: 4px;
+}
+.form-control {
+    border-radius: 4px;
+}
+.view-form-icon.view-form-icon-input-group input, .view-form-icon.view-form-icon-input-group select, .view-form-icon.view-form-icon-input-group text, .view-form-icon.view-form-icon-input-group textarea {
+    border-radius: 4px;
+}
+.input-group .form-control:first-child, .input-group-addon:first-child, .input-group-btn:first-child > .btn, .input-group-btn:first-child > .btn-group > .btn, .input-group-btn:first-child > .dropdown-toggle, .input-group-btn:last-child > .btn:not(:last-child):not(.dropdown-toggle), .input-group-btn:last-child > .btn-group:not(:last-child) > .btn {
+
+}
+.list-group-item:last-child {
+    border-radius: 4px;
+}
+.btn-default {
+    border-radius: 4px;
+}
+.alert-warning {
+    border-radius: 4px;
+}
+.order-location {
+    border-radius: 4px;
+}
+.btn-primary.disabled, .btn-primary[disabled], fieldset[disabled] .btn-primary, .btn-primary.disabled:hover, .btn-primary[disabled]:hover, fieldset[disabled] .btn-primary:hover, .btn-primary.disabled:focus, .btn-primary[disabled]:focus, fieldset[disabled] .btn-primary:focus, .btn-primary.disabled:active, .btn-primary[disabled]:active, fieldset[disabled] .btn-primary:active, .btn-primary.disabled.active, .btn-primary[disabled].active, fieldset[disabled] .btn-primary.active {
+    color: white;
+}
+.btn-group > .btn:first-child:not(:last-child):not(.dropdown-toggle) {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px;
+}
+.product-image-large {
+    max-height: 350px;
+    border: 1px solid #ddd;
+    max-height: 100%;
+    max-width: 100%;
+    position: relative;
+    top: 0;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+#451_img_prod_lg {
+    border-radius: 8px;
+}
+/*side nav*/
+.side-nav-title {
+    margin: 12px;
+    font-size: var(--fs-xl);
+    margin-top: 25px;
+    line-height: normal;
+    margin-bottom: 10px;
+}
+.panel-nav ul li a {
+    width: 100%;
+    padding: 3px 0;
+    font-weight: 500;
+    color: #211e22;
+    font-size: var(--fs-body);
+}
+.panel-nav ul li {
+    border-top: none;
+}
+.divider {
+    height: 1px;
+    background-color: rgba(0, 0, 0, 0.12);
+    width: 100%;
+}
+.panel-nav .panel-body > ul, .panel-nav .panel-category-list:not(.no-panels) > ul, .panel-nav .panel-product-list:not(.no-panels) > ul, .panel-nav .panel-lineitem > ul, .panel-nav .panel-order-history > ul, .panel-nav .panel-order-shipping-multiple > ul {
+    border-bottom: none;
+}
+.panel-product-list ul li.gallery a img {
+    border-radius: 8px;
+    max-width: 280px;
+}
+.thumbnail img {
+    max-height: 300px;
+}
+.modal-content {
+    width: fit-content;
+}
+.panel-product-list ul li a img {
+    border-radius: 4px;
+}
+.product-desc {
+    width: 50%;
+}
+.galleryImages .active .product-image-large {
+    border-radius: 8px;
+}
+
+/* ------------------- Footer ------------------- */
+/*
+   Moved out of a <style> block inside partials/copyrightView.html. A partial can be
+   injected more than once, and duplicated inline styles fight each other in the cascade.
+
+   Light, per the brighter direction: a hairline rule and the Hertz wordmark treatment
+   carry it rather than a heavy grey slab. Four columns on desktop, stacking to one on a
+   phone, with the brand column given more room than the link columns because it holds a
+   sentence rather than a list.
+*/
+.hz-footer {
+  background: #fff;
+  border-top: 1px solid #e3e7ef;
+  font-family: var(--hz-font);
+  color: #2c3140;
+  margin-top: 64px;
+  position: relative;
+  z-index: 1;
+  clear: both;
+}
+
+.hz-footer-inner {
+  max-width: 1120px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 48px 24px 40px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1.3fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* The wordmark, with the yellow underline the brand uses. Set in the condensed display
+   face so it reads as a mark rather than as another heading. */
+.hz-footer-mark {
+  font-family: var(--hz-font);
+  font-weight: 700;
+  font-style: italic;
+  font-size: var(--fs-5xl);
+  line-height: 1;
+  color: #11172b;
+  display: inline-block;
+  border-bottom: 4px solid #fc0;
+  padding-bottom: 2px;
+  margin-bottom: 16px;
+}
+
+.hz-footer-tag {
+  font-size: var(--fs-body);
+  font-weight: 700;
+  color: #11172b;
+  margin: 0 0 4px;
+}
+
+.hz-footer-blurb {
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  color: #5f6778;
+  margin: 0;
+  max-width: 34ch;
+}
+
+.hz-footer-h {
+  font-size: var(--fs-label);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #5f6778;
+  margin: 0 0 14px;
+}
+.hz-footer-help .hz-footer-h { text-transform: none; letter-spacing: 0; font-size: var(--fs-body); color: #11172b; }
+
+.hz-footer-nav ul { list-style: none; padding: 0; margin: 0; }
+.hz-footer-nav li { margin-bottom: 10px; }
+
+.hz-footer-nav a {
+  font-size: var(--fs-body);
+  color: #2c3140;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  padding-bottom: 1px;
+}
+.hz-footer-nav a:hover { color: #11172b; text-decoration: none; border-bottom-color: #fc0; }
+.hz-footer-nav a:focus { outline: 2px solid #11172b; outline-offset: 3px; text-decoration: none; }
+
+/* A quieter base bar, separated by a rule rather than a colour change. */
+.hz-footer-base { border-top: 1px solid #eef0f5; }
+
+.hz-footer-inner--base {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 8px 20px;
+  padding: 18px 24px 22px;
+  font-size: var(--fs-xs);
+  color: #5f6778;
+}
+.hz-footer-by { color: #8a90a0; }
+
+@media (max-width: 900px) {
+  .hz-footer-inner { grid-template-columns: 1fr 1fr; gap: 32px; }
+}
+@media (max-width: 560px) {
+  .hz-footer-inner { grid-template-columns: 1fr; gap: 28px; padding: 36px 20px 28px; }
+  .hz-footer-inner--base { justify-content: flex-start; padding: 16px 20px 20px; }
+}
+
+/* =========================================================================
+   Site header — Hertz brand guidelines v2.0
+
+   Logo top left at 34px with clear space; nav at a 28px gap with the active
+   item underlined 3px yellow; name and avatar right. A 1px rule at 20% black
+   closes the bar and the 3px yellow rule sits under it.
+
+   Tokens are repeated rather than inherited from .hz-lp: the header renders on
+   every page, including the ones still on the old theme.
+   ========================================================================= */
+.hz-hd {
+  --yellow: #FFCC00;
+  /* Repeated here for the same reason as the rest: the header is not inside .hz-lp, so a
+     token defined only there resolves to nothing and silently drops the declaration that
+     uses it. The cart control needs both — type on yellow, and the pressed yellow. */
+  --yellow-press: #E6B800;
+  --black-90: #434244;
+  --black-80: #58595B;
+  --black-60: #808285;
+  --rule: rgba(0,0,0,0.2);
+  font-family: var(--hz-font);
+  background: #fff;
+  border-bottom: 1px solid var(--rule);
+  box-shadow: inset 0 -4px 0 -1px var(--yellow);
+}
+.hz-hd, .hz-hd *, .hz-hd *::before, .hz-hd *::after { box-sizing: border-box; }
+
+.hz-hd-bar {
+  display: flex; align-items: center; gap: 28px;
+  padding: 22px clamp(16px, 4vw, 56px);
+}
+
+/* Clear space on all sides is at least the width of the wordmark's z (§2.1). */
+.hz-hd-logo { display: block; flex: 0 0 auto; margin-right: 12px; }
+.hz-hd-logo img { display: block; height: 34px; width: auto; }
+
+.hz-hd-nav { display: flex; align-items: center; gap: 28px; flex: 1 1 auto; flex-wrap: wrap; }
+
+.hz-hd-link {
+  position: relative; display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--fs-md); font-weight: 600; line-height: 1;
+  color: #000; text-decoration: none; padding: 6px 0; white-space: nowrap;
+}
+.hz-hd-link:hover, .hz-hd-link:focus { color: #000; text-decoration: none; }
+/* The underline is drawn rather than a border so it does not move the text. */
+.hz-hd-link::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 3px;
+  background: var(--yellow); opacity: 0; transition: opacity .12s ease-out;
+}
+.hz-hd-link:hover::after { opacity: .45; }
+.hz-hd-link.active::after,
+.hz-hd-drop.active > .hz-hd-link::after { opacity: 1; }
+
+.hz-hd-caret {
+  width: 0; height: 0; margin-left: 2px;
+  border-left: 4px solid transparent; border-right: 4px solid transparent;
+  border-top: 5px solid currentColor;
+}
+.hz-hd-badge {
+  background: var(--yellow); color: #434244;
+  font-size: var(--fs-label); font-weight: 700; border-radius: 2px; padding: 2px 6px;
+}
+.hz-hd-drop { position: relative; display: inline-flex; }
+/* The theme paints every .dropdown-menu black with white items. This one is white with
+   dark items, so BOTH have to be restated together — setting only the text colour is what
+   produced a black panel with black text. Selectors carry the .hz-hd ancestor so they beat
+   the theme's single-class rules without !important. */
+.hz-hd .hz-hd-menu {
+  background: #fff;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.10);
+  margin-top: 10px;
+  padding: 6px 0;
+  min-width: 232px;
+}
+.hz-hd .hz-hd-menu > li > a {
+  font-family: var(--hz-font);
+  font-size: var(--fs-body); font-weight: 600; letter-spacing: 0; line-height: 1.3;
+  color: #000; background: transparent;
+  padding: 10px 18px; white-space: nowrap;
+  display: flex; align-items: center; gap: 8px;
+}
+.hz-hd .hz-hd-menu > li > a:hover,
+.hz-hd .hz-hd-menu > li > a:focus {
+  background: #FAFAFA; color: #000;
+  /* The accent marks the item without becoming type: yellow is a fill (§3.2). */
+  box-shadow: inset 3px 0 0 var(--yellow);
+}
+.hz-hd .hz-hd-menu > li.divider {
+  height: 1px; margin: 6px 0; background: var(--rule); overflow: hidden;
+}
+.hz-hd .hz-hd-menu > li > a .fa { font-size: var(--fs-sm); }
+/* Log Out carried Bootstrap's `text-danger` red. The brand's red is for errors, and
+   signing out is not one. */
+.hz-hd .hz-hd-menu > li > a .fa.text-danger { color: inherit; }
+
+.hz-hd-you { display: flex; align-items: center; gap: 14px; margin-left: auto; flex: 0 0 auto; }
+.hz-hd-name { font-size: var(--fs-body); font-weight: 600; color: var(--black-80); white-space: nowrap; }
+.hz-hd-spend { font-size: var(--fs-sm); color: var(--black-60); white-space: nowrap; }
+.hz-hd-cart { list-style: none; margin: 0; padding: 0; display: flex; align-items: center; }
+
+/* 2px radius, matching every other control on the site (§5.2). */
+.hz-hd-avatar {
+  width: 38px; height: 38px; border: 1px solid var(--rule); border-radius: 2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #000; flex: 0 0 auto;
+}
+.hz-hd-avatar:hover, .hz-hd-avatar:focus { border-color: #000; color: #000; }
+.hz-hd-avatar svg {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* ---------------------------------------------------------- the cart control
+   Deliberately the twin of .hz-hd-avatar above: same 38px box, same 1px rule, same 2px
+   radius, same 20px stroked glyph. The two sit together at the end of the header and
+   should read as one pair of controls, not an icon parked beside a button.
+
+   Styles live here rather than in the directive, which used to inject its own <style>
+   block carrying `margin-right: 30%` and a `min-width: 300px` that broke the header. */
+.hz-mc { position: relative; list-style: none; display: flex; align-items: center; }
+
+.hz-mc-btn {
+  position: relative;
+  /* `min-height` because bootstrap-451.css sets `min-height: 40px` on every button, and a
+     min-height beats a height. Without this the cart sits 2px taller than the account
+     avatar next to it — the avatar is an <a> and escapes that rule. */
+  width: 38px; height: 38px; min-height: 38px; padding: 0;
+  border: 1px solid var(--rule); border-radius: 2px; background: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #000; cursor: pointer; flex: 0 0 auto;
+}
+.hz-mc-btn:hover { border-color: #000; }
+.hz-mc-btn:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.hz-mc-i {
+  width: 20px; height: 20px;
+  fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Yellow is a fill and never type (§3.2), so the count is near-black on yellow. It sits
+   proud of the box corner; `min-width` with a pill radius keeps a two-digit count from
+   squashing into an oval. */
+.hz-mc-badge {
+  position: absolute; top: -7px; right: -7px;
+  min-width: 19px; height: 19px; padding: 0 5px;
+  border-radius: 10px; background: var(--yellow); color: var(--black-90);
+  font-size: var(--fs-label); font-weight: 700; line-height: 19px; text-align: center;
+  box-sizing: border-box;
+}
+
+.hz-mc-panel {
+  position: absolute; top: calc(100% + 10px); right: 0; z-index: 1200;
+  width: 320px; max-width: calc(100vw - 32px);
+  background: #fff; border: 1px solid var(--rule); border-radius: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 14px 16px;
+  text-align: left;
+  cursor: default;
+}
+.hz-mc-h {
+  margin: 0 0 10px; padding-bottom: 10px; border-bottom: 1px solid var(--rule);
+  font-size: var(--fs-sm); font-weight: 700; color: var(--black-90);
+}
+
+.hz-mc-empty { text-align: center; padding: 6px 0 2px; }
+.hz-mc-empty p { margin: 0 0 8px; font-size: var(--fs-sm); color: var(--black-60); }
+.hz-mc-empty a { font-size: var(--fs-sm); font-weight: 700; color: var(--black-90); text-decoration: underline; }
+
+.hz-mc-list { list-style: none; margin: 0; padding: 0; }
+.hz-mc-row {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 0; border-bottom: 1px solid var(--rule);
+}
+.hz-mc-thumb {
+  flex: 0 0 auto; width: 40px; height: 40px;
+  border: 1px solid var(--rule); background: #fafbfd;
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.hz-mc-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.hz-mc-meta { display: flex; flex-direction: column; gap: 1px; min-width: 0; flex: 1 1 auto; }
+/* The name wraps to two lines and then stops. A product name is long enough to push the
+   price out of the panel if it is allowed to run. */
+.hz-mc-name {
+  font-size: var(--fs-sm); font-weight: 600; color: var(--black-90); line-height: 1.25;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.hz-mc-qty { font-size: var(--fs-xs); color: var(--black-60); }
+.hz-mc-line { flex: 0 0 auto; font-size: var(--fs-sm); font-weight: 600; color: var(--black-90); }
+
+.hz-mc-more { padding: 9px 0; text-align: center; }
+.hz-mc-more a { font-size: var(--fs-xs); font-weight: 600; color: var(--black-60); text-decoration: underline; }
+
+.hz-mc-sums { padding-top: 10px; }
+.hz-mc-sums p {
+  display: flex; justify-content: space-between; gap: 12px;
+  margin: 0 0 5px; font-size: var(--fs-sm); color: var(--black-60);
+}
+.hz-mc-sums .hz-mc-total { font-weight: 700; color: var(--black-90); }
+
+/* The one action in the panel, so it carries the yellow. */
+.hz-mc-go {
+  display: block; margin-top: 12px; padding: 11px 14px;
+  background: var(--yellow); border: 1px solid var(--yellow); border-radius: 2px;
+  color: var(--black-90); font-size: var(--fs-body); font-weight: 700;
+  text-align: center; text-decoration: none;
+}
+.hz-mc-go:hover, .hz-mc-go:focus {
+  background: var(--yellow-press); border-color: var(--yellow-press); color: var(--black-90);
+  text-decoration: none;
+}
+
+.hz-hd a:focus-visible,
+.hz-lp a:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+
+/* ---- Menu button: phone only, the twin of the cart box beside it ---- */
+.hz-hd-toggle {
+  display: none;
+  width: 38px; height: 38px; min-height: 38px; padding: 0;
+  border: 1px solid var(--rule); border-radius: 2px; background: #fff;
+  align-items: center; justify-content: center; color: #000; cursor: pointer;
+}
+.hz-hd-toggle:hover, .hz-hd-toggle[aria-expanded="true"] { border-color: #000; }
+.hz-hd-toggle:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.hz-hd-toggle svg {
+  width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.7;
+  stroke-linecap: round;
+}
+
+/* ---- The same header on a phone ----
+   Logo, cart and Menu in one bar; the nav becomes a panel under it. The name and avatar
+   come off because the panel already carries User Information, and a 390px bar holding
+   five things holds none of them well. The account menu is laid open in the panel rather
+   than being a dropdown inside a dropdown. */
+@media (max-width: 767px) {
+  .hz-hd-bar { flex-wrap: wrap; gap: 12px; padding: 12px 16px; }
+  .hz-hd-logo { margin-right: 0; }
+  .hz-hd-logo img { height: 28px; }
+  .hz-hd-you { gap: 10px; }
+  .hz-hd-name, .hz-hd-spend, .hz-hd-avatar { display: none; }
+  .hz-hd-toggle { display: inline-flex; }
+
+  .hz-hd-nav {
+    display: none; order: 10; flex: 1 0 100%;
+    flex-direction: column; align-items: stretch; gap: 0;
+    margin: 0 -16px -12px; padding: 4px 16px 18px; border-top: 1px solid var(--rule);
+  }
+  .hz-hd-nav.is-open { display: flex; }
+
+  .hz-hd-nav > .hz-hd-link,
+  .hz-hd .hz-hd-menu > li > a {
+    font-size: var(--fs-lg); padding: 14px 0; border-bottom: 1px solid var(--rule);
+    white-space: normal;
+  }
+  /* The active mark moves from under the word to the left edge, as on the account
+     menu's hover, because an underline across a full-width row marks the row, not the
+     page. */
+  .hz-hd-nav > .hz-hd-link::after { left: -16px; right: auto; top: 0; bottom: 0; width: 3px; height: auto; }
+
+  .hz-hd-drop { display: block; }
+  .hz-hd-drop > .dropdown-toggle {
+    pointer-events: none; border-bottom: 0; padding: 20px 0 6px;
+    font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+    color: var(--black-60);
+  }
+  .hz-hd-drop > .dropdown-toggle::after, .hz-hd-drop .hz-hd-caret { display: none; }
+  .hz-hd .hz-hd-drop .hz-hd-menu {
+    display: block; position: static; float: none; min-width: 0;
+    margin: 0; padding: 0; border: 0; border-top: 1px solid var(--rule);
+    box-shadow: none; background: transparent;
+  }
+  .hz-hd .hz-hd-menu > li > a { padding-left: 0; padding-right: 0; }
+  .hz-hd .hz-hd-menu > li > a:hover,
+  .hz-hd .hz-hd-menu > li > a:focus { background: transparent; box-shadow: none; }
+  .hz-hd .hz-hd-menu > li.divider { display: none; }
+}
+
+/* =========================================================================
+   Cart
+
+   Written for `partials/cartView.html`, which is this storefront's own markup
+   rather than the stock theme's. That is the whole reason this section is
+   short: the previous attempts were CSS fighting a Bootstrap column nest built
+   for prices, editable quantities and multi-address shipping, none of which a
+   Hertz employee sees. Owning the markup means the styles describe the page
+   instead of arguing with it.
+
+   Same language as the landing page and the picker: flat, ruled, 2px radius,
+   yellow as a fill and never as type.
+   ========================================================================= */
+.hz-cart {
+  --yellow: #FFCC00;
+  --yellow-press: #E6B800;
+  --ink: #11172b;
+  --body: #2c3140;
+  --muted: #5f6778;
+  --line: #e3e7ef;
+  --edge: #dae0ea;
+  --sub: #f8f9fc;
+  --display: var(--hz-font);
+
+  font-family: var(--hz-font);
+  color: var(--body);
+  /* White ground, per the client. This was a tinted #F6F7F9 because on pure white the
+     cards' 1px edge was the only thing separating the page from the header — but the
+     header now carries its own bottom rule and yellow edge, so it no longer needs the
+     page to do that for it. The cards keep their 1px border and read as panels on white. */
+  background: #fff;
+  /* Cancel .mainContainer's 10% side padding so the page runs edge to edge like the
+     landing page: content box is 80% of the whole, and 10/80 = 12.5%. */
+  margin-left: -12.5%;
+  margin-right: -12.5%;
+  padding: 28px clamp(16px, 4vw, 56px) clamp(48px, 7vw, 96px);
+  min-height: calc(100vh - 150px);
+}
+.hz-cart, .hz-cart *, .hz-cart *::before, .hz-cart *::after { box-sizing: border-box; }
+@media screen and (max-width: 425px) {
+  .hz-cart { margin-left: -2.0833%; margin-right: -2.0833%; }
+}
+
+.hz-cart-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; margin-bottom: 22px;
+}
+.hz-cart-title {
+  font-family: var(--hz-font); font-weight: 600; font-size: var(--fs-title);
+  line-height: 1.02; letter-spacing: -0.008em; color: var(--ink); margin: 0;
+}
+.hz-cart-print {
+  background: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--body);
+  padding: 9px 14px; cursor: pointer; white-space: nowrap;
+}
+.hz-cart-print:hover { border-color: var(--ink); color: var(--ink); }
+
+.hz-cart-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px; align-items: start;
+}
+
+/* ---- items ---- */
+.hz-cart-items { border: 1px solid var(--edge); border-radius: 8px; background: #fff; }
+.hz-cart-row {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr) auto auto;
+  align-items: center; gap: 18px;
+  padding: 18px 20px; border-top: 1px solid var(--line);
+}
+.hz-cart-row:first-child { border-top: 0; }
+
+.hz-cart-thumb {
+  width: 88px; height: 88px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--sub); overflow: hidden; display: grid; place-items: center;
+}
+.hz-cart-thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+.hz-cart-info { min-width: 0; }
+.hz-cart-name { font-size: var(--fs-md); font-weight: 700; color: var(--ink); margin: 0 0 3px; }
+.hz-cart-size { font-size: var(--fs-sm); color: var(--muted); margin: 0; }
+.hz-cart-spec { font-size: var(--fs-sm); color: var(--body); margin: 4px 0 0; }
+.hz-cart-spec span { color: var(--muted); }
+
+.hz-cart-qty { text-align: right; }
+.hz-cart-qty-l {
+  display: block; font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.hz-cart-qty-n {
+  font-family: var(--hz-font); font-size: var(--fs-4xl); font-weight: 600; color: var(--ink);
+  line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+.hz-cart-act { min-width: 0; }
+.hz-cart-remove {
+  background: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--muted);
+  padding: 9px 14px; cursor: pointer; white-space: nowrap;
+}
+.hz-cart-remove:hover { border-color: #a4192d; color: #a4192d; }
+
+/* ---- acknowledgements ---- */
+.hz-cart-ack {
+  grid-column: 1 / -1;
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: 4px 0 0; padding: 12px 14px;
+  background: var(--sub); border: 1px solid var(--line); border-radius: 4px;
+  font-size: var(--fs-sm); font-weight: 400; line-height: 1.5; color: var(--body); cursor: pointer;
+}
+.hz-cart-ack input { margin: 2px 0 0; flex: 0 0 auto; }
+
+/* ---- summary ---- */
+.hz-cart-side { position: sticky; top: 16px; }
+.hz-cart-summary {
+  border: 1px solid var(--edge); border-radius: 8px; background: #fff; padding: 20px;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.hz-cart-summary-h {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 4px;
+}
+.hz-cart-sum-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  font-size: var(--fs-body); margin: 0;
+}
+.hz-cart-sum-row span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); }
+.hz-cart-sum-total {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  border-top: 2px solid var(--ink); margin-top: 8px; padding-top: 12px;
+  font-size: var(--fs-xl); font-weight: 700; color: var(--ink);
+}
+.hz-cart-note { font-size: var(--fs-xs); color: var(--muted); margin: 0; }
+
+.hz-cart-btn {
+  display: block; width: 100%; text-align: center;
+  background: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  font: inherit; font-size: var(--fs-md); font-weight: 700; color: var(--ink);
+  padding: 14px 18px; cursor: pointer; text-decoration: none;
+}
+.hz-cart-btn:hover {
+  background: var(--sub); border-color: var(--ink); color: var(--ink); text-decoration: none;
+}
+.hz-cart-btn--primary {
+  background: var(--yellow); border-color: var(--yellow); color: #434244;
+}
+.hz-cart-btn--primary:hover {
+  background: var(--yellow-press); border-color: var(--yellow-press); color: #434244;
+}
+.hz-cart-btn--primary[disabled] {
+  background: #EDEFF2; border-color: var(--line); color: var(--muted); cursor: not-allowed;
+}
+/* Cancelling is not the second half of checking out. */
+.hz-cart-cancel {
+  background: none; border: 0; font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--muted); text-decoration: underline; padding: 6px; cursor: pointer;
+}
+.hz-cart-cancel:hover { color: #a4192d; }
+
+.hz-cart :focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+
+.hz-cart-empty { padding: 40px 0; }
+.hz-cart-empty p { font-size: var(--fs-lg); color: var(--body); margin: 0 0 16px; }
+.hz-cart-empty .hz-cart-btn { display: inline-flex; width: auto; }
+
+.hz-cart-alert, .hz-cart-said { margin-top: 18px; font-size: var(--fs-body); }
+.hz-cart-alert p { color: #a4192d; margin: 0; }
+.hz-cart-said p { color: var(--ink); margin: 0; }
+
+@media (max-width: 900px) {
+  .hz-cart-grid { grid-template-columns: minmax(0, 1fr); }
+  .hz-cart-side { position: static; }
+}
+@media (max-width: 600px) {
+  .hz-cart-row { grid-template-columns: 64px minmax(0, 1fr); row-gap: 10px; padding: 16px; }
+  .hz-cart-thumb { width: 64px; height: 64px; }
+  .hz-cart-qty, .hz-cart-act { grid-column: 2; text-align: left; }
+}
+
+/* ---------- Checkout ----------
+   Same language as the cart. The three step cards come from the stock theme's form
+   partials, so this styles them from the outside as cards and leaves their internals
+   alone — that is where address, payment and approval behaviour lives.
+   -------------------------------------------------- */
+.hz-co {
+  --yellow: #FFCC00; --yellow-press: #E6B800;
+  --ink: #11172b; --body: #2c3140; --muted: #5f6778;
+  --line: #e3e7ef; --edge: #dae0ea; --sub: #f8f9fc;
+  --display: var(--hz-font);
+  font-family: var(--hz-font);
+  /* White, matching the cart. See the note on .hz-cart. */
+  color: var(--body); background: #fff;
+  margin-left: -12.5%; margin-right: -12.5%;
+  /* No padding of its own: the two halves carry it, so the grey summary half can run to
+     the edge of the screen. */
+  padding: 0;
+  min-height: calc(100vh - 150px);
+}
+.hz-co, .hz-co *, .hz-co *::before, .hz-co *::after { box-sizing: border-box; }
+/* The grey half runs down to the footer. The page container's bottom padding and the
+   footer's top margin would otherwise leave a white band under it; both are taken away on
+   this page only, so the split meets the footer's own rule. */
+/* The container also has a fixed 1000px min-height, so the view is stretched to fill it:
+   the container, the view, the section and the grid each grow into what is left. */
+.mainContainer:has(> ng-view > .hz-co) { padding-bottom: 0; display: flex; flex-direction: column; }
+.mainContainer:has(> ng-view > .hz-co) > ng-view { display: flex; flex-direction: column; flex: 1 0 auto; }
+.mainContainer:has(> ng-view > .hz-co) > ng-view > .hz-co { flex: 1 0 auto; display: flex; flex-direction: column; }
+.mainContainer:has(> ng-view > .hz-co) .hz-co-grid { flex: 1 0 auto; }
+.mainContainer:has(> ng-view > .hz-co) + .hidden-print .hz-footer { margin-top: 0; }
+@media screen and (max-width: 425px) {
+  .hz-co { margin-left: -2.0833%; margin-right: -2.0833%; }
+}
+
+.hz-co-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+.hz-co-title {
+  font-family: var(--hz-font); font-weight: 600; font-size: var(--fs-5xl);
+  line-height: 1.1; letter-spacing: -0.008em; color: var(--ink); margin: 0;
+}
+
+/* The Shopify split (Trevor, 24 Sep 2026). Two halves across the whole width: the form on
+   white, the summary on grey with a rule between them. Each half's content is held to a
+   readable width and pushed against the dividing line, so on a wide screen the pair sits
+   centred while the grey still reaches the edge. */
+.hz-co-grid {
+  display: grid; grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+  grid-template-areas: "main side";
+  min-height: calc(100vh - 150px);
+}
+.hz-co-main {
+  grid-area: main; min-width: 0; display: flex; justify-content: flex-end;
+  padding: 36px clamp(24px, 4.5vw, 64px) 64px;
+}
+.hz-co-side {
+  grid-area: side; min-width: 0; background: var(--sub); border-left: 1px solid var(--line);
+  padding: 36px clamp(24px, 4.5vw, 64px) 64px;
+}
+.hz-co-col { width: 100%; max-width: 580px; display: flex; flex-direction: column; gap: 28px; }
+.hz-co-col--side { max-width: 440px; position: sticky; top: 24px; }
+.hz-co-sumbar { display: none; }
+
+.hz-co-crumbs {
+  display: flex; align-items: center; gap: 8px; margin: 0 0 -18px;
+  font-size: var(--fs-sm); color: var(--muted);
+}
+.hz-co-crumbs a { color: var(--ink); text-decoration: none; }
+.hz-co-crumbs a:hover { text-decoration: underline; }
+.hz-co-crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+
+/* ---- the step cards ----
+   Written for this page, not layered over Bootstrap. The step partials now carry hz-co-*
+   classes of their own, so none of this needs `!important` to win an argument with
+   bootstrap-451.css — which is what the previous version of this block was doing, and why
+   the page kept looking half-finished whatever was changed.
+
+   Bootstrap is still loaded for the rest of the theme. Checkout simply no longer depends
+   on it.
+   -------------------------------------------------- */
+/* No surface: on the split the sections sit straight on the white half, as Shopify's do,
+   each one a heading and its fields with space between. */
+/* Spaced by a margin on each visible section, not a gap: a directive whose section is
+   hidden still leaves its element in the panel, and a gap would open space around it. */
+.hz-co-panel { display: flex; flex-direction: column; margin-top: -32px; }
+.hz-co-panel .hz-co-card { margin-top: 32px; }
+
+/* The card is now a section of that surface: no edge, no fill, no radius of its own. */
+.hz-co-card { background: transparent; border: 0; border-radius: 0; overflow: visible; }
+
+/* The rule sits ABOVE each heading rather than below it, so it reads as a divider between
+   sections rather than an underline belonging to the title. Each directive wraps its own
+   card, so `.hz-co-card + .hz-co-card` would never match — the first section's rule is
+   removed through the panel's first child instead. */
+.hz-co-card-h {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0; border-top: 0; background: transparent;
+}
+/* The first VISIBLE section, not the first in the DOM.
+   `orderdetails` is first in source but is hidden for a shopper with no Order ID, cost
+   centre — so Shipping became the top section while still drawing its
+   divider, doubling it against the panel's own border.
+
+   Deliberately not the chained `.ng-hide + .ng-hide + *` form: `orderbilling` is hidden in
+   this tenant ALWAYS, so that pattern would also strip the divider from Approvals, which
+   genuinely needs one. This matches only a hidden FIRST child, which is the real case. */
+.hz-co-panel > :first-child .hz-co-card-h,
+.hz-co-panel > .ng-hide:first-child + * .hz-co-card-h { border-top: 0; }
+.hz-co-card-t {
+  margin: 0; font-family: var(--hz-font);
+  font-size: var(--fs-2xl); font-weight: 600; letter-spacing: -0.01em; color: var(--ink);
+}
+
+/* Quiet when it is fine, visible when it is not.
+   A column of green ticks is noise: it marks what needs no attention. Only the section
+   actually holding up Submit says anything, which is also what makes it findable. */
+.hz-co-step-icon { font-size: var(--fs-md); line-height: 1; }
+.hz-co-step-icon.is-done { display: none; }
+/* Ink, not a warning gold. The heading beside it carries the meaning; the marker
+   only has to be findable. */
+.hz-co-step-icon.is-todo { color: var(--ink); }
+
+.hz-co-card-b { padding: 14px 0 0; display: flex; flex-direction: column; gap: 16px; }
+/* The gap above applies to the card body's children — but every section's real content is
+   inside a <form>, which was the only child, so the rhythm reached nothing and fields stacked
+   flush. Carry it through the form. */
+.hz-co-card-b > form { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---- fields ---- */
+.hz-co-field { display: flex; flex-direction: column; gap: 6px; }
+/* One answer for a field label. This declared 11px/700/uppercase but rendered 13px/600/ink
+   because the blanket rule above outranked it — while KEEPING the caps tracking, so labels
+   came out a hybrid neither rule intended. Sentence case at 13px, matching the reference and
+   the cart. */
+.hz-co-label {
+  font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0; text-transform: none;
+  color: var(--muted); margin: 0;
+}
+.hz-co-label.is-required::after { content: ' *'; }
+/* 2px and 12/14 to match the rule below that tames stock controls
+   (`.hz-co .form-control, .hz-co input[type="text"], …`). That rule is more specific, so on
+   any control it also matches — which is most of them — it was already winning, and this
+   one declared a 4px radius and 11/13 padding that never applied. Two different answers for
+   the same control, and which you got depended on whether the markup happened to be ours or
+   the stock theme's. 2px is also the brand radius for controls. */
+.hz-co-input, .hz-co-select {
+  font: inherit; font-size: var(--fs-md); color: var(--ink); width: 100%;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 2px;
+  background: #fff; box-shadow: none; appearance: none;
+}
+/* A select must not look like a text box — it has a caret drawn in.
+   Qualified with `.hz-co` so it outranks the generic control rule below, which sets a
+   symmetric padding that would otherwise run the text under the caret. */
+.hz-co .hz-co-select,
+.hz-co-select {
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath fill='%235f6778' d='M1 1l5 5 5-5'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 13px center; background-size: 11px;
+  padding-right: 36px;
+}
+.hz-co-input:focus, .hz-co-select:focus {
+  border-color: var(--ink); outline: 2px solid var(--yellow); outline-offset: 1px;
+}
+.hz-co-input[disabled] { background: var(--sub); color: var(--muted); }
+.hz-co-static { margin: 0; font-size: var(--fs-md); color: var(--ink); }
+.hz-co-inline { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.hz-co-inline .hz-co-input { flex: 1 1 220px; width: auto; }
+.hz-co-pair { display: flex; flex-wrap: wrap; gap: 10px; }
+.hz-co-pair .hz-co-input { flex: 1 1 160px; width: auto; }
+.hz-co-check { display: inline-flex; align-items: center; gap: 7px; font-size: var(--fs-body); margin: 0; }
+
+/* ---- notices ---- */
+.hz-co-alert {
+  background: var(--sub); border: 1px solid var(--line); border-radius: 6px;
+  padding: 14px 16px; font-size: var(--fs-sm); line-height: 1.5; color: var(--body);
+}
+.hz-co-alert--bad { background: #fcebed; border-color: #e3bcc2; color: #a4192d; }
+.hz-co-alert a { font-weight: 600; text-decoration: underline; }
+
+/* ---- shipping ---- */
+.hz-co-switch { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.hz-co-toggle {
+  font: inherit; font-size: var(--fs-body); font-weight: 600; padding: 9px 14px;
+  border: 0; background: #fff; color: var(--body); cursor: pointer;
+}
+.hz-co-toggle + .hz-co-toggle { border-left: 1px solid var(--line); }
+.hz-co-toggle.is-on { background: var(--ink); color: #fff; }
+.hz-co-linkbtn {
+  align-self: flex-start; font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  background: none; border: 0; padding: 0; color: var(--body);
+  text-decoration: underline; cursor: pointer;
+}
+.hz-co-linkbtn:hover { color: var(--ink); }
+
+/* Where the order is going: the one fact this step exists to state, so it is set as a
+   statement rather than as a boxed field with a micro-label over it. */
+.hz-co-ship { display: flex; flex-direction: column; gap: 14px; }
+/* The step's heading carries the ways to change the address, on the right. */
+.hz-co-card-h--split { justify-content: space-between; flex-wrap: wrap; }
+.hz-co-ship-acts { display: inline-flex; gap: 18px; }
+/* The address card: a pin, a small label, and the address large enough to check. */
+.hz-co-ship-card {
+  display: flex; gap: 14px; align-items: flex-start;
+  padding: 18px 20px; border: 1px solid var(--ink); border-radius: 2px; background: var(--sub);
+}
+.hz-co-ship-pin { flex: 0 0 auto; color: var(--ink); margin-top: 1px; }
+.hz-co-ship-body { min-width: 0; display: flex; flex-direction: column; gap: 6px; }
+.hz-co-ship-h {
+  margin: 0; font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.hz-co-ship-a {
+  display: flex; flex-direction: column; gap: 2px; font-style: normal;
+  font-size: var(--fs-lg); line-height: 1.45; color: var(--ink); margin: 0;
+}
+.hz-co-ship-name { font-weight: 700; }
+.hz-co-ship-person { font-weight: 600; }
+.hz-co-ship-phone { font-size: var(--fs-body); color: var(--muted); margin-top: 4px; }
+
+/* The confirmation gates Submit, so it is built to be seen and easy to hit: full width,
+   a real target rather than a 13px tick, and the yellow edge once it is done so the page
+   acknowledges the one action it asked for. */
+/* `.hz-co-card-b label` also matches this element and, at (0,0,1,1) against this rule's
+   (0,0,1,0), silently won — so the confirmation that gates Submit rendered at the generic
+   label's 13px instead of the 15px intended here. Qualified with the element to outrank it.
+   Any future label-based component in a card body needs the same treatment. */
+.hz-co-card-b label.hz-co-confirm,
+.hz-co-confirm {
+  display: flex; gap: 12px; align-items: center; margin: 0;
+  padding: 4px 0; border: 0; background: none;
+  font-size: var(--fs-md); font-weight: 500; line-height: 1.4;
+  color: var(--ink); cursor: pointer;
+}
+.hz-co-confirm input { width: 20px; height: 20px; margin: 0; flex: none; accent-color: #11172b; }
+
+/* Help, as the form's footer: a rule and two quiet lines, where Shopify keeps its policy
+   links. Nothing waits on it. */
+.hz-co-help {
+  display: flex; flex-direction: column; gap: 6px;
+  border-top: 1px solid var(--line); padding-top: 18px;
+  font-size: var(--fs-sm); line-height: 1.5; color: var(--muted);
+}
+.hz-co-help p { margin: 0; }
+.hz-co-help strong { color: var(--ink); font-weight: 600; }
+.hz-co-help a { color: var(--body); text-decoration: underline; overflow-wrap: anywhere; }
+
+/* Submit and the ways out, at the foot of the form. */
+.hz-co-pay { display: flex; flex-direction: column; gap: 14px; }
+.hz-co .hz-co-btn--pay { min-height: 56px; font-size: var(--fs-lg); }
+.hz-co-pay-links { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.hz-co-back {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: var(--fs-body); font-weight: 600; color: var(--ink); text-decoration: none;
+}
+.hz-co-back:hover { color: var(--ink); text-decoration: underline; }
+
+.hz-co-multi {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px;
+  border-top: 1px solid var(--line); padding-top: 16px;
+}
+.hz-co-multi-to { display: flex; flex-direction: column; gap: 12px; }
+.hz-co-multi-when { margin: 0; font-size: var(--fs-xs); color: var(--muted); }
+.hz-co-multi-what { margin: 0; font-size: var(--fs-body); color: var(--ink); }
+
+@media screen and (max-width: 700px) {
+  .hz-co-multi { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* The directives inside the step cards are still stock Four51 markup — addressinput,
+   paymentselector, the oc* custom fields. They keep Bootstrap's classes, so these few
+   rules bring them into line without restyling each one. */
+.hz-co-card-b .form-control {
+  font: inherit; font-size: var(--fs-md); color: var(--ink); height: auto; width: 100%;
+  padding: 11px 13px; border: 1px solid var(--line); border-radius: 4px;
+  background: #fff; box-shadow: none;
+}
+.hz-co-card-b .form-control:focus {
+  border-color: var(--ink); outline: 2px solid var(--yellow); outline-offset: 1px;
+}
+/* Narrowed to the stock markup it was written for.
+   As `.hz-co-card-b label` it matched OUR label components too and, at (0,0,1,1) against
+   their (0,0,1,0), silently won — so `.hz-co-label` and `.hz-co-confirm` rendered at sizes,
+   weights and colours they do not declare. The directives still emit bare and `.required`
+   labels, which is what this is for. */
+.hz-co-card-b label:not([class]),
+.hz-co-card-b label.required,
+.hz-co-card-b .form-group > label { font-size: var(--fs-sm); font-weight: 600; color: var(--body); }
+.hz-co-card-b label.required::after { content: ' *'; color: var(--muted); }
+.hz-co-card-b .btn {
+  font: inherit; font-size: var(--fs-body); font-weight: 600; padding: 10px 15px;
+  border-radius: 4px; border: 1px solid var(--edge); background: #fff; color: var(--ink);
+  box-shadow: none; text-transform: none; letter-spacing: 0;
+}
+.hz-co-card-b .btn:hover { background: var(--sub); border-color: var(--ink); }
+
+/* The state before the order has loaded, and the state where there is no order. */
+.hz-co-wait { padding: 36px clamp(16px, 4.5vw, 64px) 60px; font-size: var(--fs-md); color: var(--muted); }
+.hz-co-wait p { margin: 0; }
+.hz-co-wait a { color: var(--ink); font-weight: 600; text-decoration: underline; }
+
+/* ---- waiting ----
+   `bootstrap-451.css:8486` makes every loadingindicator an absolutely-positioned sheet over
+   its container — `inset: 0`, a pale blue fill at 75% opacity, `z-index: 1029` — with the
+   spinner pinned at 49%/49% and the caption wherever it lands. Inside the Shipping section
+   that washed out the address and covered the "Address not found" message that explains what
+   went wrong; at page level it covered the header, the logo and the nav.
+
+   A wait of a second or two does not need to take the screen away. It is a line with a
+   spinner, in place, and the content stays readable underneath. */
+.hz-co .app-loading-indicator-cell {
+  position: static; background: none; opacity: 1; z-index: auto;
+  display: flex; align-items: center; gap: 10px;
+  float: none; width: auto; padding: 10px 0; text-align: left;
+}
+.hz-co .app-loading-indicator-cell i {
+  position: static; top: auto; left: auto; margin: 0;
+  font-size: var(--fs-md); color: var(--muted);
+}
+.hz-co .app-loading-indicator-cell p { margin: 0; }
+.hz-co .app-loading-indicator-cell small { font-size: var(--fs-sm); color: var(--muted); }
+
+/* ---- the address lookup ----
+   These rules replace the <style> block `largeAddressListSearch.js` used to inject into the
+   document, which was global and contained a syntax error. Scoped here so they only apply on
+   checkout and sit next to the components they have to match.
+
+   The two resets below are the whole reason that field had 53px of empty space above it:
+   `bootstrap-451.css:6122` puts `margin: 35px 0 0` on the wrapper and `:6202` positions the
+   label absolutely at `top: -20px`, so the label floated out and left a hole behind it. */
+.hz-co .largeaddress { margin-left: 0; margin-right: 0; }
+.hz-co .largeaddress > div { padding-left: 0; padding-right: 0; }
+.hz-co .view-form-icon > div:not(.panel-heading) { margin: 0; }
+.hz-co .view-form-icon label {
+  position: static; top: auto; display: block;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--muted);
+  letter-spacing: 0; text-transform: none; margin: 0 0 6px;
+}
+/* Nothing is painted over an input on this page. `.view-form-icon` exists to float an icon
+   into the field; here it covered the first 30px of the address box — the part you click. */
+.hz-co .view-form-icon i { display: none; }
+
+.hz-co .hz-addr-hint { margin: 6px 0 0; font-size: var(--fs-xs); line-height: 1.45; color: var(--muted); }
+.hz-co .hz-addr-hint--bad { color: #a4192d; }
+
+/* The typeahead list. The injected version was the only 10px radius and the only drop shadow
+   on the page, and painted the highlighted row pure black with !important. */
+.hz-co .largeaddress .dropdown-menu {
+  background-color: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12); padding: 4px 0; margin-top: 2px;
+}
+.hz-co .largeaddress .dropdown-menu > li > a { padding: 9px 14px; font-size: var(--fs-body); color: var(--ink); white-space: normal; }
+.hz-co .largeaddress .dropdown-menu .active > a,
+.hz-co .largeaddress .dropdown-menu > li > a:hover { background-color: var(--sub); color: var(--ink); }
+
+/* ---- summary ---- */
+
+/* The step cards, styled from outside. */
+.hz-co .panel-order, .hz-co .panel {
+  background: #fff; border: 1px solid var(--edge) !important; border-radius: 8px;
+  box-shadow: none; overflow: hidden; margin: 0;
+}
+.hz-co .panel-heading, .hz-co .panel-heading.checkout-container {
+  background: #fff !important; border: 0 !important;
+  border-bottom: 1px solid var(--line) !important; padding: 15px 20px !important;
+  /* Always-open cards now: the header is a label, not a toggle. */
+  cursor: default;
+}
+.hz-co .panel-body { padding: 20px !important; border: 0; }
+.hz-co .panel-heading h3, .hz-co .panel-title {
+  display: flex; align-items: center; gap: 10px; margin: 0;
+  font-family: var(--hz-font); font-size: var(--fs-lg); font-weight: 700; color: var(--ink);
+}
+.hz-co .checkout-title {
+  font-size: var(--fs-lg) !important; font-weight: 700 !important;
+  letter-spacing: 0 !important; padding-right: 0 !important;
+}
+.hz-co .checkout-circle, .hz-co .panel-heading .fa {
+  float: none !important; padding: 0 !important; font-size: var(--fs-body) !important; line-height: 1;
+}
+.hz-co .fa-check-circle { color: var(--muted) !important; }
+.hz-co .fa-warning { color: var(--muted) !important; }
+.hz-co .fa-caret-up, .hz-co .fa-caret-down { color: var(--muted) !important; margin-left: auto; }
+
+/* Form controls inside the step cards. */
+.hz-co label.required { color: var(--muted) !important; }
+.hz-co label.required::after { content: ' *'; color: var(--muted); }
+.hz-co .control-label, .hz-co .form-group > label {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 6px;
+}
+.hz-co .form-control, .hz-co input[type="text"], .hz-co select, .hz-co textarea {
+  font: inherit; font-size: var(--fs-md); color: var(--ink); height: auto; padding: 12px 14px;
+  border: 1px solid var(--line); border-radius: 2px; box-shadow: none;
+  /* `background-color`, NOT the `background` shorthand. This rule also matches
+     `select.hz-co-select`, and the shorthand reset its `background-image` — which is the
+     caret — so with `appearance: none` already removing the native arrow, EVERY select on
+     the checkout rendered as a plain box you could not tell was a dropdown. */
+  background-color: #fff;
+}
+.hz-co .form-control:focus { border-color: var(--ink); box-shadow: none; outline: 2px solid var(--yellow); outline-offset: 1px; }
+.hz-co .btn {
+  font: inherit; font-size: var(--fs-body); font-weight: 600; padding: 11px 16px;
+  border-radius: 2px; border: 1px solid var(--edge) !important;
+  background: #fff !important; color: var(--ink) !important;
+  box-shadow: none; text-transform: none !important; letter-spacing: 0 !important;
+}
+.hz-co .btn:hover { background: var(--sub) !important; border-color: var(--ink) !important; }
+.hz-co .btn span { color: inherit !important; }
+/* Stock alerts, kept legible but NOT flattened.
+   This was one neutral grey with `!important` on every property, which collapsed
+   alert-info, alert-warning, alert-danger and alert-success into the same box — so a
+   directive's warning and a directive's confirmation looked identical, and an error read as
+   a note. The neutral stays the default; the three that carry meaning keep it. */
+.hz-co .alert {
+  background: var(--sub); border: 1px solid var(--line);
+  color: var(--body); border-radius: 2px; font-size: var(--fs-sm);
+}
+/* Brand: light ground, yellow rule, ink type — not a gold wash. */
+.hz-co .alert-warning { background: var(--sub); border-color: var(--line); border-left: 3px solid var(--yellow); color: var(--ink); }
+.hz-co .alert-danger  { background: #fcebed; border-color: #e3bcc2; color: #a4192d; }
+/* Confirmations do not get their own colour here. Green said 'well done' where the
+   page only needs to say what happened. */
+.hz-co .alert-success { background: var(--sub); border-color: var(--line); color: var(--ink); }
+
+/* ---- summary ---- */
+.hz-co-summary { display: flex; flex-direction: column; gap: 12px; }
+/* Shopify's summary has no heading beside the form; the grey half says what it is. Kept
+   for a screen reader. */
+.hz-co-summary-h {
+  position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+.hz-co-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; font-size: var(--fs-body); }
+.hz-co-row span:last-child { font-variant-numeric: tabular-nums; color: var(--ink); }
+.hz-co-total {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  margin-top: 8px; font-size: var(--fs-xl); font-weight: 700; color: var(--ink);
+}
+.hz-co-blocked { font-size: var(--fs-sm); color: var(--muted); margin: 0; line-height: 1.45; }
+
+.hz-co-btn {
+  display: block; width: 100%; text-align: center;
+  background: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  font: inherit; font-size: var(--fs-md); font-weight: 700; color: var(--ink);
+  padding: 14px 18px; cursor: pointer; text-decoration: none;
+}
+.hz-co-btn:hover { background: var(--sub); border-color: var(--ink); text-decoration: none; }
+.hz-co-btn--primary { background: var(--yellow); border-color: var(--yellow); color: #434244; }
+
+.hz-co-btn--primary[disabled] { background: #EDEFF2; border-color: var(--line); color: var(--muted); cursor: not-allowed; }
+/* The lines being ordered: Shopify's summary line. */
+.hz-co-items {
+  list-style: none; margin: 0 0 8px; padding: 0 0 20px; border-bottom: 1px solid var(--line);
+  display: flex; flex-direction: column; gap: 16px;
+}
+.hz-co-item { display: flex; align-items: center; gap: 14px; }
+/* The photo on white, framed, carrying the quantity as a badge on its corner. The badge is
+   round like the header's cart count, the one other count on the site. */
+.hz-co-item-thumb {
+  position: relative; flex: 0 0 64px; width: 64px; height: 64px;
+  border: 1px solid var(--line); border-radius: 2px; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+}
+.hz-co-item-thumb img { max-width: 88%; max-height: 88%; object-fit: contain; }
+.hz-co-item-q {
+  position: absolute; top: -9px; right: -9px;
+  min-width: 22px; height: 22px; padding: 0 6px; border-radius: 11px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--muted); color: #fff;
+  font-size: var(--fs-xs); font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1;
+}
+.hz-co-item-text { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1 1 auto; }
+.hz-co-item-n { font-size: var(--fs-body); font-weight: 600; color: var(--ink); line-height: 1.3; }
+.hz-co-item-size { font-size: var(--fs-sm); color: var(--muted); }
+.hz-co-item-p { flex: 0 0 auto; font-size: var(--fs-body); color: var(--ink); font-variant-numeric: tabular-nums; }
+
+.hz-co-cancel {
+  background: none; border: 0; font: inherit; font-size: var(--fs-sm); font-weight: 600;
+  color: var(--muted); text-decoration: underline; padding: 6px 0; cursor: pointer;
+}
+.hz-co-cancel:hover { color: #a4192d; }
+.hz-co :focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+.hz-co-alert p { color: #a4192d; margin: 0; font-size: var(--fs-body); }
+.hz-co-said p { color: var(--ink); margin: 0; font-size: var(--fs-body); }
+
+/* A phone or narrow tablet: one column, and the summary folds into a bar above the form,
+   opened on a tap, as Shopify's does. */
+@media (max-width: 900px) {
+  .hz-co-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "bar" "side" "main";
+    grid-template-rows: auto auto 1fr;
+  }
+  .hz-co-sumbar {
+    grid-area: bar; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%; padding: 16px clamp(16px, 5vw, 32px);
+    background: var(--sub); border: 0; border-bottom: 1px solid var(--line);
+    font: inherit; font-size: var(--fs-body); color: var(--ink); cursor: pointer; text-align: left;
+  }
+  .hz-co-sumbar-t { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; }
+  .hz-co-sumbar-chev { transition: transform .15s ease; }
+  .hz-co-sumbar-chev.is-open { transform: rotate(180deg); }
+  .hz-co-sumbar-n { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .hz-co-side { display: none; border-left: 0; border-bottom: 1px solid var(--line); padding: 20px clamp(16px, 5vw, 32px); }
+  .hz-co-side.is-open { display: block; }
+  .hz-co-col--side { position: static; max-width: none; }
+  .hz-co-main { justify-content: stretch; padding: 24px clamp(16px, 5vw, 32px) 48px; }
+  .hz-co-col { max-width: none; }
+  .hz-co-title { font-size: var(--fs-4xl); }
+  /* A phone ends at the last thing on the form, not at a fixed 1000px. */
+  .mainContainer:has(> ng-view > .hz-co) { min-height: 0; }
+}
+@media (prefers-reduced-motion: reduce) { .hz-co-sumbar-chev { transition: none; } }
+
+/* =========================================================================
+   Account pages — order history, order detail, addresses, contact
+   =========================================================================
+
+   One scope for the four pages behind the header's Orders link and Account
+   menu. They were the last of the stock theme: Bootstrap panels, injected
+   <style> blocks, `fa` icons and tables with a border on every cell.
+
+   They share a scope rather than taking one each because they are the same
+   page furniture four times over — a title, a card, a table, an empty state.
+   Four copies of these tokens is four places for them to drift.
+
+   Tokens match .hz-cart and .hz-co exactly, so a card here and a card at
+   checkout are the same object. Custom properties do not cross a scope
+   boundary, so they have to be restated; they must not be re-chosen.
+*/
+.hz-pg {
+  --yellow: #FFCC00;
+  --yellow-press: #E6B800;
+  --ink: #11172b;
+  --body: #2c3140;
+  --muted: #5f6778;
+  --line: #e3e7ef;
+  --edge: #dae0ea;
+  --sub: #f8f9fc;
+  --stop-ink: #a4192d;
+  --stop-bg: #fcebed;
+  --display: var(--hz-font);
+
+  font-family: var(--hz-font);
+  color: var(--body);
+  background: #fff;
+  /* Cancel .mainContainer's 10% side padding so these sit flush with the cart
+     and checkout: the content box is 80% of the whole, and 10/80 = 12.5%. */
+  margin-left: -12.5%;
+  margin-right: -12.5%;
+  padding: 28px clamp(16px, 4vw, 56px) clamp(48px, 7vw, 96px);
+  min-height: calc(100vh - 150px);
+}
+.hz-pg, .hz-pg *, .hz-pg *::before, .hz-pg *::after { box-sizing: border-box; }
+@media screen and (max-width: 425px) {
+  .hz-pg { margin-left: -2.0833%; margin-right: -2.0833%; }
+}
+
+/* ---- page head ---- */
+.hz-pg-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 16px; flex-wrap: wrap; margin-bottom: 6px;
+}
+.hz-pg-title {
+  font-family: var(--hz-font); font-weight: 600; font-size: var(--fs-title);
+  line-height: 1.02; letter-spacing: -0.008em; color: var(--ink); margin: 0;
+}
+.hz-pg-sub { font-size: var(--fs-md); line-height: 1.55; color: var(--muted); margin: 0 0 22px; max-width: 62ch; }
+.hz-pg-back {
+  display: inline-block; font-size: var(--fs-sm); font-weight: 600; color: var(--muted);
+  text-decoration: none; margin: 0 0 10px;
+}
+.hz-pg-back:hover, .hz-pg-back:focus { color: var(--ink); text-decoration: underline; }
+
+/* ---- cards ---- */
+.hz-pg-card {
+  border: 1px solid var(--edge); border-radius: 8px; background: #fff;
+  margin: 0 0 20px;
+}
+.hz-pg-card-h {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 15px 20px; border-bottom: 1px solid var(--line);
+}
+.hz-pg-card-t {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin: 0;
+}
+.hz-pg-card-b { padding: 20px; }
+/* Prose inside a card. Shared rather than per-page: the contact page set its own body
+   size twice and both times it came out a size off from every other page.
+   `p.hz-pg-quiet` is qualified with the element deliberately: `.hz-pg-card-b > p` is
+   (0,0,1,1) and a bare `.hz-pg-quiet` at (0,0,1,0) would lose to it. */
+.hz-pg-card-b > p { font-size: var(--fs-md); line-height: 1.6; color: var(--body); margin: 0; }
+.hz-pg-card-b > p + p { margin-top: 12px; }
+.hz-pg-card-b > p.hz-pg-quiet { font-size: var(--fs-body); color: var(--muted); }
+.hz-pg-card-b > .hz-pg-btn { margin-top: 16px; }
+
+/* ---- tables ----
+   No vertical rules and no zebra. A row is separated from the next by one hairline,
+   which is all a reader needs to track across it. */
+.hz-pg-table { width: 100%; border-collapse: collapse; }
+.hz-pg-table th {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--muted); text-align: left; padding: 0 16px 10px; border-bottom: 1px solid var(--edge);
+  white-space: nowrap;
+}
+.hz-pg-table td {
+  padding: 14px 16px; border-bottom: 1px solid var(--line);
+  font-size: var(--fs-body); color: var(--body); vertical-align: middle;
+}
+.hz-pg-table tr:last-child td { border-bottom: 0; }
+.hz-pg-table .hz-pg-num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hz-pg-table a { color: var(--ink); font-weight: 700; text-decoration: none; }
+.hz-pg-table a:hover, .hz-pg-table a:focus { text-decoration: underline; }
+.hz-pg-scroll { overflow-x: auto; }
+
+/* Status. One neutral pill for every state: the page reports what happened, it does
+   not grade it, and a palette of semantic colours here would be off brand. */
+.hz-pg-pill {
+  display: inline-block; padding: 4px 10px; border-radius: 2px;
+  background: var(--sub); border: 1px solid var(--edge);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: .02em; color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ---- buttons ---- */
+.hz-pg-btn {
+  display: inline-block; background: var(--yellow); border: 1px solid var(--yellow);
+  border-radius: 2px; font: inherit; font-size: var(--fs-body); font-weight: 700;
+  /* Type on yellow is the brand's own dark grey, never black and never white. */
+  color: #434244; padding: 11px 22px; cursor: pointer; text-decoration: none;
+  line-height: 1.2;
+}
+.hz-pg-btn:hover {
+  background: var(--yellow-press); border-color: var(--yellow-press); color: #434244;
+  text-decoration: none;
+}
+.hz-pg-btn[disabled] { opacity: .45; cursor: not-allowed; }
+.hz-pg-btn--ghost {
+  background: #fff; border-color: var(--edge); color: var(--body);
+  font-size: var(--fs-sm); font-weight: 600; padding: 10px 16px;
+}
+.hz-pg-btn--ghost:hover {
+  background: #fff; border-color: var(--ink); color: var(--ink);
+}
+.hz-pg-btn--stop { background: #fff; border-color: var(--edge); color: var(--muted); }
+.hz-pg-btn--stop:hover:not([disabled]) {
+  background: var(--stop-bg); border-color: var(--stop-ink); color: var(--stop-ink);
+}
+.hz-pg-actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+
+/* ---- filter chips ---- */
+.hz-pg-chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.hz-pg-chip {
+  background: #fff; border: 1px solid var(--edge); border-radius: 2px;
+  font: inherit; font-size: var(--fs-sm); font-weight: 600; color: var(--body);
+  padding: 9px 14px; cursor: pointer; white-space: nowrap;
+}
+.hz-pg-chip:hover { border-color: var(--ink); color: var(--ink); }
+/* The chosen filter is a yellow fill with black type on it, the same
+   relationship the primary button uses. */
+.hz-pg-chip.is-on {
+  background: var(--yellow); border-color: var(--yellow); color: var(--btn-on-yellow, #000);
+}
+.hz-pg-chip-n { font-variant-numeric: tabular-nums; opacity: .7; margin-left: 6px; }
+.hz-pg-chip.is-on .hz-pg-chip-n { opacity: .85; }
+
+/* ---- fields ----
+   `align-items: start`, not `end`. With `end` the cells in a row align their BOTTOMS, so
+   one field carrying a hint under its input is taller than its neighbours and drags them
+   down: on the account form the email hint pushed first and last name a line lower than
+   the email box beside them, and the row read as broken. Aligned at the top, every label
+   sits on one line and every input sits on the next, and hints hang off the bottom where
+   they belong.
+
+   240px rather than 190px: at 190 a four-field form in a 760px panel broke three-two,
+   which puts first name, last name and email on one row and phone alone underneath. At
+   240 it is an even two by two, and the wider cards further down still get their five. */
+.hz-pg-fields {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px; align-items: start;
+}
+.hz-pg-field { min-width: 0; }
+/* A cell holding a button rather than an input. It has no label, so it needs the label's
+   height added back or it floats above the inputs it sits beside. */
+.hz-pg-field--action { padding-top: 22px; }
+.hz-pg-field label {
+  display: block; font-size: var(--fs-xs); font-weight: 700; color: var(--ink);
+  margin: 0 0 6px; letter-spacing: .01em;
+}
+/* `background-color`, never the `background` shorthand: the shorthand also resets
+   background-image, which is how the select caret disappeared at checkout. */
+.hz-pg-field input,
+.hz-pg-field select {
+  width: 100%; height: 42px; padding: 0 12px;
+  border: 1px solid var(--edge); border-radius: 2px;
+  background-color: #fff; font: inherit; font-size: var(--fs-body); color: var(--body);
+}
+.hz-pg-field input:focus, .hz-pg-field select:focus {
+  border-color: var(--ink); outline: 0;
+}
+.hz-pg-field-hint { font-size: var(--fs-xs); color: var(--muted); margin: 6px 0 0; }
+.hz-pg-search { display: flex; gap: 10px; align-items: flex-end; flex-wrap: wrap; }
+.hz-pg-search .hz-pg-field { flex: 1 1 260px; }
+
+/* ---- notices ----
+   The house shape: a light ground with a 3px yellow rule down the left edge. Yellow
+   is a fill here and the type stays ink, per the brand guide. */
+.hz-pg-note {
+  background: var(--sub); border-left: 3px solid var(--yellow);
+  padding: 14px 16px; margin: 0 0 20px; border-radius: 0 4px 4px 0;
+  font-size: var(--fs-body); line-height: 1.55; color: var(--body);
+}
+.hz-pg-note strong { color: var(--ink); }
+.hz-pg-note p { margin: 0; }
+.hz-pg-note p + p { margin-top: 8px; }
+.hz-pg-note--stop {
+  background: var(--stop-bg); border-left-color: var(--stop-ink); color: var(--stop-ink);
+}
+.hz-pg-note--stop strong { color: var(--stop-ink); }
+
+/* ---- empty state ---- */
+.hz-pg-empty {
+  border: 1px solid var(--edge); border-radius: 8px; background: #fff;
+  padding: clamp(32px, 6vw, 64px) 24px; text-align: center;
+}
+/* Qualified with the element, because `.hz-pg-empty p` below is (0,0,1,1) and would
+   otherwise beat a bare `.hz-pg-empty-t` at (0,0,1,0) and take the title's size and
+   colour with it. */
+.hz-pg-empty p.hz-pg-empty-t {
+  font-family: var(--hz-font); font-size: var(--fs-3xl); font-weight: 600; color: var(--ink);
+  margin: 0 0 8px; max-width: none;
+}
+.hz-pg-empty p { font-size: var(--fs-md); color: var(--muted); margin: 0 0 20px; max-width: 46ch; margin-inline: auto; }
+
+/* ---- pagination ----
+   The theme's <pagination> directive emits Bootstrap markup, so it is restyled in
+   place rather than replaced. */
+.hz-pg .pagination { display: flex; flex-wrap: wrap; gap: 6px; padding: 0; margin: 18px 0 0; list-style: none; }
+.hz-pg .pagination > li > a,
+.hz-pg .pagination > li > span {
+  display: block; border: 1px solid var(--edge); border-radius: 2px; background: #fff;
+  color: var(--body); font-size: var(--fs-sm); font-weight: 600; padding: 8px 12px; text-decoration: none;
+  float: none; margin: 0; font-variant-numeric: tabular-nums;
+}
+.hz-pg .pagination > li > a:hover { border-color: var(--ink); color: var(--ink); }
+.hz-pg .pagination > .active > a,
+.hz-pg .pagination > .active > span,
+.hz-pg .pagination > .active > a:hover,
+.hz-pg .pagination > .active > span:hover {
+  background: var(--yellow); border-color: var(--yellow); color: var(--btn-on-yellow, #000);
+}
+.hz-pg .pagination > .disabled > a,
+.hz-pg .pagination > .disabled > span { opacity: .4; }
+
+.hz-pg-count { font-size: var(--fs-sm); color: var(--muted); margin: 14px 0 0; }
+.hz-pg :focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+
+/* ---- two-column layout, used by the order detail page ---- */
+.hz-pg-grid {
+  display: grid; grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 24px; align-items: start;
+}
+.hz-pg-side { position: sticky; top: 16px; }
+@media (max-width: 900px) {
+  .hz-pg-grid { grid-template-columns: minmax(0, 1fr); }
+  .hz-pg-side { position: static; }
+}
+
+/* ---- definition rows, for order and address detail ---- */
+.hz-pg-dl { margin: 0; }
+.hz-pg-dl-row {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+  font-size: var(--fs-body); padding: 7px 0; border-bottom: 1px solid var(--line);
+}
+.hz-pg-dl-row:last-child { border-bottom: 0; }
+.hz-pg-dl-k { color: var(--muted); }
+.hz-pg-dl-v { color: var(--ink); font-weight: 600; text-align: right; }
+.hz-pg-dl-v--total { font-family: var(--hz-font); font-size: var(--fs-2xl); font-weight: 600; }
+
+/* ---- order detail: one row per item ----
+   Same shape as a cart row, so an order looks like the cart it came from. */
+.hz-pg-li {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto;
+  gap: 18px; align-items: start;
+  padding: 18px 20px; border-top: 1px solid var(--line);
+}
+.hz-pg-li:first-child { border-top: 0; }
+.hz-pg-li-main { min-width: 0; }
+.hz-pg-li-name { font-size: var(--fs-md); font-weight: 700; color: var(--ink); margin: 0 0 3px; }
+.hz-pg-li-sku {
+  font-family: var(--hz-font); font-size: var(--fs-sm); letter-spacing: .02em;
+  color: var(--muted); margin: 0;
+}
+.hz-pg-li-spec { font-size: var(--fs-sm); color: var(--body); margin: 4px 0 0; }
+.hz-pg-li-spec > span:first-child { color: var(--muted); }
+.hz-pg-li-spec-v { font-weight: 600; color: var(--ink); }
+.hz-pg-li-addr { font-size: var(--fs-sm); color: var(--muted); margin: 6px 0 0; font-style: normal; }
+.hz-pg-li-links { display: flex; flex-wrap: wrap; gap: 14px; margin: 8px 0 0; }
+.hz-pg-li-links a { font-size: var(--fs-sm); font-weight: 600; color: var(--ink); }
+
+.hz-pg-li-meta { text-align: right; white-space: nowrap; }
+.hz-pg-li-qty { margin: 0; }
+.hz-pg-li-qty-l {
+  display: block; font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.hz-pg-li-qty-n {
+  font-family: var(--hz-font); font-size: var(--fs-4xl); font-weight: 600; color: var(--ink);
+  line-height: 1.1; font-variant-numeric: tabular-nums;
+}
+.hz-pg-li-price { font-size: var(--fs-body); font-weight: 700; color: var(--ink); margin: 6px 0 0; }
+.hz-pg-li-price span {
+  display: block; font-size: var(--fs-xs); font-weight: 400; color: var(--muted);
+}
+.hz-pg-li-proof { grid-column: 1 / -1; margin: 12px 0 0; }
+.hz-pg-li-proof img { max-height: 360px; border: 1px solid var(--line); border-radius: 4px; }
+
+@media (max-width: 560px) {
+  .hz-pg-li { grid-template-columns: minmax(0, 1fr); }
+  .hz-pg-li-meta { text-align: left; }
+}
+
+/* =========================================================================
+   Orders: the history list and one order — orderSearchView.html and
+   Reporting/orderHistoryView.html. In the `.hz-pg` scope, so cards, pills, buttons and
+   definition rows are the shared ones; this is only the order row, the item row and the
+   search bar.
+   ========================================================================= */
+
+/* ---- one order: the line under the title ---- */
+.hz-ord-meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px;
+  margin: 10px 0 22px; font-size: var(--fs-body); color: var(--muted);
+}
+
+/* ---- one order: an item, as a photo, what it is, and how many ---- */
+.hz-ord-li {
+  display: grid; grid-template-columns: 64px minmax(0, 1fr) auto;
+  gap: 16px; align-items: center;
+  padding: 16px 20px; border-top: 1px solid var(--line);
+}
+.hz-pg-card-h + .hz-ord-li { border-top: 0; }
+.hz-ord-thumb {
+  width: 64px; height: 64px; border-radius: 4px; background: var(--sub);
+  display: flex; align-items: center; justify-content: center; overflow: hidden;
+}
+.hz-ord-thumb img { max-width: 100%; max-height: 100%; object-fit: contain; }
+.hz-ord-li-main { min-width: 0; }
+.hz-ord-li-name { font-size: var(--fs-md); font-weight: 700; color: var(--ink); margin: 0 0 5px; }
+.hz-ord-li-facts {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 4px 12px; margin: 0;
+}
+.hz-ord-size {
+  display: inline-block; padding: 2px 8px; border-radius: 2px;
+  background: var(--sub); border: 1px solid var(--edge);
+  font-size: var(--fs-xs); font-weight: 700; color: var(--ink); white-space: nowrap;
+}
+.hz-ord-sku {
+  font-family: var(--hz-font); font-size: var(--fs-sm); letter-spacing: .02em; color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.hz-ord-li-addr { font-size: var(--fs-sm); color: var(--muted); margin: 6px 0 0; }
+.hz-ord-li-qty { text-align: right; white-space: nowrap; }
+.hz-ord-li-qty-l {
+  display: block; font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted);
+}
+.hz-ord-li-qty-n {
+  display: block; font-family: var(--hz-font); font-size: var(--fs-4xl); font-weight: 600;
+  line-height: 1.1; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.hz-ord-li-price { display: block; font-size: var(--fs-sm); font-weight: 700; color: var(--ink); margin-top: 4px; }
+
+.hz-ord-ship + .hz-ord-ship { margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--line); }
+
+/* ---- one order: the side panel ---- */
+.hz-ord-addr { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.hz-ord-addr .hz-pg-card-t { margin: 0 0 6px; }
+.hz-ord-addr address {
+  font-style: normal; font-size: var(--fs-body); line-height: 1.55; color: var(--body); margin: 0;
+}
+/* The way into a return: the house notice shape, a light ground and the yellow rule. */
+.hz-ord-return { background: var(--sub); border-left: 3px solid var(--yellow); }
+.hz-pg-card-b > p.hz-ord-return-t {
+  font-family: var(--hz-font); font-size: var(--fs-2xl); font-weight: 600; color: var(--ink);
+  margin: 0 0 6px;
+}
+.hz-ord-return .hz-pg-card-b > p { font-size: var(--fs-body); }
+
+/* ---- the list: search ---- */
+.hz-ord-find { display: flex; margin: 0 0 16px; }
+.hz-ord-find input {
+  flex: 1 1 240px; max-width: 360px; height: 42px; padding: 0 12px;
+  border: 1px solid var(--edge); border-radius: 2px; background-color: #fff;
+  font: inherit; font-size: var(--fs-body); color: var(--body);
+}
+.hz-ord-find input:focus { border-color: var(--ink); outline: 0; }
+
+/* ---- the list: one order per row, the whole row the link ----
+   Every row is its own grid, so `auto` tracks sized each row to its own contents and the
+   "Ordered by" column wandered with the width of the status and the total (Trevor,
+   24 Sep 2026). Fixed tracks line every row up whatever it holds; the status pill fills
+   its track so both its edges line up too. */
+.hz-ord-row {
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 96px 140px;
+  gap: 8px 24px; align-items: center;
+  padding: 16px 20px; border-top: 1px solid var(--line);
+  color: var(--body); text-decoration: none;
+}
+.hz-pg-card-h + .hz-ord-row { border-top: 0; }
+.hz-ord-row:hover, .hz-ord-row:focus { background: var(--sub); color: var(--body); text-decoration: none; }
+.hz-ord-row-id { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.hz-ord-row-num {
+  font-family: var(--hz-font); font-size: var(--fs-xl); font-weight: 600; color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.hz-ord-row-date { font-size: var(--fs-sm); color: var(--muted); font-variant-numeric: tabular-nums; }
+.hz-ord-row-who { font-size: var(--fs-body); color: var(--body); min-width: 0; }
+.hz-ord-row-k {
+  display: block; font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--muted); margin-bottom: 2px;
+}
+.hz-ord-row-note { font-size: var(--fs-sm); color: var(--muted); margin-left: 4px; }
+.hz-ord-row-total { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; text-align: right; }
+.hz-ord-row-end { display: flex; align-items: center; }
+.hz-ord-row-end .hz-pg-pill { width: 100%; text-align: center; }
+/* No prices shown: no total column, rather than an empty one or the pill slipping into it. */
+.hz-ord-row--noprice { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 140px; }
+
+@media (max-width: 560px) {
+  /* A phone: the photo shrinks and the quantity sits under the name rather than beside it. */
+  .hz-ord-li { grid-template-columns: 52px minmax(0, 1fr); padding: 14px 16px; }
+  .hz-ord-thumb { width: 52px; height: 52px; }
+  .hz-ord-li-qty { grid-column: 2; text-align: left; display: flex; align-items: baseline; gap: 8px; }
+  .hz-ord-li-qty-l, .hz-ord-li-qty-n { display: inline; }
+  .hz-ord-li-qty-n { font-size: var(--fs-2xl); }
+  .hz-ord-row, .hz-ord-row--noprice { grid-template-columns: minmax(0, 1fr) 112px; padding: 14px 16px; }
+  .hz-ord-row-who { grid-column: 1; grid-row: 2; }
+  .hz-ord-row-total { grid-column: 1; text-align: left; }
+  .hz-ord-row-end { grid-column: 2; grid-row: 1 / span 2; }
+  .hz-ord-find input { max-width: none; }
+}
+
+/* ---- one panel, even sections ----
+   For pages that are a single column of related blocks rather than a grid of cards:
+   contact, and the account form. One border around the lot, hairlines between, the same
+   padding on every section, so the page reads as one object instead of a scatter of
+   boxes at different sizes. */
+.hz-pg-panel {
+  border: 1px solid var(--edge); border-radius: 8px; background: #fff;
+  max-width: 760px;
+}
+/* A measured column for a page that is one record rather than a set of things.
+   The account page: its rows are a label on the left and a value on the right, and run
+   the full width of a wide screen the two ends stop being readable as a pair. Everything
+   in the column shares the measure, so the card and the note under it line up.
+
+   Not the same as `.hz-pg-cards` below, which spreads short blocks ACROSS the page. Both
+   exist because "short content on a wide screen" has two right answers and which one
+   applies depends on whether the content is one thing or several. */
+.hz-pg-stack { max-width: 760px; }
+/* Cards side by side, filling the page.
+   This replaced a 760px column of stacked cards, which was the wrong answer to the right
+   question. Short blocks DO look stranded run full width one under another, but putting
+   them in a narrow column left two thirds of a 1990px screen empty and stacked three
+   header strips over about four lines of content. Side by side they use the width and
+   the headers stop outnumbering the prose.
+   Cards stretch to a common height, so the row has one top edge and one bottom edge. */
+.hz-pg-cards {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;
+}
+.hz-pg-cards > .hz-pg-card { margin-bottom: 20px; }
+/* A label-and-block pair inside a card body, for things that read better stacked than
+   as a right-aligned dl row: an address, or an opening time. */
+.hz-pg-card-b address {
+  font-size: var(--fs-md); line-height: 1.55; font-style: normal; color: var(--ink); margin: 0;
+}
+/* The uppercase label takes a gap when it is used inside a body rather than as a card
+   header. Two-class selector so it beats the bare `.hz-pg-card-t` margin of 0. */
+.hz-pg-card-b .hz-pg-card-t { margin: 0 0 6px; }
+.hz-pg-sect { padding: 22px 24px; border-top: 1px solid var(--line); }
+.hz-pg-sect:first-child { border-top: 0; }
+.hz-pg-sect-t {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 14px;
+}
+.hz-pg-sect p { font-size: var(--fs-body); line-height: 1.6; color: var(--body); margin: 0; }
+.hz-pg-sect p + p { margin-top: 10px; }
+.hz-pg-sect p strong { color: var(--ink); }
+.hz-pg-sect .hz-pg-btn { margin-top: 14px; }
+/* Two addresses, or two short blocks, side by side inside one section. */
+.hz-pg-sect-two {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 18px;
+}
+.hz-pg-sect address {
+  font-size: var(--fs-body); line-height: 1.55; font-style: normal; color: var(--body); margin: 0;
+}
+
+/* A field that is shown, not asked for.
+   `readonly` rather than `disabled`, because a disabled input is skipped by the keyboard
+   and by most screen readers. Styled so it plainly is not an input. */
+.hz-pg-field input[readonly] {
+  background-color: var(--sub); color: var(--ink); cursor: default;
+}
+.hz-pg-field input[readonly]:focus { border-color: var(--edge); }
+
+/* ---- a page of options ----
+   For a card that is a choice rather than a container. The 11px uppercase `.hz-pg-card-t`
+   is the right label for a table or a detail panel and the wrong one here: it made the
+   contact page list its two routes without either ever looking like something to pick.
+   24px 600 is the size this site already uses for a spoken heading inside a card. */
+.hz-pg-opt .hz-pg-card-b { padding: clamp(24px, 3vw, 34px); }
+.hz-pg-opt-h {
+  font-family: var(--hz-font); font-size: var(--fs-5xl); font-weight: 700; line-height: 1.12;
+  letter-spacing: -0.005em; color: var(--ink); margin: 0 0 12px;
+}
+.hz-pg-opt p { font-size: var(--fs-md); line-height: 1.6; }
+.hz-pg-opt p strong { color: var(--ink); font-weight: 700; }
+.hz-pg-opt .hz-pg-btn { margin-top: 20px; }
+/* The second option is a filled ground rather than an outlined box. That is what
+   separates the thing you DO from the thing you read: one carries a button, the other
+   carries an instruction. */
+.hz-pg-opt--fill { background: var(--sub); border-color: transparent; }
+/* The quieter line under the instruction: a rule, then an icon and muted type. */
+.hz-pg-opt-aside {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin: 20px 0 0; padding: 18px 0 0; border-top: 1px solid var(--edge);
+}
+.hz-pg-opt-aside svg { flex: 0 0 auto; margin-top: 2px; }
+.hz-pg-opt-aside p { font-size: var(--fs-body); line-height: 1.55; color: var(--muted); margin: 0; }
+
+/* ---- a ruled strip of facts ----
+   Top and bottom rule with vertical dividers between columns, rather than a card. For
+   details that close a page: they are reference, not another thing to choose. */
+.hz-pg-facts {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  margin: 46px 0 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+}
+.hz-pg-fact { padding: 26px 0 26px 30px; border-left: 1px solid var(--line); }
+/* The first column sits against the page edge, so it takes no rule and no indent. */
+.hz-pg-fact:first-child { border-left: 0; padding-left: 0; }
+.hz-pg-fact-k {
+  font-size: var(--fs-label); font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); margin: 0 0 8px;
+}
+.hz-pg-fact address {
+  font-size: var(--fs-lg); line-height: 1.5; font-style: normal; color: var(--ink); margin: 0;
+}
+
+/* On a phone the strip stacks, and the divider that separated two columns became a stray
+   rule and a 30px indent down the left of the second block. Stacked, blocks are divided
+   the way the rest of the page divides rows: a hairline across the top. */
+@media (max-width: 560px) {
+  .hz-pg-fact { padding: 20px 0; border-left: 0; }
+  .hz-pg-fact:first-child { padding-left: 0; }
+  .hz-pg-fact + .hz-pg-fact { border-top: 1px solid var(--line); }
+  .hz-pg-facts { margin-top: 32px; }
+}
+
+/* The job title and email share a line on a wide card. On a phone the email drops to its
+   own line and the separator was left hanging at the end of the title. */
+@media (max-width: 560px) {
+  .hz-pg-prof-sep { display: none; }
+  .hz-pg-prof-mail { flex-basis: 100%; }
+}
+
+/* =========================================================================
+   Reading pages: both FAQs and the returns policy.
+
+   Each carried its own <style> block: a system font, a centred title, 12px corners with
+   drop shadows, "Click to expand" printed beside every question, answer links in yellow
+   type, and an orange warning panel. None of it was the site's. They now sit in the
+   `.hz-pg` scope like order history and contact, so the title, the type and the tokens are
+   the same objects, and this layer adds only what a page of prose needs.
+   ========================================================================= */
+.hz-doc { max-width: 820px; }
+.hz-doc .hz-pg-title { margin-bottom: 22px; }
+.hz-doc-h {
+  font-family: var(--hz-font); font-size: var(--fs-3xl); font-weight: 600; line-height: 1.15;
+  color: var(--ink); margin: 34px 0 12px;
+}
+
+/* One question per row. Flat, 1px edge, no shadow; the open one takes the house accent,
+   a 3px yellow rule down the left, rather than a glow. */
+.hz-doc details {
+  border: 1px solid var(--edge); border-radius: 8px; background: #fff;
+  margin: 0 0 8px;
+}
+.hz-doc details[open] { box-shadow: inset 3px 0 0 var(--yellow); }
+.hz-doc summary {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  min-height: 52px; padding: 14px 18px;
+  font-size: var(--fs-md); font-weight: 600; line-height: 1.4; color: var(--ink);
+  cursor: pointer; list-style: none;
+}
+.hz-doc summary::-webkit-details-marker { display: none; }
+.hz-doc summary::after {
+  content: '+'; flex: 0 0 auto;
+  width: 26px; height: 26px; border: 1px solid var(--edge); border-radius: 2px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: var(--fs-xl); font-weight: 400; line-height: 1; color: var(--ink);
+}
+/* Yellow is a fill; the mark on it is the brand's dark grey. */
+.hz-doc details[open] summary::after {
+  content: '\2212'; background: var(--yellow); border-color: var(--yellow); color: var(--btn-on-yellow, #000);
+}
+.hz-doc details > p {
+  margin: 0; padding: 0 18px 18px; font-size: var(--fs-md); line-height: 1.65; color: var(--body);
+}
+.hz-doc a { color: var(--ink); font-weight: 600; text-decoration: underline; text-underline-offset: 2px; }
+.hz-doc a:hover, .hz-doc a:focus { color: var(--ink); text-decoration-thickness: 2px; }
+
+/* Policy blocks: the house notice shape, all three alike. What a block says is carried by
+   its heading and its marks, not by an orange ground. */
+.hz-doc-box {
+  background: var(--sub); border-left: 3px solid var(--yellow); border-radius: 0 4px 4px 0;
+  padding: 20px 22px; margin: 0 0 14px;
+}
+.hz-doc-box .hz-doc-h { font-size: var(--fs-2xl); margin: 0 0 10px; }
+.hz-doc-box p { font-size: var(--fs-md); line-height: 1.6; color: var(--body); margin: 0; }
+.hz-doc-box p + ol, .hz-doc-box ol + p { margin-top: 12px; }
+.hz-doc-box ul, .hz-doc-box ol { list-style: none; margin: 0; padding: 0; }
+.hz-doc-box li {
+  position: relative; padding-left: 30px; margin: 8px 0 0;
+  font-size: var(--fs-md); line-height: 1.55; color: var(--body);
+}
+.hz-doc-box ul li::before {
+  content: '\2713'; position: absolute; left: 2px; top: 0; font-weight: 700; color: var(--ink);
+}
+.hz-doc-box--no ul li::before { content: '\2715'; }
+.hz-doc-box ol { counter-reset: hz-step; }
+.hz-doc-box ol li { counter-increment: hz-step; padding-left: 36px; }
+.hz-doc-box ol li strong { color: var(--ink); }
+.hz-doc-box ol li::before {
+  content: counter(hz-step); position: absolute; left: 0; top: 0;
+  width: 24px; height: 24px; border-radius: 2px; background: var(--yellow); color: #434244;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: var(--fs-sm); font-weight: 700;
+}
+
+/* =========================================================================
+   Buttons: one look across the site (Trevor, 24 Sep 2026)
+
+   Every page had its own button: .hz-lp-btn on the landing page and team list, .hz-btn in
+   the picker, .hz-cart-btn, .hz-co-btn, .hz-pg-btn on the account pages, .hz-cta and
+   .hz-band-cta on the older landing blocks, and Bootstrap's .btn-primary / .btn-info /
+   .logonBtn in the stock partials. Five different heights, four text colours on the same
+   yellow (#434244, #11172b, black-90, and yellow-on-white for the stock ones), hovers that
+   darkened by a colour on one page and by `filter: brightness()` on another, and most of
+   them styled `:focus` like `:hover`, so a button stayed "hovered" after it was clicked.
+
+   Now one geometry and two looks:
+     primary    yellow fill, black text; hover is the brand's pressed yellow
+     secondary  white, a hairline border that darkens to ink on hover
+   Both change colour only, over 120ms, and show a focus ring for the keyboard alone.
+   Disabled is one grey. The header's own buttons are deliberately not part of this.
+
+   Layout that belongs to a place (a full-width button in a summary, one under a person on
+   the team list) stays where it was written; this is only how a button looks.
+   ========================================================================= */
+:root {
+  --btn-h: 44px;
+  --btn-px: 22px;
+  --btn-yellow: #FFCC00;
+  --btn-yellow-hover: #E6B800;
+  --btn-on-yellow: #000;
+  --btn-line: #dae0ea;
+  --btn-ink: #11172b;
+  --btn-off-bg: #EDEFF2;
+  --btn-off-ink: #5f6778;
+}
+
+/* Geometry, for every button. */
+/* Bootstrap's own buttons only at full size: the date picker builds its day cells from
+   .btn-sm / .btn-xs buttons, which must stay small. .btn-default takes the colours below
+   but keeps its size for the same reason. */
+.hz-lp-btn, .hz-btn, .hz-cart-btn, .hz-co-btn, .hz-pg-btn, .hz-cta, .hz-band-cta, .hz-alloc-cta,
+.btn-primary:not(.btn-sm):not(.btn-xs), .btn-info:not(.btn-sm):not(.btn-xs), .logonBtn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  min-height: var(--btn-h); padding: 0 var(--btn-px);
+  border-radius: 2px; border-width: 1px; border-style: solid;
+  font-family: var(--hz-font); font-size: var(--fs-body); font-weight: 700;
+  line-height: 1.2; letter-spacing: 0; text-transform: none; text-decoration: none;
+  white-space: nowrap; cursor: pointer; filter: none; box-shadow: none;
+  transition: background-color .12s ease, border-color .12s ease, color .12s ease;
+}
+/* The ones that fill their column keep doing so. */
+.hz-cart-btn, .hz-co-btn, .hz-btn--block { display: flex; width: 100%; }
+
+/* Primary: yellow, black text. */
+.hz-lp-btn, .hz-btn, .hz-cart-btn--primary, .hz-co-btn--primary, .hz-pg-btn, .hz-cta,
+.hz-band-cta, .hz-alloc-cta, .btn-primary, .btn-info, .logonBtn {
+  background: var(--btn-yellow); border-color: var(--btn-yellow); color: var(--btn-on-yellow);
+}
+.hz-lp-btn:hover, .hz-btn:hover:not([disabled]), .hz-cart-btn--primary:hover:not([disabled]),
+.hz-co-btn--primary:hover:not([disabled]), .hz-pg-btn:hover:not([disabled]), .hz-cta:hover,
+.hz-band-cta:hover, .hz-alloc-cta:hover {
+  background: var(--btn-yellow-hover); border-color: var(--btn-yellow-hover);
+  color: var(--btn-on-yellow); text-decoration: none;
+}
+/* The stock buttons carry !important hovers of their own (yellow fill, white text). */
+.btn-primary:hover, .btn-info:hover, .logonBtn:hover,
+.btn-primary:focus, .btn-info:focus, .logonBtn:focus {
+  background: var(--btn-yellow-hover) !important; border-color: var(--btn-yellow-hover) !important;
+  color: var(--btn-on-yellow) !important;
+}
+
+/* Secondary: white, hairline, ink on hover. */
+.hz-lp-btn--ghost, .hz-cart-btn:not(.hz-cart-btn--primary), .hz-co-btn:not(.hz-co-btn--primary),
+.hz-pg-btn--ghost, .hz-pg-btn--stop, .btn-default {
+  background: #fff; border-color: var(--btn-line); color: var(--btn-ink);
+}
+.hz-lp-btn--ghost:hover, .hz-cart-btn:not(.hz-cart-btn--primary):hover, .hz-co-btn:not(.hz-co-btn--primary):hover,
+.hz-pg-btn--ghost:hover, .btn-default:hover {
+  background: #fff; border-color: var(--btn-ink); color: var(--btn-ink); text-decoration: none;
+}
+/* Cancel-like actions warn on hover in the brand's stop colour, as before. */
+.hz-pg-btn--stop { color: var(--btn-off-ink); }
+.hz-pg-btn--stop:hover:not([disabled]) { background: #fcebed; border-color: #a4192d; color: #a4192d; }
+/* On a yellow band, the second button is white with an ink edge, and stays white. */
+.hz-lp-btn--onyellow { background: #fff; border-color: var(--btn-ink); color: var(--btn-ink); }
+.hz-lp-btn--onyellow:hover { background: #fff; border-color: var(--btn-ink); color: var(--btn-ink); box-shadow: inset 0 0 0 1px var(--btn-ink); }
+
+/* Dollar and Thrifty pages fill their buttons with their own brand colour, with white text;
+   only the yellow ones take black. */
+.hz-pick[data-brand="dollar"] .hz-btn, .hz-pick[data-brand="thrifty"] .hz-btn {
+  background: var(--a); border-color: var(--a); color: var(--on-a);
+}
+.hz-pick[data-brand="dollar"] .hz-btn:hover:not([disabled]),
+.hz-pick[data-brand="thrifty"] .hz-btn:hover:not([disabled]) {
+  background: var(--a-deep); border-color: var(--a-deep); color: var(--on-a);
+}
+.hz-home[data-brand="dollar"] .hz-cta, .hz-home[data-brand="thrifty"] .hz-cta,
+.hz-band[data-brand="dollar"] .hz-band-cta, .hz-band[data-brand="thrifty"] .hz-band-cta {
+  background: var(--hz-accent); border-color: var(--hz-accent); color: #fff;
+}
+.hz-home[data-brand="dollar"] .hz-cta:hover, .hz-home[data-brand="thrifty"] .hz-cta:hover,
+.hz-band[data-brand="dollar"] .hz-band-cta:hover, .hz-band[data-brand="thrifty"] .hz-band-cta:hover {
+  background: var(--hz-accent-deep, var(--hz-accent)); border-color: var(--hz-accent-deep, var(--hz-accent)); color: #fff;
+}
+
+/* Disabled: one grey, and no hover. */
+.hz-lp-btn[disabled], .hz-btn[disabled], .hz-cart-btn[disabled], .hz-co-btn[disabled],
+.hz-pg-btn[disabled], .btn-primary[disabled], .btn-info[disabled], .btn-default[disabled] {
+  background: var(--btn-off-bg) !important; border-color: var(--btn-off-bg) !important;
+  color: var(--btn-off-ink) !important; cursor: not-allowed; opacity: 1;
+}
+
+/* Keyboard focus only: a ring, never a colour change that sticks after a click. */
+.hz-lp-btn:focus, .hz-btn:focus, .hz-cart-btn:focus, .hz-co-btn:focus, .hz-pg-btn:focus,
+.hz-cta:focus, .hz-band-cta:focus, .hz-alloc-cta:focus { outline: 0; }
+.hz-lp-btn:focus-visible, .hz-btn:focus-visible, .hz-cart-btn:focus-visible, .hz-co-btn:focus-visible,
+.hz-pg-btn:focus-visible, .hz-cta:focus-visible, .hz-band-cta:focus-visible, .hz-alloc-cta:focus-visible,
+.btn-primary:focus-visible, .btn-info:focus-visible, .logonBtn:focus-visible, .btn-default:focus-visible {
+  outline: 2px solid var(--btn-ink); outline-offset: 2px;
+}

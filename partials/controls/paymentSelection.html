@@ -1,0 +1,83 @@
+<!--
+  How the order is paid for. One option per payment method Four51 lets this user use (each
+  is a permission: PayByCreditCard, PayByPO, PayByBudgetAccount, and SubmitForApproval for an
+  order that goes to an approver), then the details for the chosen one.
+
+  The bindings, validation and split-billing logic are the stock theme's, from the
+  `paymentselector` directive; only the markup is this theme's. Styled by `.hs-pay` in
+  css/store.css and the `.hz-co-*` field classes in custom.css.
+-->
+<div class="hs-pay">
+  <p class="hz-co-label is-required">Payment method</p>
+  <div class="hs-pay-opts" role="radiogroup" aria-label="Payment method">
+    <label class="hs-pay-opt" ng-if="paymentAllowed('CreditCard')" ng-class="{on: currentOrder.PaymentMethod == 'CreditCard'}">
+      <input type="radio" name="paymentMethod" value="CreditCard" ng-model="currentOrder.PaymentMethod" />
+      <span><b>Credit card</b><small>Charged when the order is placed</small></span>
+    </label>
+    <label class="hs-pay-opt" ng-if="paymentAllowed('PurchaseOrder')" ng-class="{on: currentOrder.PaymentMethod == 'PurchaseOrder'}">
+      <input type="radio" name="paymentMethod" value="PurchaseOrder" ng-model="currentOrder.PaymentMethod" />
+      <span><b>Purchase order</b><small>Invoiced to your account</small></span>
+    </label>
+    <label class="hs-pay-opt" ng-if="user.Permissions.contains('PayByBudgetAccount') && (SpendingAccounts|filter:{ForPurchase:true}).length > 0"
+           ng-class="{on: currentOrder.PaymentMethod == 'BudgetAccount' || currentOrder.BudgetAccountID}">
+      <input type="radio" name="paymentMethod" value="BudgetAccount" ng-model="currentOrder.PaymentMethod"
+             ng-click="setBudgetAccount((SpendingAccounts|filter:{AccountType.PurchaseCredit:true}).length)" />
+      <span><b>Spending account</b><small>From your account balance</small></span>
+    </label>
+    <label class="hs-pay-opt" ng-if="paymentAllowed('Undetermined')" ng-class="{on: currentOrder.PaymentMethod == 'Undetermined'}">
+      <input type="radio" name="paymentMethod" value="Undetermined" ng-model="currentOrder.PaymentMethod" ng-disabled="isSplitBilling" />
+      <span><b>Send for approval</b><small>An approver chooses how it is paid</small></span>
+    </label>
+  </div>
+
+  <!-- Spending account -->
+  <div class="hs-pay-detail" ng-if="user.Permissions.contains('PayByBudgetAccount')" ng-show="currentOrder.PaymentMethod == 'BudgetAccount'">
+    <p class="hs-pay-note" ng-show="(SpendingAccounts|filter:{ForPurchase:true}).length == 1">
+      {{selectedBudgetAccount.Label}}, balance {{selectedBudgetAccount.Balance | culturecurrency}}
+    </p>
+    <div class="hz-co-field" ng-show="(SpendingAccounts|filter:{ForPurchase:true}).length > 1">
+      <label class="hz-co-label is-required">Spending account</label>
+      <select class="hz-co-select"
+              ng-options="account.ID as (account.Label + ', balance ' + (account.Balance | culturecurrency)) for account in SpendingAccounts | filter:{ForPurchase:true}"
+              ng-model="currentOrder.BudgetAccountID"
+              ng-required="currentOrder.PaymentMethod == 'BudgetAccount'">
+        <option value=""></option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Credit card: a saved card, or a new one -->
+  <div class="hs-pay-detail" ng-if="user.Permissions.contains('PayByCreditCard')" ng-show="currentOrder.PaymentMethod == 'CreditCard'">
+    <div class="hz-co-field" ng-if="paymentSelection.SavedCards.length">
+      <label class="hz-co-label">Saved card</label>
+      <div class="hs-pay-saved">
+        <select class="hz-co-select" ng-model="currentOrder.CreditCardID" ng-options="card.ID as card.Name for card in paymentSelection.SavedCards">
+          <option value="">Use a new card</option>
+        </select>
+        <button type="button" class="hs-pay-link" ng-show="showDelete(currentOrder.CreditCardID)" ng-click="deleteSavedCard(currentOrder.CreditCardID)">Remove card</button>
+      </div>
+    </div>
+    <creditcard ng-show="!currentOrder.CreditCardID"></creditcard>
+  </div>
+
+  <div class="hs-pay-warn" ng-show="cart_billing.$error.paymentMethod && currentOrder.PaymentMethod == 'BudgetAccount' && currentOrder.BudgetAccountID">
+    {{currentBudgetAccount.Label}} does not cover the order total.
+  </div>
+
+  <!-- A spending account that covers part of the total, and a second method for the rest. -->
+  <div class="hs-pay-warn" ng-show="isSplitBilling">
+    <p ng-show="currentOrder.PaymentMethod == 'BudgetAccount'">
+      {{currentBudgetAccount.Label}} does not cover the order total. Choose a second payment method for the remaining
+      <strong ng-show="!user.Permissions.contains('HidePricing')">{{remainingOrderTotal | culturecurrency}}</strong><span ng-show="user.Permissions.contains('HidePricing')">balance</span>,
+      or remove the spending account.
+    </p>
+    <p ng-show="currentOrder.PaymentMethod != 'BudgetAccount'">
+      {{currentBudgetAccount.Label}} does not cover the order total. This payment covers the remaining
+      <strong ng-show="!user.Permissions.contains('HidePricing')">{{remainingOrderTotal | culturecurrency}}</strong><span ng-show="user.Permissions.contains('HidePricing')">balance</span>.
+    </p>
+    <button type="button" class="hs-pay-link"
+            ng-click="currentOrder.BudgetAccountID = null; isSplitBilling = null; currentOrder.PaymentMethod = (currentOrder.PaymentMethod == 'BudgetAccount') ? null : currentOrder.PaymentMethod;">
+      Remove {{currentBudgetAccount.Label}} as payment
+    </button>
+  </div>
+</div>

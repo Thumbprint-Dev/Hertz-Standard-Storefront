@@ -1,0 +1,75 @@
+<!--
+  The order's facts, in the side panel of the order detail page.
+
+  Was an injected <style> block setting 20px Lato on a `.order-summary-body`, with each
+  row built as a <p> holding a label and a `pull-right` value. Floats in a narrow column
+  overlap as soon as either side wraps, which is what the 20px type was hiding.
+
+  Now label/value rows that lay out with flex and wrap without colliding. Every binding
+  is unchanged.
+-->
+<div class="hz-pg-dl">
+  <div class="hz-pg-dl-row" ng-show="order.DateSubmitted">
+    <span class="hz-pg-dl-k">Ordered</span>
+    <span class="hz-pg-dl-v">{{order.DateSubmitted | date:user.Culture.DateFormat.short}}</span>
+  </div>
+  <div class="hz-pg-dl-row">
+    <span class="hz-pg-dl-k">Status</span>
+    <span class="hz-pg-dl-v">{{order.StatusText | r | xlat}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.DateCompleted">
+    <span class="hz-pg-dl-k">Completed</span>
+    <span class="hz-pg-dl-v">{{order.DateCompleted | date:user.Culture.DateFormat.short}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.FromUserFirstName || order.FromUserLastName">
+    <span class="hz-pg-dl-k">Ordered by</span>
+    <span class="hz-pg-dl-v">{{order.FromUserFirstName + ' ' + order.FromUserLastName}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.Comments">
+    <span class="hz-pg-dl-k">Comments</span>
+    <span class="hz-pg-dl-v">{{order.Comments}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="orderCostCenter">
+    <span class="hz-pg-dl-k">Cost centre</span>
+    <span class="hz-pg-dl-v">{{(order.LineItems.length == 1) && order.LineItems[0].CostCenter || null}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.CostCenter">
+    <span class="hz-pg-dl-k">Cost centre</span>
+    <span class="hz-pg-dl-v">{{order.CostCenter}}</span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.PaymentMethod != 'Undetermined'">
+    <span class="hz-pg-dl-k">Payment</span>
+    <span class="hz-pg-dl-v">
+      {{order.PaymentMethodText | r | xlat}}<strong ng-show="order.CreditCard.Type">{{': ' + order.CreditCard.DisplayName}}</strong>
+      {{order.AmountOnAccount && order.PaymentMethod != 'BudgetAccount' ? "(" + (order.Total - order.AmountOnAccount | currency) + ")" : ""}}
+    </span>
+  </div>
+  <div class="hz-pg-dl-row" ng-show="order.AmountOnAccount && order.PaymentMethod != 'BudgetAccount'">
+    <span class="hz-pg-dl-k">Account</span>
+    <span class="hz-pg-dl-v">{{(order.AccountName || order.AccountLabel) + " (" + (order.AmountOnAccount | culturecurrency) + ")"}}</span>
+  </div>
+</div>
+
+<div ng-show="!order.IsMultipleShip()" style="margin-top: 16px;">
+  <p class="hz-pg-card-t" style="margin: 0 0 6px;">Ships to</p>
+  <address style="font-size: 14px; line-height: 1.55; margin: 0; color: #2c3140;">
+    <span ng-show="order.LineItems[0].ShipFirstName || order.LineItems[0].ShipLastName">{{order.LineItems[0].ShipFirstName}} {{order.LineItems[0].ShipLastName}}</span>
+    <span ng-show="!order.LineItems[0].ShipFirstName || !order.LineItems[0].ShipLastName">{{order.ShipAddress.FirstName}} {{order.ShipAddress.LastName}}</span><br />
+    {{order.ShipAddress.Street1}}<br />
+    <span ng-if="order.ShipAddress.Street2">{{order.ShipAddress.Street2}}<br /></span>
+    {{order.ShipAddress.City}}, {{order.ShipAddress.State}} {{order.ShipAddress.Zip}}
+    <span ng-if="order.ShipAddress.Country != 'US'"><br />{{order.ShipAddress.Country}}</span>
+  </address>
+</div>
+
+<div ng-show="order.BillAddress && order.BillingEnabled" style="margin-top: 16px;">
+  <p class="hz-pg-card-t" style="margin: 0 0 6px;">Bills to</p>
+  <address style="font-size: 14px; line-height: 1.55; margin: 0; color: #2c3140;">
+    <span ng-show="order.BillFirstName || order.BillLastName">{{order.BillFirstName}} {{order.BillLastName}}</span>
+    <span ng-show="!order.BillFirstName || !order.BillLastName">{{order.BillAddress.FirstName}} {{order.BillAddress.LastName}}</span><br />
+    {{order.BillAddress.Street1}}<br />
+    <span ng-if="order.BillAddress.Street2">{{order.BillAddress.Street2}}<br /></span>
+    {{order.BillAddress.City}}, {{order.BillAddress.State}} {{order.BillAddress.Zip}}
+    <span ng-if="order.BillAddress.Country != 'US'"><br />{{order.BillAddress.Country}}</span>
+  </address>
+</div>

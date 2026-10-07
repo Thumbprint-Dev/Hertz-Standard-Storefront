@@ -1,0 +1,23 @@
+<!--
+  Add or edit one address.
+
+  The form itself is the `addressinput` directive, shared with checkout, so this file is
+  only the page around it: a title that says which of the two things is happening, and a
+  way back to the list. It was a Bootstrap panel with the same title inside its heading.
+-->
+<section class="hz-pg address-view">
+  <a class="hz-pg-back" href="addresses">&larr; All addresses</a>
+
+  <div class="hz-pg-head">
+    <h1 class="hz-pg-title">{{address.ID ? 'Edit address' : 'Add an address'}}</h1>
+  </div>
+  <p class="hz-pg-sub">
+    Orders ship here when you choose this address at checkout.
+  </p>
+
+  <div class="hz-pg-card" style="max-width: 720px;">
+    <div class="hz-pg-card-b">
+      <addressinput address='address' user='user' return='return'></addressinput>
+    </div>
+  </div>
+</section>

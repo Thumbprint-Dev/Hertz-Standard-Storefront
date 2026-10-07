@@ -1,0 +1,70 @@
+<!--
+  Order history, the page behind the header's Orders link.
+
+  Every order, newest first, one row each, reading left to right as number and date, who
+  ordered it, total and status; the whole row opens the order. OrderSearchCtrl fetches every
+  Four51 status bucket and merges them. A box to find an order by number appears once there
+  are more than three, and narrows the list as it is typed.
+-->
+<section class="hz-pg hz-ord order-search-view">
+
+  <div class="hz-pg-head">
+    <h1 class="hz-pg-title">Order history</h1>
+  </div>
+  <div class="hz-pg-spacer" aria-hidden="true"></div>
+
+  <loadingindicator ng-show="pagedIndicator" />
+
+  <!-- Narrows the list as it is typed. Shown once there are enough orders to look through. -->
+  <div class="hz-ord-find" ng-show="allOrders.length > 3">
+    <label class="hz-sr-only" for="hzOrderId">Find an order by number</label>
+    <input id="hzOrderId" type="search" ng-model="find.text" autocomplete="off"
+           placeholder="Find an order by number" />
+  </div>
+
+  <div class="hz-pg-note" ng-show="allOrders.length && !orders.length">
+    <p><strong>No order numbers match.</strong> Clear the search to see every order.</p>
+  </div>
+
+  <div class="hz-pg-empty" ng-show="!pagedIndicator && !allOrders.length">
+    <p class="hz-pg-empty-t">No orders yet</p>
+    <p>When you place an order it will appear here, with its status and where it shipped.</p>
+    <a class="hz-pg-btn" href="catalog">Start shopping</a>
+  </div>
+
+  <div ng-show="orders.length">
+    <div class="hz-pg-card">
+      <div class="hz-pg-card-h">
+        <p class="hz-pg-card-t">All orders</p>
+        <p class="hz-pg-card-t">{{settings.listCount}} {{settings.listCount === 1 ? 'order' : 'orders'}}</p>
+      </div>
+
+      <!-- An order that is still the working cart opens as the cart: it has not been placed. -->
+      <a class="hz-ord-row" ng-class="{'hz-ord-row--noprice': user.Permissions.contains('HidePricing')}"
+         ng-repeat="order in orders | paginate:(settings.currentPage-1) * settings.pageSize | limitTo:settings.pageSize"
+         ng-href="{{currentOrder.ID == order.ID ? 'cart' : 'order/' + order.ID}}">
+        <span class="hz-ord-row-id">
+          <span class="hz-ord-row-num">{{order.ExternalID ? 'Order ' + order.ExternalID : 'Order'}}</span>
+          <span class="hz-ord-row-date">{{(order.DateSubmitted || order.DateCreated) | date:'MMM d, y'}}<span ng-if="order.DateCanceled || order.DateCancelled">, canceled {{(order.DateCanceled || order.DateCancelled) | date:'MMM d, y'}}</span></span>
+        </span>
+        <span class="hz-ord-row-who">
+          <span class="hz-ord-row-k">Ordered by</span>
+          {{order.FromUserFirstName}} {{order.FromUserLastName}}
+        </span>
+        <span class="hz-ord-row-total" ng-if="!(user.Permissions.contains('HidePricing'))">{{order.Total | culturecurrency}}</span>
+        <span class="hz-ord-row-end">
+          <span class="hz-pg-pill">{{order.StatusText}}</span>
+        </span>
+      </a>
+    </div>
+
+    <div ng-show="settings.listCount > settings.pageSize">
+      <pagination page="settings.currentPage" max-size="8" rotate="false" boundary-links="true"
+                  total-items="settings.listCount" items-per-page="settings.pageSize"
+                  direction-links="true" previous-text="{{'Previous' | xlat}}"
+                  next-text="{{'Next' | xlat}}" first-text="{{'First' | xlat}}"
+                  last-text="{{'Last' | xlat}}"></pagination>
+    </div>
+  </div>
+
+</section>

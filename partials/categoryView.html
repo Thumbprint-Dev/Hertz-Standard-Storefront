@@ -1,0 +1,42 @@
+<!--
+  A category: its garments as a grid, the other categories beside it. Styled by `.hs-list`
+  in css/store.css; the grid itself is partials/controls/productGrid.html.
+-->
+<section class="hs hs-list">
+  <nav class="hs-crumbs" aria-label="Breadcrumb">
+    <a href="catalog">Home</a><span aria-hidden="true">/</span><span>{{listing.category.Name || '&nbsp;'}}</span>
+  </nav>
+
+  <div class="hs-list-head">
+    <div>
+      <h1 class="hs-title">{{listing.category.Name}}</h1>
+      <p class="hs-sub" ng-if="!listing.loading">
+        {{listing.families.length}} {{listing.families.length == 1 ? 'product' : 'products'}}
+      </p>
+    </div>
+    <label class="hs-sort" ng-if="listing.families.length > 1">
+      Sort
+      <select ng-model="listing.sort">
+        <option value="featured">Featured</option>
+        <option value="name">Name</option>
+        <option value="low" ng-if="!user.Permissions.contains('HidePricing')">Price, low to high</option>
+        <option value="high" ng-if="!user.Permissions.contains('HidePricing')">Price, high to low</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="hs-list-body">
+    <nav class="hs-side" aria-label="Categories">
+      <p>Categories</p>
+      <a ng-repeat="c in tree" href="catalog/{{c.InteropID}}" ng-class="{on: c.InteropID == listing.id}">{{c.Name}}</a>
+    </nav>
+
+    <div>
+      <productgrid families="listing.shown" loading="listing.loading" hide-prices="user.Permissions.contains('HidePricing')"></productgrid>
+      <div class="hs-empty" ng-if="!listing.loading && !listing.families.length">
+        <p>Nothing in this category yet.</p>
+        <a class="hs-btn hs-btn--ghost" href="catalog">Back to the store</a>
+      </div>
+    </div>
+  </div>
+</section>

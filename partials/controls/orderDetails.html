@@ -1,0 +1,93 @@
+<!--
+  Checkout · step 1, order details.
+
+  Rewritten off Bootstrap. Every binding is the stock one — `cart_order` is still the form
+  name `orderSummary.html` and `checkOutViewCtrl` read for validity, `currentOrder.*` model
+  paths are unchanged, and the `octextfield` directives and their `ng-required` expressions
+  are byte-for-byte what they were. What changed is the chrome: `panel-*`, `col-xs-*`,
+  `input-group`, `form-control` and the inline `<style>` block are gone, replaced by the
+  `hz-co-*` components in custom.css.
+
+  That matters because the old markup could only be restyled from the outside, with a pile
+  of `!important` fighting Bootstrap's own rules. Two stylesheets arguing over the same
+  element is why this page kept looking half-finished whatever was done to it.
+
+  Branches nobody at Hertz currently reaches — the PO ID field, cost centres, free-form
+  cost centre — are kept, not deleted. They are permission-gated Four51 behaviour and a
+  different tenant or a permission change brings them back; removing them would be removing
+  functionality, which is not what restyling means.
+-->
+<!--
+  Shown only when there is something in it to fill in: an order ID the user sets
+  (`EditPOID`), a cost centre, or order fields configured in Four51 (a PO number, a note
+  for the warehouse). For a shopper with none of those, checkout opens on Shipping.
+
+  `ng-show`, not `ng-if`: `cart_order` is one of the forms the Submit button reads, and a
+  form removed from the DOM evaluates to `undefined` there. Hidden, it stays registered and
+  valid. The condition mirrors the inner ones; change one and change the other.
+-->
+<div class="hz-co-card"
+     ng-show="user.Permissions.contains('EditPOID')
+           || (user.Permissions.contains('CostCenterPerOrder') && !user.Permissions.contains('CostCenterPerLine') && user.CostCenters.length > 0)
+           || (user.Permissions.contains('CostCenterPerOrder') && user.Permissions.contains('FreeFormCostCenter'))
+           || currentOrder.OrderFields.length > 0">
+  <div class="hz-co-card-h">
+    <h3 class="hz-co-card-t">Order details</h3>
+  </div>
+
+  <div class="hz-co-card-b">
+    <form name="cart_order" novalidate="">
+      <div class="hz-co-field" ng-if="user.Permissions.contains('EditPOID')">
+        <label class="hz-co-label is-required" for="hz-co-orderid">
+          {{('Order' | r) + ' ' + ('ID' | r) | xlat}}
+        </label>
+        <div class="hz-co-inline">
+          <input id="hz-co-orderid" class="hz-co-input" name="orderid" type="text"
+                 ng-disabled="currentOrder.autoID"
+                 ng-model="currentOrder.ExternalID"
+                 required
+                 ui-mask="{{currentOrder.autoID ? null : user.Company.POIDMask}}" />
+          <label class="hz-co-check" ng-if="user.Permissions.contains('AllowAutoGenPOID')">
+            <input type="checkbox"
+                   ng-click="currentOrder.ExternalID = currentOrder.autoID ? null : 'auto'"
+                   ng-model="currentOrder.autoID" />
+            <span>{{('Auto' | r) + ' ' + ('ID' | r) | xlat}}</span>
+          </label>
+        </div>
+      </div>
+
+      <div class="hz-co-field"
+           ng-show="user.Permissions.contains('CostCenterPerOrder') && !user.Permissions.contains('CostCenterPerLine') && user.CostCenters.length > 0 || user.Permissions.contains('CostCenterPerOrder') && user.Permissions.contains('FreeFormCostCenter')">
+        <label class="hz-co-label is-required" for="hz-co-costcenter">
+          {{'Cost Center' | r | xlat}}
+        </label>
+        <select id="hz-co-costcenter" class="hz-co-select"
+                ng-required="user.Permissions.contains('CostCenterPerOrder') && !user.Permissions.contains('CostCenterPerLine') && !user.Permissions.contains('FreeFormCostCenter')"
+                ng-change="updateCostCenter()"
+                ng-if="user.CostCenters.length > 1 && !user.Permissions.contains('FreeFormCostCenter')"
+                ng-options="center.Name as center.Name for center in user.CostCenters"
+                ng-model="currentOrder.CostCenter">
+          <option value=""></option>
+        </select>
+        <input class="hz-co-input" type="text"
+               ng-show="user.Permissions.contains('FreeFormCostCenter')"
+               ng-model="currentOrder.CostCenter"
+               ng-required="user.Permissions.contains('CostCenterPerOrder') && !user.Permissions.contains('CostCenterPerLine') && user.Permissions.contains('FreeFormCostCenter')"
+               placeholder="{{'Cost Center' | r | xlat}}" />
+        <p class="hz-co-static"
+           ng-if="user.CostCenters.length == 1 && !user.Permissions.contains('FreeFormCostCenter')">
+          {{currentOrder.CostCenter}}
+        </p>
+      </div>
+
+      <!-- Order fields configured in Four51 for this site, in the order Four51 lists them. -->
+      <div class="hz-co-field" ng-repeat="field in currentOrder.OrderFields">
+        <octextfield customfield="field" ng-if="field.ControlType == 'Text'"></octextfield>
+        <ocselectionfield customfield="field" ng-if="field.ControlType == 'Selection'"></ocselectionfield>
+        <occheckboxfield customfield="field" ng-if="field.ControlType == 'Checkbox'"></occheckboxfield>
+        <ocdatefield customfield="field" ng-if="field.ControlType == 'Date'"></ocdatefield>
+      </div>
+
+    </form>
+  </div>
+</div>
