@@ -41,6 +41,26 @@ The payment options are the methods the signed-in user's Four51 permissions allo
 `PayByBudgetAccount` (spending accounts), and `SubmitForApproval` for orders that need an
 approver. The first one allowed is preselected.
 
+### Punchout
+
+The store supports punchout from a buyer's procurement system (Ariba, Coupa and the like),
+based on Four51's [Punchout overrides](https://github.com/Four51/CustomSolutions/tree/master/Punchout).
+A user with the `PunchoutUser` permission who arrives through a punchout session:
+
+- lands where the session says: the cart for an `Edit` operation, otherwise
+  `PunchoutLandingCategory` or `PunchoutLandingProduct` (once per session, tracked by
+  `punchoutconfig` in local storage), `js/controllers/Four51Ctrl.js`;
+- sees **Submit cart** on the cart page instead of **Check out**. It saves the order, marks it
+  as a punchout order (`PUT order/punchout/:id`), fetches the return form
+  (`punchoutin/returnform/<template>`) and posts it to the buyer's `PunchOutPostURL`,
+  `js/controllers/cartCtrl.js`, `partials/cartView.html`, `js/services/punchoutService.js`;
+- has no **Log Out**: the session belongs to the procurement system.
+
+Four51 setup: a punchout template on the buyer company, the `PunchoutUser` permission on the
+punchout users' group, and the landing category or product if the buyer wants one. Like
+Four51's overrides, this works when the store opens in its own window or tab (Chrome,
+Firefox, Edge); a store embedded in a frame on Safari or Internet Explorer is not supported.
+
 ## Deploying to Four51
 
 The repository root **is** the theme. In the Four51 admin for the store's site, point Git

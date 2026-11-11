@@ -21,10 +21,18 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 	};
 
 	//Punchout
-	if($scope.PunchoutUser){
-		$scope.punchouturl = $sce.trustAsResourceUrl(Punchout.punchoutSession.PunchOutPostURL);
+	// Read the post URL from the punchout session cookie, not behind `$scope.PunchoutUser`:
+	// that flag is set inside Four51Ctrl's async User.get, so on a reload of /cart it is not
+	// there yet when this controller runs, and the return form would post nowhere.
+	var punchoutSession = Punchout.punchoutSession;
+	if (punchoutSession && punchoutSession.PunchOutPostURL) {
+		$scope.punchouturl = $sce.trustAsResourceUrl(punchoutSession.PunchOutPostURL);
 	}
 	$scope.submitPunchoutOrder = function () {
+		if (!$scope.punchouturl) {
+			$scope.errorMessage = 'Your punchout session has ended. Return to your purchasing system and punch out again.';
+			return;
+		}
 	    $scope.submitClicked = true;
 		$scope.saveChanges(function (data) {
 			Punchout.save($scope.currentOrder.ID, function(){

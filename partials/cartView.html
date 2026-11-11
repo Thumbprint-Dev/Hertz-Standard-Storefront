@@ -96,10 +96,21 @@
             </div>
           </div>
 
-          <button type="button" class="hz-cart-btn hz-cart-btn--primary"
+          <button type="button" class="hz-cart-btn hz-cart-btn--primary" ng-if="!PunchoutUser"
                   ng-click="checkOut()" ng-disabled="cart.$invalid || kitValidation">
             Check out
           </button>
+
+          <!-- Punchout: the cart goes back to the buyer's procurement system instead of
+               through checkout. CartViewCtrl.submitPunchoutOrder saves the order, marks it
+               as a punchout order and posts #punchoutForm to the buyer. -->
+          <button type="button" class="hz-cart-btn hz-cart-btn--primary" ng-if="PunchoutUser"
+                  ng-click="submitPunchoutOrder()" ng-disabled="cart.$invalid || kitValidation || submitClicked">
+            {{submitClicked ? 'Sending your cart…' : 'Submit cart'}}
+          </button>
+          <p class="hs-muted" ng-if="PunchoutUser">
+            Returns this cart to your purchasing system to finish the order there.
+          </p>
 
           <a class="hz-cart-btn" href="catalog">Continue shopping</a>
 
@@ -112,5 +123,12 @@
     </div>
 
     <div class="hz-cart-alert" ng-show="errorMessage"><p>{{errorMessage}}</p></div>
+  </form>
+
+  <!-- Punchout return form, outside the cart form (forms cannot nest). Its fields are the
+       cXML/OCI values Four51's punchoutin/returnform gives back, posted to the buyer's
+       PunchOutPostURL. -->
+  <form id="punchoutForm" method="POST" action="{{punchouturl}}" ng-if="PunchoutUser">
+    <input type="hidden" ng-repeat="(key, val) in punchoutForm" name="{{key}}" value="{{val}}" />
   </form>
 </section>
