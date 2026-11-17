@@ -20,14 +20,19 @@ four51.app.controller('NavCtrl', ['$location', '$route', '$scope', '$451', '$tim
       
 
  
+        // Four51 2.0 (COMTOOLS-1947): log out on the server as well, so the token stops
+        // working, then sign in again as the anonymous user on an anonymous site.
         $scope.Logout = function(){
-            User.logout();
-            if ($scope.isAnon) {
-                $location.path("/catalog");
-                User.login(function(user) {
-                    $scope.user = user;
-                });
-            }
+            User.logout($scope.user, function(u){
+                if ($scope.isAnon) {
+                    $timeout(function () {
+                        $location.path("/catalog");
+                        location.reload(true);
+                    }, 500);
+                }
+            }, function(ex){
+                console.log(ex.Message);
+            });
         };
 
         $scope.Clear = function() {
