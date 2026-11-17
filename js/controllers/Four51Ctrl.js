@@ -1,12 +1,17 @@
-four51.app.controller('Four51Ctrl', ['$scope', '$route', '$location', 'Punchout', '$451', 'User', 'Order', 'Security', 'OrderConfig', 'Category', 'AppConst','XLATService', 'GoogleAnalytics', 'OrderSearchCriteria', 'SpendingAccount',
-function ($scope, $route, $location, Punchout, $451, User, Order, Security, OrderConfig, Category, AppConst, XLATService, GoogleAnalytics, OrderSearchCriteria, SpendingAccount) {
+four51.app.controller('Four51Ctrl', ['$scope', '$route', '$rootScope', '$timeout', '$document', '$window', '$location', 'Punchout', '$451', 'User', 'Order', 'Security', 'OrderConfig', 'Category', 'AppConst','XLATService', 'GoogleAnalytics', 'OrderSearchCriteria', 'SpendingAccount',
+function ($scope, $route, $rootScope, $timeout, $document, $window, $location, Punchout, $451, User, Order, Security, OrderConfig, Category, AppConst, XLATService, GoogleAnalytics, OrderSearchCriteria, SpendingAccount) {
 	$scope.AppConst = AppConst;
 	$scope.scroll = 0;
 	$scope.isAnon = $451.isAnon; //need to know this before we have access to the user object
 	$scope.Four51User = Security;
 	if ($451.isAnon && !Security.isAuthenticated()) {
-		User.login(function () {
-			$route.reload();
+		var tempUser = {
+			Username: null,
+			Password: null,
+			Email: null
+		};
+		User.login(tempUser,function (u) {
+			location.reload();
 		});
 	}
 
@@ -111,8 +116,8 @@ function ($scope, $route, $location, Punchout, $451, User, Order, Security, Orde
           });
 
 
-	            if (!$scope.user.TermsAccepted)
-		            $location.path('conditions');
+				if (!$scope.user.TermsAccepted)
+					$location.path('conditions');
 
 				if (user.CurrentOrderID) {
 					Order.get(user.CurrentOrderID, function (ordr) {
@@ -142,11 +147,11 @@ function ($scope, $route, $location, Punchout, $451, User, Order, Security, Orde
 	}
 	catch(ex) {}
 
-    $scope.errorSection = '';
+	$scope.errorSection = '';
 
-    function cleanup() {
-        Security.clear();
-    }
+	function cleanup() {
+		Security.clear();
+	}
 
     // Every cart write goes through Order.save, which broadcasts the saved order; keeping it
     // here means the header, the cart and every page read the same current order.
@@ -154,9 +159,44 @@ function ($scope, $route, $location, Punchout, $451, User, Order, Security, Orde
         $scope.currentOrder = order;
     });
 
-    $scope.$on('event:auth-loginConfirmed', function(){
-        $route.reload();
+	$scope.$on('event:auth-loginConfirmed', function(){
+		$route.reload();
 	});
 	$scope.$on("$routeChangeSuccess", init);
-    $scope.$on('event:auth-loginRequired', cleanup);
+	$scope.$on('event:auth-loginRequired', cleanup);
+
+	// Timeout timer value
+	var TimeOutTimerValue = 15*60*1000;
+
+	// Start a timeout
+	var TimeOut_Thread = $timeout(function(){ LogoutByTimer() } , TimeOutTimerValue);
+	var bodyElement = angular.element($document);
+
+	angular.forEach(['keydown', 'keyup', 'click', 'mousemove', 'DOMMouseScroll', 'mousewheel', 'mousedown', 'touchstart', 'touchmove', 'scroll', 'focus'],
+		function(EventName) {
+			bodyElement.bind(EventName, function (e) { TimeOut_Resetter(e) });
+		});
+
+	function LogoutByTimer(){
+		// Nothing to sign out of (the login screen is showing already).
+		if (!Security.isAuthenticated()) return;
+		User.logout($scope.user, function(u){
+			if ($scope.isAnon) {
+				$timeout(function () {
+					$location.path("/catalog");
+					location.reload(true);
+				}, 500);
+			}
+		}, function(ex){
+			console.log(ex.Message);
+		});
+	}
+
+	function TimeOut_Resetter(e){
+		/// Stop the pending timeout
+		$timeout.cancel(TimeOut_Thread);
+
+		/// Reset the timeout
+		TimeOut_Thread = $timeout(function(){ LogoutByTimer() } , TimeOutTimerValue);
+	}
 }]);

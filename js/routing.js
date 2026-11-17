@@ -20,6 +20,10 @@ four51.app.config(['$routeProvider', '$locationProvider', function($routeProvide
         // Four51 kits, if the catalog ever carries one.
         when('/kit/:id', { templateUrl: 'partials/kitView.html', controller: 'KitCtrl' }).
         when('/kit/:id/:lineitemid', { templateUrl: 'partials/kitView.html', controller: 'KitCtrl' }).
+        // Variable products inside a kit (Four51 COMTOOLS-96).
+        when('/kit/:id/:lineitemid/:productInteropID', { templateUrl: concatSpecFormView, controller: 'KitSpecFormCtrl' }).
+        when('/kit/:id/:lineitemid/:productInteropID/:variantInteropID', { templateUrl: 'partials/kitVariantView.html', controller: 'KitVariantCtrl' }).
+        when('/kit/:id/:lineitemid/:productInteropID/:variantInteropID/edit', { templateUrl: concatSpecFormView, controller: 'KitSpecFormCtrl' }).
 
         when('/search', { templateUrl: 'partials/searchView.html', controller: 'ProductSearchCtrl' }).
         when('/search/:searchTerm', { templateUrl: 'partials/searchView.html', controller: 'ProductSearchCtrl' }).

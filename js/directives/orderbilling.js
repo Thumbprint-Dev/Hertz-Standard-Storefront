@@ -47,6 +47,11 @@ four51.app.directive('orderbilling', ['Address', 'AddressList', function(Address
 
 			AddressList.billing(function(list) {
 				$scope.billaddresses = (list || []).filter(function(a) { return a && a.ID; });
+				// An approver editing someone else's order keeps that order's billing address
+				// as a choice, though it is not one of the approver's own (Four51 base).
+				var bill = $scope.currentOrder && $scope.currentOrder.BillAddress;
+				if ($scope.isEditforApproval && bill && bill.ID && !AddressList.contains(bill))
+					$scope.billaddresses.push(bill);
 				$scope.billing.loaded = true;
 				init();
 			});
