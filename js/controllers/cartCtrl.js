@@ -120,6 +120,16 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 		}
 	};
 
+	var cleanDate = function(callback){
+		angular.forEach($scope.currentOrder.LineItems, function(li){
+			if(li.DateNeeded){
+			    var newDate = new Date(li.DateNeeded);
+				li.DateNeeded = newDate.toDateString();
+			}
+		});
+		if (callback) callback();
+	}
+
 	$scope.saveChanges = function(callback) {
 		$scope.actionMessage = null;
 		$scope.errorMessage = null;
@@ -129,18 +139,20 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 		else {
 			$scope.displayLoadingIndicator = true;
 			OrderConfig.address($scope.currentOrder, $scope.user);
-			Order.save($scope.currentOrder,
-				function(data) {
-					$scope.currentOrder = data;
-					$scope.displayLoadingIndicator = false;
-					if (callback) callback();
-					$scope.actionMessage = 'Your Changes Have Been Saved';
-				},
-				function(ex) {
-					$scope.errorMessage = ex.Message;
-					$scope.displayLoadingIndicator = false;
-				}
-			);
+			cleanDate(function(){
+				Order.save($scope.currentOrder,
+					function (data) {
+						$scope.currentOrder = data;
+						$scope.displayLoadingIndicator = false;
+						if (callback) callback();
+						$scope.actionMessage = 'Your Changes Have Been Saved';
+					},
+					function (ex) {
+						$scope.errorMessage = ex.Message;
+						$scope.displayLoadingIndicator = false;
+					}
+				);
+			});
 		}
 	};
 
@@ -148,16 +160,22 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 		if (confirm('Are you sure you wish to remove this item from your cart?') == true) {
 			Order.deletelineitem($scope.currentOrder.ID, item.ID,
 				function(order) {
-					$scope.currentOrder = order;
-					Order.clearshipping($scope.currentOrder);
 					if (!order) {
 						$scope.user.CurrentOrderID = null;
 						User.save($scope.user, function(){
 							$location.path('catalog');
 						});
 					}
-					$scope.displayLoadingIndicator = false;
-					$scope.actionMessage = 'Your Changes Have Been Saved';
+					else{
+						$scope.currentOrder = order;
+						if(!$scope.isEditforApproval){
+							Order.clearshipping($scope.currentOrder);
+						}
+						$scope.saveChanges(function(){
+							$scope.displayLoadingIndicator = false;
+							$scope.actionMessage = 'Your Changes Have Been Saved';
+						})
+					}
 				},
 				function (ex) {
 					$scope.errorMessage = ex.Message.replace(/\<<Approval Page>>/g, 'Approval Page');
@@ -171,27 +189,36 @@ function ($scope, $routeParams, $location, $451, Order, OrderConfig, User, Punch
 		$scope.displayLoadingIndicator = true;
 		if (!$scope.isEditforApproval)
 			OrderConfig.address($scope.currentOrder, $scope.user);
-		Order.save($scope.currentOrder,
-			function(data) {
-				$scope.currentOrder = data;
-                $location.path($scope.isEditforApproval ? 'checkout/' + $routeParams.id : 'checkout');
-				$scope.displayLoadingIndicator = false;
-			},
-			function(ex) {
-				$scope.errorMessage = ex.Message;
-				$scope.displayLoadingIndicator = false;
-			}
-		);
+		cleanDate(function(){
+			Order.save($scope.currentOrder,
+				function (data) {
+					$scope.currentOrder = data;
+					$location.path($scope.isEditforApproval ? 'checkout/' + $routeParams.id : 'checkout');
+					$scope.displayLoadingIndicator = false;
+				},
+				function (ex) {
+					$scope.errorMessage = ex.Message;
+					$scope.displayLoadingIndicator = false;
+				}
+			);
+		});
 	};
 
-	$scope.$watch('currentOrder.LineItems', function(newval) {
+	$scope.$watch('currentOrder.LineItems', function (newval) {
 		var newTotal = 0;
+		var invalidKitFound = false;
 		if (!$scope.currentOrder) return newTotal;
-		angular.forEach($scope.currentOrder.LineItems, function(item){
-			if (item.IsKitParent)
-				$scope.cart.$setValidity('kitValidation', !item.KitIsInvalid);
+		// COMTOOLS-2032: one invalid kit anywhere blocks checkout. Four51's version stops after
+		// the first kit whether it is valid or not; this checks every kit.
+		var hasKit = false;
+		angular.forEach($scope.currentOrder.LineItems, function (item) {
+			if (item.IsKitParent) {
+				hasKit = true;
+				if (item.KitIsInvalid) invalidKitFound = true;
+			}
 			newTotal += item.LineTotal;
 		});
+		if (hasKit && $scope.cart) $scope.cart.$setValidity('kitValidation', !invalidKitFound);
 		$scope.currentOrder.Subtotal = newTotal;
 	}, true);
 

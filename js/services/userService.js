@@ -52,9 +52,22 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 
 	var _login = function(credentials, success, error) {
 		store.clear();
-		$resource($451.api('login')).get(credentials).$promise.then(
+		if(credentials.CurrentPassword && !credentials.NewPassword){
+			delete credentials.CurrentPassword;
+		}
+		if(!credentials.Username && !credentials.Password && !credentials.Email){
+			credentials = {};
+			credentials.Username = null;
+			credentials.Password = null;
+		}
+		$resource($451.api('login/user')).save(credentials).$promise.then(
 			function(u) {
-				_then(success,u);
+				if(credentials.CurrentOrderID){
+					_setorder(credentials.CurrentOrderID,success,error);
+				}
+				else{
+					_then(success, u);
+				}
 			},
 			function(ex) {
 				if (angular.isFunction(error))
@@ -110,9 +123,18 @@ four51.app.factory('User', ['$q', '$rootScope', '$resource', '$451', 'Security',
 		);
 	};
 
-	var _logout = function() {
+	var _logout = function(credentials, success, error) {
 		store.clear();
-		Security.logout();
+		$resource($451.api('logout/user')).save(credentials).$promise.then(
+			function(u) {
+				Security.logout();
+				_then(success, u);
+			},
+			function(ex) {
+				if (angular.isFunction(error))
+					error(Error.format(ex));
+			}
+		);
 	};
 
 	return {

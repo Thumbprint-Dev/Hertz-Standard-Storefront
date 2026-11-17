@@ -67,7 +67,7 @@
           </div>
 
           <div class="hz-pg-actions" style="margin-top: 18px;">
-            <button type="submit" class="hz-pg-btn" ng-disabled="user_form.$invalid">Save changes</button>
+            <button type="submit" class="hz-pg-btn" ng-disabled="user_form.$invalid || buttonClicked">Save changes</button>
             <span class="hz-pg-field-hint" ng-show="actionMessage" role="status" ng-bind-html="actionMessage"></span>
           </div>
         </div>
@@ -161,7 +161,7 @@
             <div class="hz-pg-sect">
               <div class="hz-pg-actions">
                 <input class="hz-pg-btn" type="submit" id="451_btn_user"
-                       ng-disabled="user_form.$invalid" value="Create account" />
+                       ng-disabled="user_form.$invalid || buttonClicked" value="Create account" />
               </div>
               <div class="hz-pg-note" ng-show="actionMessage" style="margin: 14px 0 0;">
                 <p ng-bind-html="actionMessage | r | xlat"></p>
@@ -188,7 +188,7 @@
                        ng-model="loginasuser.Password" autocomplete="off" />
               </div>
               <input class="hz-pg-btn" type="submit" id="451_btn_login_existing"
-                     ng-disabled="login_existing.$invalid" value="Sign in" />
+                     ng-disabled="login_existing.$invalid || buttonClicked" value="Sign in" />
               <inlineerror ng-show="loginAsExistingError" title="{{loginAsExistingError}}" />
             </div>
           </div>

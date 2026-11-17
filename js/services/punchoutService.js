@@ -4,7 +4,16 @@ four51.app.factory('Punchout', ['$resource', '$451', '$http', '$cookieStore', 'E
             fn(data);
     }
 
-    var _punchoutSession = $cookieStore.get('punchoutSession.' + $451.apiName);
+    // Never throw here. Four51Ctrl injects this service, so an exception while reading the
+    // cookie (one $cookieStore cannot parse as JSON) would stop Four51Ctrl from starting,
+    // leave `Four51User` undefined, and index.html would show the login screen even to a
+    // signed-in punchout user.
+    var _punchoutSession = null;
+    try {
+        _punchoutSession = $cookieStore.get('punchoutSession.' + $451.apiName) || null;
+    } catch (e) {
+        if (window.console) console.warn('punchoutSession cookie could not be read', e);
+    }
 
     var _getForm = function(success, error){
         var url = $451.api('punchoutin/returnform/' + _punchoutSession.PunchoutTemplateName) + '?PunchoutBuyerCookie=' + _punchoutSession.PunchoutBuyerCookie;
